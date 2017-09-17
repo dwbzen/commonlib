@@ -1,4 +1,4 @@
-package math.junit;
+package junit;
 
 import javax.json.stream.JsonParser;
 
