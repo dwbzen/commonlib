@@ -10,9 +10,12 @@
 apply plugin: 'java-library'
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'maven'
 
 sourceCompatibility = 1.8
 version = '1.0'
+project.group  = 'math-lib'
+
 jar {
     manifest {
         attributes 'Implementation-Title': 'Math-Lib',
@@ -29,6 +32,18 @@ repositories {
     maven {
         url "http://central.maven.org/maven2/"
     }
+	mavenLocal()
+	flatDir {
+        name "jarRepository"
+        dirs "lib"
+    }
+}
+
+uploadArchives {
+		repositories {
+			add project.repositories.jarRepository
+			mavenLocal()
+		}
 }
 
 dependencies {
