@@ -7,13 +7,13 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import math.complex.Complex;
-import math.complex.ComplexPlane;
-import math.complex.TriangleGridColoring;
-import math.fractal.ComplexColoring;
-import math.fractal.FractalFormula;
-import math.fractal.IterationPoint;
-import math.fractal.MandlebrotFractal;
+import mathlib.complex.Complex;
+import mathlib.complex.ComplexPlane;
+import mathlib.complex.TriangleGridColoring;
+import mathlib.fractal.ComplexColoring;
+import mathlib.fractal.FractalFormula;
+import mathlib.fractal.IterationPoint;
+import mathlib.fractal.MandlebrotFractal;
 
 public class MandelCanvas {
 

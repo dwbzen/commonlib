@@ -3,7 +3,7 @@ package junit;
 import javax.json.stream.JsonParser;
 
 import junit.framework.TestCase;
-import math.Point2D;
+import mathlib.Point2D;
 
 public class JSONParseTest  extends TestCase {
 

@@ -16,18 +16,19 @@ import java.util.Random;
 import javax.swing.JColorChooser;
 import javax.swing.JPanel;
 
-import math.complex.Complex;
-import math.complex.ComplexPlane;
-import math.complex.TriangleGridColoring;
-import math.fractal.FractalFormula;
-import math.fractal.GenericIterationListener;
-import math.fractal.IterationPoint;
-import math.fractal.JuliaFractal;
-import math.fractal.MandlebrotFractal;
-import math.ifs.ChaosGame;
-import math.ifs.IteratedFunctionSystem;
-import math.util.BroadcastEvent;
-import math.util.IBroadcastClient;
+import mathlib.Point2D;
+import mathlib.complex.Complex;
+import mathlib.complex.ComplexPlane;
+import mathlib.complex.TriangleGridColoring;
+import mathlib.fractal.FractalFormula;
+import mathlib.fractal.GenericIterationListener;
+import mathlib.fractal.IterationPoint;
+import mathlib.fractal.JuliaFractal;
+import mathlib.fractal.MandlebrotFractal;
+import mathlib.ifs.ChaosGame;
+import mathlib.ifs.IteratedFunctionSystem;
+import mathlib.util.BroadcastEvent;
+import mathlib.util.IBroadcastClient;
 
 /**
  *
@@ -1299,7 +1300,7 @@ public class TestFrame extends javax.swing.JFrame implements IBroadcastClient {
 		game.setMaxIterations(npoints);
 		game.start();
 		while (!game.isComplete()) {
-			math.Point2D<Number> point = game.next();
+			Point2D<Number> point = game.next();
 			x = (int) (point.getX().doubleValue() * width);
 			y = (int) (point.getY().doubleValue() * height);
 			g.drawOval(x, y, 1, 1);
