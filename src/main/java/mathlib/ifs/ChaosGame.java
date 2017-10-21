@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import mathlib.CommandMessage;
-import mathlib.IProducer;
+import mathlib.IPointProducer;
 import mathlib.Point2D;
 import mathlib.PointSet;
 
@@ -16,7 +16,7 @@ import mathlib.PointSet;
  * @author dbacon
  *
  */
-public class ChaosGame implements IProducer {
+public class ChaosGame implements IPointProducer {
 
 	protected static final Logger log = LogManager.getLogger(ChaosGame.class);
 	
