@@ -8,11 +8,11 @@ import java.util.concurrent.ThreadLocalRandom;
  * where Mu is the mean (also median and mode)
  * and Sigma is the standard deviation
  * 
- * @author don_bacon
+ * @author donbacon
  *
  */
 public class ProbabilityDensityFunction {
-	private double[] range = {-5.0, 5.0};
+	private Point2D<Double> range;
 	private double mu = 1.0;
 	private double sigma = 0;
 	private double factor;	// 1/sqrt(2 * Pi * mu^2)
@@ -22,6 +22,7 @@ public class ProbabilityDensityFunction {
 		this.mu = mu;
 		this.sigma = sigma;
 		factor = 1/ Math.pow((2 * Math.PI * Math.pow(mu, 2)), .5);
+		range = new Point2D<Double>(0,0);
 	}
 	
 	/**
@@ -43,14 +44,14 @@ public class ProbabilityDensityFunction {
 	 * @return
 	 */
 	public double randomPDF() {
-		return random.nextDouble(range[0], range[1]);
+		return random.nextDouble(range.getX().doubleValue(), range.getY().doubleValue());
 	}
 
-	public double[] getRange() {
+	public Point2D<Double> getRange() {
 		return range;
 	}
 
-	public void setRange(double[] range) {
+	public void setRange(Point2D<Double> range) {
 		this.range = range;
 	}
 
