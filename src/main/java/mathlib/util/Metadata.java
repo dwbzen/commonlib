@@ -4,11 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Transient;
-
-import com.mongodb.DBObject;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Metadata implements IJson {
 
@@ -20,12 +16,9 @@ public class Metadata implements IJson {
 	public static final String URL_KEY = "url";
 	public static final String DESCRIPTION_KEY = "description";
 	
-	
-	@Transient	private Morphia morphia = new Morphia();
-	@Transient  private DBObject dbObject = null;
 
-	@Property	private Properties properties = new Properties();
-	@Property	private Map<String, Number> numberMap = new HashMap<String, Number>();
+	@JsonProperty	private Properties properties = new Properties();
+	@JsonProperty	private Map<String, Number> numberMap = new HashMap<String, Number>();
 	
 	public Metadata() {
 		
@@ -69,16 +62,10 @@ public class Metadata implements IJson {
 		numberMap.put(key, value);
 	}
 	
-	public DBObject getDBObject() {
-		if(dbObject == null) {
-			dbObject = morphia.toDBObject(this);
-		}
-		return dbObject;
-	}
 	
 	@Override
 	public String toJSON() {
-		return  getDBObject().toString();
+		return  toJson();
 	}
 	
 	public static void main(String...args) {

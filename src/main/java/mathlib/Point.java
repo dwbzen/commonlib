@@ -4,19 +4,17 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Property;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import mathlib.util.IJson;
 
-@Entity(value="point", noClassnameStored=true)
 public class Point<T extends Number> implements IJson, Serializable {
 
 	private static final long serialVersionUID = 8164516008279659505L;
 	private static MathContext mathContext = MathContext.DECIMAL32;	// the default
 	
-	@Property("x")	private Number x = BigDecimal.ZERO;
-	@Property("y")	private Number y = BigDecimal.ZERO;
+	@JsonProperty	private Number x = BigDecimal.ZERO;
+	@JsonProperty	private Number y = BigDecimal.ZERO;
 	
 	public Point(Number x, Number y) {
 		this.x = x;

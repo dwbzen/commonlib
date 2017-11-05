@@ -1,7 +1,8 @@
 package mathlib;
 
 import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Property;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import mathlib.util.IJson;
 
@@ -14,8 +15,8 @@ import mathlib.util.IJson;
 public class IntegerPair implements IJson {
 
 	private static final long serialVersionUID = 8841512197660420640L;
-	@Property("x")	private Integer x = 0;
-	@Property("y")	private Integer y = 0;
+	@JsonProperty	private Integer x = 0;
+	@JsonProperty	private Integer y = 0;
 	
 	public IntegerPair(int x, int y) {
 		this.x = x;
@@ -51,17 +52,10 @@ public class IntegerPair implements IJson {
 		return new IntegerPair(x,x);
 	}
 	
-	
+
 	@Override
 	public String toJSON() {
-		StringBuffer sb = new StringBuffer("{ ");
-		sb.append("\"x\" : ");
-		sb.append(getX());
-		sb.append(", \"y\" : ");
-		sb.append(getY());
-		sb.append(" }");
-		
-		return sb.toString();
+		return toJson();
 	}
 	
 	public static void main(String... args) {

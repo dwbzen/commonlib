@@ -18,6 +18,7 @@ import org.mongodb.morphia.annotations.Property;
 
 /**
  * NOTE - dropped MongoDB support for now. Need to update queries to NOT return the _id
+ * TODO: rewrite using Jackson
  * 
  * @author don_bacon
  *

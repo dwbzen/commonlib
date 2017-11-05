@@ -3,6 +3,8 @@ package mathlib.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import mathlib.util.IJson;
 
 /**
@@ -19,8 +21,8 @@ import mathlib.util.IJson;
 public abstract class DataPoint<T extends Number> implements IJson {
 
 	private static final long serialVersionUID = -8850267519541590336L;
-	private List<Integer> dimensions = new ArrayList<Integer>();
-	private int depth = 1;
+	@JsonProperty	private List<Integer> dimensions = new ArrayList<Integer>();
+	@JsonProperty	private int depth = 1;
 	
 	public List<Integer> getDimensions() {
 		return dimensions;

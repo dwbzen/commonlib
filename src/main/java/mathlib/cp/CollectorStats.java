@@ -6,6 +6,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * 
  * @author don_Bacon
@@ -13,10 +17,13 @@ import java.util.TreeMap;
  */
 public class CollectorStats<K, T extends List<K>> {
 
-	private int subsetLength;
-	private T subset;				// List of length subsetLength
-	private int totalOccurrance;	// total #times subset occurs
-	private Map<K, OccurrenceProbability> occurrenceProbabilityMap = new TreeMap<K, OccurrenceProbability>();
+	ObjectMapper mapper = new ObjectMapper();
+	
+	@JsonProperty	private int subsetLength;
+	@JsonProperty	private T subset;				// List of length subsetLength
+	@JsonProperty	private int totalOccurrance;	// total #times subset occurs
+	@JsonProperty	private Map<K, OccurrenceProbability> occurrenceProbabilityMap = new TreeMap<K, OccurrenceProbability>();
+	
 	public static final int LOW = 0;
 	public static final int HIGH = 1;
 	private boolean terminal = false;	// true if this is a terminal state
@@ -129,6 +136,17 @@ public class CollectorStats<K, T extends List<K>> {
 			sb.append("\n");
 		}
 		return sb.toString();
+	}
+	
+	public String toJson() {
+		String result = null;
+		try {
+			result = mapper.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }

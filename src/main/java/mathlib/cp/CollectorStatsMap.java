@@ -11,8 +11,10 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
- * A TreeMap bound to a base class K and some class T that is a List<K>
+ * A TreeMap bound to a base class K and some class T that implements a List<K>
  * Some examples, 
  * K : HarmonyChord, T : ChordProgression (which implements List<HarmonyChord>
  * K : Character, T : Word (implements List<Character>)
@@ -27,8 +29,9 @@ import org.apache.logging.log4j.Logger;
 public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, CollectorStats<K, T>> {
 
 	private static final long serialVersionUID = 4801227327750662977L;
-	private Map<T, Integer> summaryMap = null;
-	protected boolean trace = false;
+	
+	@JsonIgnore private Map<T, Integer> summaryMap = null;
+	@JsonIgnore protected boolean trace = false;
 
 	protected static final Logger log = LogManager.getLogger(CollectorStatsMap.class);
 
