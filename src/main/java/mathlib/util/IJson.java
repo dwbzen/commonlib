@@ -27,6 +27,7 @@ public interface IJson extends Serializable {
 		try {
 			result = mapper.writeValueAsString(this);
 		} catch (JsonProcessingException e) {
+			System.err.println("Cannot serialize because " + e.toString());
 			e.printStackTrace();
 		}
 		return result;
