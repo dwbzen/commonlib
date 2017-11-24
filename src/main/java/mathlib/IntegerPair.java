@@ -1,7 +1,6 @@
 package mathlib;
 
-import org.mongodb.morphia.annotations.Entity;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import mathlib.util.IJson;
@@ -11,10 +10,12 @@ import mathlib.util.IJson;
  * @author don_bacon
  *
  */
-@Entity(value="IntegerPair", noClassnameStored=true)
 public class IntegerPair implements IJson {
 
 	private static final long serialVersionUID = 8841512197660420640L;
+	@JsonIgnore	private String xLabel = "x";
+	@JsonIgnore private String yLabel = "y";
+	
 	@JsonProperty	private Integer x = 0;
 	@JsonProperty	private Integer y = 0;
 	
@@ -22,6 +23,14 @@ public class IntegerPair implements IJson {
 		this.x = x;
 		this.y = y;
 	}
+	
+	public IntegerPair(String xlabel, int x, String ylabel, int y) {
+		xLabel = xlabel;
+		yLabel = ylabel;
+		this.x = x;
+		this.y = y;
+	}
+	
 	public IntegerPair() {
 		this(0, 0);
 	}
@@ -44,6 +53,19 @@ public class IntegerPair implements IJson {
 		this.y = y.intValue();
 	}
 	
+	public String getxLabel() {
+		return xLabel;
+	}
+	public void setxLabel(String xLabel) {
+		this.xLabel = xLabel;
+	}
+	public String getyLabel() {
+		return yLabel;
+	}
+	public void setyLabel(String yLabel) {
+		this.yLabel = yLabel;
+	}
+	
 	public static IntegerPair pair(int x, int y) {
 		return new IntegerPair(x,y);
 	}
@@ -62,7 +84,6 @@ public class IntegerPair implements IJson {
 		IntegerPair pair = new IntegerPair(201, 301);
 		// { "className" : "math.IntegerPair" , "x" : 201 , "y" : 301}
 		System.out.println(pair.toJSON());
-		
 	}
 
 }

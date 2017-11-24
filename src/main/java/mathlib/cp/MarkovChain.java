@@ -22,7 +22,8 @@ import mathlib.util.INameable;
  *
  *
  * @author don_bacon
- * @see https://en.wikipedia.org/wiki/Markov_chain
+ * <p>See <a href="https://en.wikipedia.org/wiki/Markov_chain">Markov Chain</a> on Wikipedia
+ * 
  * @param <K> a base class
  * @param <T> class that implements List<K>
  */
