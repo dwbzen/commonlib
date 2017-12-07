@@ -13,12 +13,89 @@ import mathlib.PointSet;
 
 /**
  * Implementation of the stocastic chaos game for IFS approximation
- * @author dbacon
+ * @author don_bacon
  *
  */
 public class ChaosGame implements IPointProducer {
 
 	protected static final Logger log = LogManager.getLogger(ChaosGame.class);
+	
+	private IteratedFunctionSystem ifs;
+	private int maxIterations = 100000;
+	private int functionIterations = 20;
+	private int count;
+	private boolean debug = false;
+	
+	public ChaosGame() {
+	}
+	public ChaosGame(IteratedFunctionSystem ifs) {
+		this.ifs = ifs;
+	}
+	public ChaosGame(IteratedFunctionSystem ifs,int maxit) {
+		this.ifs = ifs;
+		this.maxIterations = maxit;
+	}
+	public ChaosGame(int maxit) {
+		this.maxIterations = maxit;
+	}
+	
+	public void start() {
+		count = 0;
+	}
+	public boolean isComplete() {
+		return count >= maxIterations;
+	}
+	/**
+	 * Pick a random point in (x,y) in [-1, +1]
+	 * Pick a LinearFunction (random - based on weight)
+	 * Iteratively evaluate for functionIterations times, starting at point
+	 * Return the result at the end
+	 * 
+	 * @return
+	 */
+	public Point2D<Number> next() {
+		Point2D<BigDecimal> point = ifs.getRandomPoint();
+		if(debug) {	System.out.println("start: " + point); }
+		for(int i=0; i<functionIterations; i++) {
+			LinearFunction f = ifs.pickFunction();
+			point = f.evaluateAt(point, false);		// no need to create new Points
+			if(debug) {	
+				System.out.println("picked " + f.getName() + " " + point.toString()); 
+			}
+		}
+		count++;
+		return new Point2D<Number>(point);
+	}
+	
+	public PointSet<Number>  run() {
+		start();
+		PointSet<Number> points = new PointSet<Number>();
+		while(!isComplete()) {
+			 Point2D<Number> point = next();
+			 points.add(point);
+		}
+		return points;
+	}
+	
+	public IteratedFunctionSystem getIfs() {
+		return ifs;
+	}
+	public void setIfs(IteratedFunctionSystem ifs) {
+		this.ifs = ifs;
+	}
+	public int getMaxIterations() {
+		return maxIterations;
+	}
+	public void setMaxIterations(int maxIterations) {
+		this.maxIterations = maxIterations;
+	}
+	public int getFunctionIterations() {
+		return functionIterations;
+	}
+	public void setFunctionIterations(int functionIterations) {
+		this.functionIterations = functionIterations;
+	}
+
 	
 	/**
 	 * Usage: ChaosGame [-n num] [-name datasetname] [-start text] [-trailing text] > filename.json
@@ -169,82 +246,6 @@ public class ChaosGame implements IPointProducer {
 		log.trace("maxX=" + points.getMaxXValue() + " maxY=" + points.getMaxYValue());
 		log.trace("min Point: " + points.getMinPoint());
 		log.trace("max Point: " + points.getMaxPoint());
-	}
-	
-	private IteratedFunctionSystem ifs;
-	private int maxIterations = 100000;
-	private int functionIterations = 20;
-	private int count;
-	private boolean debug = false;
-	
-	public ChaosGame() {
-	}
-	public ChaosGame(IteratedFunctionSystem ifs) {
-		this.ifs = ifs;
-	}
-	public ChaosGame(IteratedFunctionSystem ifs,int maxit) {
-		this.ifs = ifs;
-		this.maxIterations = maxit;
-	}
-	public ChaosGame(int maxit) {
-		this.maxIterations = maxit;
-	}
-	
-	public void start() {
-		count = 0;
-	}
-	public boolean isComplete() {
-		return count >= maxIterations;
-	}
-	/**
-	 * Pick a random point in (x,y) in [-1, +1]
-	 * Pick a LinearFunction (random - based on weight)
-	 * Iteratively evaluate for functionIterations times, starting at point
-	 * Return the result at the end
-	 * 
-	 * @return
-	 */
-	public Point2D<Number> next() {
-		Point2D<BigDecimal> point = ifs.getRandomPoint();
-		if(debug) {	System.out.println("start: " + point); }
-		for(int i=0; i<functionIterations; i++) {
-			LinearFunction f = ifs.pickFunction();
-			if(debug) {	
-				System.out.println("picked " + f.getName() + " " + point.toString()); 
-			}
-			point = f.evaluateAt(point, false);		// no need to create new Points
-		}
-		count++;
-		return new Point2D<Number>(point);
-	}
-	
-	public PointSet<Number>  run() {
-		start();
-		PointSet<Number> points = new PointSet<Number>();
-		while(!isComplete()) {
-			 Point2D<Number> point = next();
-			 points.add(point);
-		}
-		return points;
-	}
-	
-	public IteratedFunctionSystem getIfs() {
-		return ifs;
-	}
-	public void setIfs(IteratedFunctionSystem ifs) {
-		this.ifs = ifs;
-	}
-	public int getMaxIterations() {
-		return maxIterations;
-	}
-	public void setMaxIterations(int maxIterations) {
-		this.maxIterations = maxIterations;
-	}
-	public int getFunctionIterations() {
-		return functionIterations;
-	}
-	public void setFunctionIterations(int functionIterations) {
-		this.functionIterations = functionIterations;
 	}
 
 }

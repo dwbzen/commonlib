@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -13,8 +12,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import mathlib.Matrix;
-import mathlib.Point2D;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
@@ -23,19 +20,22 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import mathlib.Matrix;
+import mathlib.Point2D;
+
 /**
  * Represents a general 2-dimensional IFS
  * This is a collection of n functions Fi(x,y)
  * Fi(x,y) = (ax + by + c, dx + ey + f)
- * Each function F can be represented as a 2-row by
- * 3-column matrix T(2,3):
+ * Each function F can be represented as a 2-row by 3-column matrix T(2,3):
  * [ [ a, b, c ], [ d, e, f ] ]
  * 
  * so F <==> T * [x,y,1]  (matrix multiplication)
  * Each F has a weight: 0 < weight < 1
- * such that the sum of the weights == 1
+ * that is interpreted as a relative probability of that transform being
+ * selected when the ChaosGame is run.
  * 
- * @author dbacon
+ * @author don_bacon
  *
  */
 public class IteratedFunctionSystem {
@@ -49,6 +49,7 @@ public class IteratedFunctionSystem {
 	private ThreadLocalRandom random = ThreadLocalRandom.current();
 	private double range = 2.0;
 	private double low = -1.0;	// [ LOW, LOW + RANGE ]
+	private double totalWeight = 0.0;
 	private String flame = null;
 	private Document doc;
 
@@ -150,8 +151,9 @@ public class IteratedFunctionSystem {
 				if(weight >= 0.00001)  {	// don't add if no weight
 					LinearFunction lf = new LinearFunction(function);
 					lf.setWeight(weight);
+					lf.setName("F"+i);
 					log.debug(lf.toJSON());
-					this.addFunction(lf);
+					addFunction(lf);
 				}
 			}
 		}
@@ -185,17 +187,17 @@ public class IteratedFunctionSystem {
 	}
 
 	public LinearFunction pickFunction() {
-		double d = random.nextDouble();
-		LinearFunction f = null;
+		double d = random.nextDouble(totalWeight);
 		double sum = 0;
-		for(Iterator<LinearFunction> it=functions.iterator(); it.hasNext();) {
-			if(sum > d) {
+		LinearFunction linearFunction = null;
+		for(LinearFunction f : functions) {
+			sum += f.getWeight();
+			linearFunction = f;
+			if(d <= sum) {
 				break;
 			}
-			f = it.next();
-			sum += f.getWeight();
 		}
-		return f;
+		return linearFunction;
 	}
 	
 	public List<LinearFunction> getFunctions() {
@@ -203,28 +205,14 @@ public class IteratedFunctionSystem {
 	}
 	
 	public int addFunction(LinearFunction f) {
-		functions.add(f);
-		return functions.size();
+		return addFunction(f, f.getWeight());
 	}
+	
 	public int addFunction(LinearFunction f, double weight) {
 		LinearFunction lf = new LinearFunction(f);
 		lf.setWeight(weight);
+		totalWeight += weight;
 		functions.add(lf);
-		return functions.size();
-	}
-	/**
-	 * Normalize weights to range [0, 1]
-	 * @return
-	 */
-	public int distributeWeights() {
-		double sum = 0D;
-		for(Iterator<LinearFunction> it=functions.iterator(); it.hasNext();) {
-			sum += it.next().getWeight();
-		}
-		for(Iterator<LinearFunction> it=functions.iterator(); it.hasNext();) {
-			LinearFunction f = it.next();
-			f.setWeight(f.getWeight()/sum);
-		}
 		return functions.size();
 	}
 	
@@ -239,9 +227,29 @@ public class IteratedFunctionSystem {
 	}
 	
 	/**
-	 * Sierpinksi in upper left diagonal of square canvas.
-	 * Data set sierpinski
-	 * @return
+	 * Sierpinksi in upper left diagonal of square canvas. Data set sierpinski
+	 * In Apophysis the .flame file transform gives the coeficients in order { {a, b, c}, {d, e, f} }
+	 *    
+	 *  <xform weight="0.5" color="0" linear="1" coefs="0.5  0  0   0.5   0.5  -0.5"  opacity="1" />
+   	 *  <xform weight="0.5" color="0" linear="1" coefs="0.5  0  0   0.5   0.5   0"    opacity="1" />
+     *  <xform weight="0.5" color="0" linear="1" coefs="0.5  0  0   0.5   0     0"    opacity="1" />
+     * In the Apophysis editor UI:
+     * Transform 1
+     * 	X	0.5		  0
+     *  Y	  0		0.5
+     *  O   0.5		0.5
+     *  
+     *  Transform 2
+     *  X	0.5		  0
+     *  Y	  0		0.5
+     *  O   0.5		  0
+     *  
+     *  Transform 3
+     *  X	0.5		  0
+     *  Y	  0		0.5
+     *  O     0		  0
+     *  
+	 * @return IteratedFunctionSystem
 	 */
 	public static IteratedFunctionSystem Sierpinski() {
 		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
@@ -249,7 +257,7 @@ public class IteratedFunctionSystem {
 		double[][] dm1 = { {.5, 0, 0}, {0, .5, 0} };
 		double[][] dm2 = { {.5, 0, .5}, {0, .5, 0} };
 		double[][] dm3 = { {.5, 0, 0}, {0, .5, .5} };
-		double weight = 1D/3D;
+		double weight = 0.5;
 		LinearFunction f1 = new LinearFunction(dm1);
 		f1.setName("f1");
 		LinearFunction f2 = new LinearFunction(dm2);
@@ -266,7 +274,6 @@ public class IteratedFunctionSystem {
 	
 	/**
 	 * Sierpinksi in upper right diagonal of square canvas.
-	 * Data set sierpinski2
 	 * @return
 	 */
 	public static IteratedFunctionSystem Sierpinski2() {
@@ -275,7 +282,7 @@ public class IteratedFunctionSystem {
 		double[][] dm1 = { {.5, 0, .5}, {0, .5, .5} };
 		double[][] dm2 = { {.5, 0, .5}, {0, .5, 0} };
 		double[][] dm3 = { {.5, 0, 0}, {0, .5, 0} };
-		double weight = 1D/3D;
+		double weight = 0.5;
 		LinearFunction f1 = new LinearFunction(dm1);
 		f1.setName("f1");
 		LinearFunction f2 = new LinearFunction(dm2);
@@ -423,6 +430,10 @@ public class IteratedFunctionSystem {
 
 	public Document getDoc() {
 		return doc;
+	}
+
+	public double getTotalWeight() {
+		return totalWeight;
 	}
 	
 }

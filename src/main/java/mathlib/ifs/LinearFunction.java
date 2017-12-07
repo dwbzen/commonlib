@@ -3,13 +3,12 @@ package mathlib.ifs;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import mathlib.Matrix;
 import mathlib.Point2D;
-
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Transient;
+import mathlib.util.IJson;
 
 /**
  * A LinearFunction F is defined as a map R^2 -> R^2:
@@ -19,17 +18,16 @@ import org.mongodb.morphia.annotations.Transient;
  * @author dbacon
  *
  */
-@Entity(value="LinearFunction", noClassnameStored=false)
-public class LinearFunction {
+public class LinearFunction implements IJson {
+	
+	private static final long serialVersionUID = -4451686768008927428L;
 	
 	/**
 	 * the function Matrix must be 2 x 3
 	 */
-	@Transient				private  Matrix<BigDecimal> function = null;
-	@Property("weight")		private double weight = 0;
-	@Property("name")		private String name;
-	
-	@Transient	private Morphia morphia = null;
+	@JsonIgnore				private  Matrix<BigDecimal> function = null;
+	@JsonProperty("weight")		private double weight = 0;
+	@JsonProperty("name")		private String name;
 
 	public static void main(String[] args) {
 		double[][] dm3 = { {.5, 0, 0}, {0, .5, .5} };
@@ -87,12 +85,15 @@ public class LinearFunction {
 	public Matrix<BigDecimal> getFunction() {
 		return function;
 	}
+	
 	public void setFunction(Matrix<BigDecimal> function) {
 		this.function = function;
 	}
+	
 	public double getWeight() {
 		return weight;
 	}
+	
 	public void setWeight(double weight) {
 		this.weight = weight;
 	}
@@ -107,16 +108,7 @@ public class LinearFunction {
 	 * @return JSON String
 	 */
 	public String toJSON() {
-		if(morphia == null) {
-			morphia = new Morphia();
-		}
-		String temp =  morphia.toDBObject(this).toString();
-		String func = function.toJSON();		// Matrix<BigDecimal>
-		StringBuffer sb = new StringBuffer(temp.substring(0, temp.length() - 1 ));	// drop the trailing "}"
-		sb.append(", \"function\": ");
-		sb.append(func);
-		sb.append("}");
-		return sb.toString();
+		return toJson();
 	}
 	
 	public Point2D<BigDecimal> evaluateAt(Point2D<BigDecimal> point, boolean createNew) {
