@@ -1290,13 +1290,13 @@ public class TestFrame extends javax.swing.JFrame implements IBroadcastClient {
 		int height = jPanel1.getHeight();
 		int width = jPanel1.getWidth();
 		String param1 = param1TextField.getText();
-		int npoints = (param1 == null || param1.length() == 0) ? 5000 : Integer
+		int npoints = (param1 == null || param1.length() == 0) ? 100000 : Integer
 				.parseInt(param1);
 
 		// TODO: SET the desired IFS here
 		IteratedFunctionSystem ifs = IteratedFunctionSystem.IFS2();
 		
-		ChaosGame game = new ChaosGame(ifs, 100000);
+		ChaosGame game = new ChaosGame(ifs, 100000, 5);
 		game.setMaxIterations(npoints);
 		game.start();
 		while (!game.isComplete()) {

@@ -24,6 +24,7 @@ public class ChaosGame implements IPointProducer {
 	private int maxIterations = 100000;
 	private int functionIterations = 20;
 	private int count;
+	private int repeats = 1;
 	private boolean debug = false;
 	
 	public ChaosGame() {
@@ -32,8 +33,12 @@ public class ChaosGame implements IPointProducer {
 		this.ifs = ifs;
 	}
 	public ChaosGame(IteratedFunctionSystem ifs,int maxit) {
+		this(ifs, maxit, 1);
+	}
+	public ChaosGame(IteratedFunctionSystem ifs, int maxit, int reps) {
 		this.ifs = ifs;
-		this.maxIterations = maxit;
+		maxIterations = maxit;
+		repeats = reps;
 	}
 	public ChaosGame(int maxit) {
 		this.maxIterations = maxit;
@@ -68,11 +73,13 @@ public class ChaosGame implements IPointProducer {
 	}
 	
 	public PointSet<Number>  run() {
-		start();
 		PointSet<Number> points = new PointSet<Number>();
-		while(!isComplete()) {
-			 Point2D<Number> point = next();
-			 points.add(point);
+		for(int i=0; i<repeats; i++) {
+			start();
+			while(!isComplete()) {
+				 Point2D<Number> point = next();
+				 points.add(point);
+			}
 		}
 		return points;
 	}
@@ -95,8 +102,13 @@ public class ChaosGame implements IPointProducer {
 	public void setFunctionIterations(int functionIterations) {
 		this.functionIterations = functionIterations;
 	}
-
 	
+	public int getRepeats() {
+		return repeats;
+	}
+	public void setRepeats(int repeats) {
+		this.repeats = repeats;
+	}
 	/**
 	 * Usage: ChaosGame [-n num] [-name datasetname] [-start text] [-trailing text] > filename.json
 	 * where num is #iterations (defaults to 10000)
@@ -129,7 +141,8 @@ public class ChaosGame implements IPointProducer {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int niterations = 10000;
+		int niterations = 100000;
+		int nrepeats = 1;
 		String dataSetName = "ifs1";
 		String trailingMessage = "SHUTDOWN";
 		String startMessage = "START";
@@ -142,6 +155,9 @@ public class ChaosGame implements IPointProducer {
 			if(args[i].equalsIgnoreCase("-n")) {
 				niterations = Integer.parseInt(args[++i]);
 			}
+			if(args[i].startsWith("-rep")) {
+				nrepeats = Integer.parseInt(args[++i]);
+			}			
 			if(args[i].equalsIgnoreCase("-name")) {
 				dataSetName = args[++i];
 			}
@@ -204,7 +220,7 @@ public class ChaosGame implements IPointProducer {
 			}
 
 		}
-		ChaosGame game = new ChaosGame(ifs, niterations);
+		ChaosGame game = new ChaosGame(ifs, niterations, nrepeats);
 		/*
 		 * Run the chaos game to generate points
 		 */
