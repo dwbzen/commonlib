@@ -1,7 +1,9 @@
 package mathlib.ifs;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,11 +13,13 @@ import mathlib.Point2D;
 import mathlib.util.IJson;
 
 /**
- * A LinearFunction F is defined as a map R^2 -> R^2:
- * F(x,y) = (ax + by + c, dx + ey + f)
- * and is represented internally as a 2 x 3 Matrix
+ * A LinearFunction F is defined as a map R<sup>2</sup> -> R<sup>2</sup>:</p>
+  * <b>F<sub>i</sub>(x, y) = V<sub>i</sub>(a<sub>i</sub> x + b<sub>i</sub> y + c<sub>i</sub>, d<sub>i</sub> x + e<sub>i</sub> y + f<sub>i</sub>)</b></p>
+ * and is represented internally as a 2 x 3 Matrix:</p>
+ * &#9474; a&emsp;b&emsp;c &#9474;<br>
+ * &#9474; b&emsp;e&emsp;f&ensp;&#9474;</p>
  * 
- * @author dbacon
+ * @author don_bacon
  *
  */
 public class LinearFunction implements IJson {
@@ -28,6 +32,7 @@ public class LinearFunction implements IJson {
 	@JsonIgnore				private  Matrix<BigDecimal> function = null;
 	@JsonProperty("weight")		private double weight = 0;
 	@JsonProperty("name")		private String name;
+	@JsonIgnore	private List<Variation>	variations = new ArrayList<Variation>();
 
 	public static void main(String[] args) {
 		double[][] dm3 = { {.5, 0, 0}, {0, .5, .5} };
@@ -111,7 +116,11 @@ public class LinearFunction implements IJson {
 		return toJson();
 	}
 	
-	public Point2D<BigDecimal> evaluateAt(Point2D<BigDecimal> point, boolean createNew) {
+	public Point2D<BigDecimal> evaluateAt(Point2D<BigDecimal> point) {
+		return evaluateAt(point, false);
+	}
+	
+	private Point2D<BigDecimal> evaluateAt(Point2D<BigDecimal> point, boolean createNew) {
 		double x =	a()*point.getX().doubleValue() +
 					b()*point.getY().doubleValue() +
 					c();

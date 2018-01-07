@@ -69,9 +69,13 @@ public class IteratedFunctionSystem {
 	 *    </flame>
 	 * </flames>
 	 * Transforms look like this: <xform weight="0.333" color="0" linear="1" coefs="0.5 0 0 0.5 0.5 -0.5" opacity="1" />
-	 * Variations specified per xform as an attribute, for example:
-	 * bubble="0.381160313030705" blur="0.618839686969295" sinusoidal="0.077552528353408" polar="0.922447471646592"
-	 * eyefish="0.693151000887156" disc="0.34543321817182"
+	 * Variations specified per xform as an attribute. The values for a given transform sum to 1. Here are some examples:</p>
+	 * linear="0.119537904160097" 	hyperbolic="0.880462095839903" </p>
+	 * flatten="0.217206117464229" 	disc="0.78279388253577" </p>
+	 * diamond="0.0912946739699692" eyefish="0.908705326030031" </p>
+	 * linear="0.535267039667815" 	spiral="0.464732960332185" </p>
+	 * swirl="0.5" 	horseshoe="0.5"; swirl="0.5" cylinder="0.5"; sinusoidal="0.5" swirl="0.5" </p>
+	 * 
 	 * @param flameFile
 	 * @param flameName
 	 */
@@ -127,6 +131,7 @@ public class IteratedFunctionSystem {
 			Node node = nList.item(i);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				Element element = (Element) node;
+				getVariations(element);
 				String coefs = element.getAttribute("coefs");
 				double weight = Double.parseDouble(element.getAttribute("weight"));
 				log.trace("coefs: " + coefs);
@@ -159,6 +164,14 @@ public class IteratedFunctionSystem {
 		}
 	}
 	
+	/**
+	 * Gets and saves known variations for a given transform (xform) Element
+	 * @param element
+	 */
+	private void getVariations(Element element) {
+		
+	}
+
 	public static void main(String... args) throws Exception {
 		String filename = null;
 		String flameName = null;

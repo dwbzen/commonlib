@@ -63,7 +63,7 @@ public class ChaosGame implements IPointProducer {
 		if(debug) {	System.out.println("start: " + point); }
 		for(int i=0; i<functionIterations; i++) {
 			LinearFunction f = ifs.pickFunction();
-			point = f.evaluateAt(point, false);		// no need to create new Points
+			point = f.evaluateAt(point);
 			if(debug) {	
 				System.out.println("picked " + f.getName() + " " + point.toString()); 
 			}
