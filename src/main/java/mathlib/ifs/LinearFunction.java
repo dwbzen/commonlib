@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,7 +23,7 @@ import mathlib.util.IJson;
  * @author don_bacon
  *
  */
-public class LinearFunction implements IJson {
+public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Point2D<BigDecimal>> {
 	
 	private static final long serialVersionUID = -4451686768008927428L;
 	
@@ -152,5 +153,10 @@ public class LinearFunction implements IJson {
 		sb.append(function.toString());
 		
 		return sb.toString();
+	}
+
+	@Override
+	public Point2D<BigDecimal> apply(Point2D<BigDecimal> point) {
+		return evaluateAt(point);
 	}
 }

@@ -179,6 +179,15 @@ public class Point2D<T extends Number>  extends JSONObject implements IPoint, Co
 		return m;
 	}
 	
+	/**
+	 * Multiplies this Point2D by a double.
+	 * @param num
+	 * @return new Point2D
+	 */
+	public Point2D<T> multiply(double num) {
+		return new Point2D<T>(getX().doubleValue()*num, getY().doubleValue()*num);
+	}
+	
 	@Override
 	public int compareTo(Point2D<T> other) {
 		double modMe = mod();
