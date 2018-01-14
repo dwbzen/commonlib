@@ -337,6 +337,40 @@ public class IteratedFunctionSystem {
 	}
 	
 	/**
+	 * Sierpinksi gasket centered with point up with Variations
+	 * Data set sierpinski3
+	 * @return
+	 */
+	public static IteratedFunctionSystem Sierpinski3Variations() {
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
+
+		double[][] dm1 = { {.5, 0, 0}, {0, .5, .5} };
+		double[][] dm2 = { {.5, 0, .5}, {0, .5, .5} };
+		double[][] dm3 = { {.5, 0, .25}, {0, .5, 0} };
+		double weight = 1D/3D;
+		LinearFunction f1 = new LinearFunction(dm1);
+		f1.setName("f1");
+		LinearFunction f2 = new LinearFunction(dm2);
+		f2.setName("f2");
+		LinearFunction f3 = new LinearFunction(dm3);
+		f3.setName("f3");
+		
+		Variation v1 = Variation.createNew("swirl", .5);
+		Variation v2 = Variation.createNew("horseshoe", .5);
+		Variation v3 = Variation.createNew("cylinder", .5);
+		Variation v4 = Variation.createNew("spiral", .5);
+		f1.addVariation(v1).addVariation(v2);
+		f2.addVariation(v1).addVariation(v2);
+		f3.addVariation(v1).addVariation(v3);
+
+		ifs.addFunction(f1, weight);
+		ifs.addFunction(f2, weight);
+		ifs.addFunction(f3, weight);
+		
+		return ifs;
+	}
+	
+	/**
 	 * Data set ifs1.
 	 * @return
 	 */
@@ -387,6 +421,17 @@ public class IteratedFunctionSystem {
 		f4.setName("f4");
 		LinearFunction f5 = new LinearFunction(dm5);
 		f5.setName("f5");
+
+		Variation v1 = Variation.createNew("swirl", .5);
+		Variation v2 = Variation.createNew("horseshoe", .5);
+		Variation v3 = Variation.createNew("cylinder", .5);
+		Variation v4 = Variation.createNew("spiral", .5);
+
+		f1.addVariation(v1).addVariation(v2);
+		f2.addVariation(v1).addVariation(v3);
+		f3.addVariation(v1).addVariation(v4);
+		f4.addVariation(v2).addVariation(v3);
+		f5.addVariation(v3).addVariation(v4);
 
 		ifs.addFunction(f1, 0.2);
 		ifs.addFunction(f2, 0.2);

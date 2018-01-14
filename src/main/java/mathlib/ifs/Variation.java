@@ -222,7 +222,12 @@ public class Variation implements Function<Point2D<BigDecimal>, Point2D<BigDecim
 	private double blendingVectorLength;
 	private int variationNumber = 0;
 	
-	public Variation(String name, int vnum, double length) {
+	public static Variation createNew(String name, double length) {
+		int vnum = variations.containsKey(name) ?  variations.get(name) : 0;
+		return new Variation(name, vnum, length);
+	}
+	
+	protected Variation(String name, int vnum, double length) {
 		this.name = name;
 		variationNumber = vnum;
 		blendingVectorLength = length;

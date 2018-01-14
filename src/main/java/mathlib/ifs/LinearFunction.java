@@ -61,6 +61,7 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 		this.function = new Matrix<BigDecimal>(func.getFunction());
 		this.weight = func.getWeight();
 		this.name = func.name;
+		variations.addAll(func.getVariations());
 	}
 	
 	public LinearFunction(double[][] array, String name) {
@@ -104,6 +105,15 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 		this.weight = weight;
 	}
 	
+	public List<Variation> getVariations() {
+		return variations;
+	}
+	
+	public LinearFunction addVariation(Variation v) {
+		variations.add(v);
+		return this;
+	}
+
 	/**
 	 * JSON representation of this LinearFunction.
 	 * example:
@@ -118,24 +128,15 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 	}
 	
 	public Point2D<BigDecimal> evaluateAt(Point2D<BigDecimal> point) {
-		return evaluateAt(point, false);
-	}
-	
-	private Point2D<BigDecimal> evaluateAt(Point2D<BigDecimal> point, boolean createNew) {
 		double x =	a()*point.getX().doubleValue() +
 					b()*point.getY().doubleValue() +
 					c();
 		double y =	d()*point.getX().doubleValue() +
 					e()*point.getY().doubleValue() +
 					f();
-		
-		Point2D<BigDecimal> result = point;
-		if(createNew) {
-			result = new Point2D<BigDecimal>(x,y);
-		}
-		else {
-			point.setX(x);
-			point.setY(y);
+		Point2D<BigDecimal> result = new Point2D<BigDecimal>(x,y);
+		for(Variation v : variations) {
+			v.apply(result);
 		}
 		return result;
 	}

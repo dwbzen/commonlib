@@ -1304,6 +1304,7 @@ public class TestFrame extends javax.swing.JFrame implements IBroadcastClient {
 			x = (int) (point.getX().doubleValue() * width);
 			y = (int) (point.getY().doubleValue() * height);
 			g.drawOval(x, y, 1, 1);
+			g.drawOval(x, y, 2, 2);
 		}
 
 		/*		for (int i = 0; i < npoints; i++) {
