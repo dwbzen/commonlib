@@ -423,14 +423,14 @@ public class IteratedFunctionSystem {
 		f5.setName("f5");
 
 		Variation v1 = Variation.createNew("swirl", .5);
-		Variation v2 = Variation.createNew("horseshoe", .5);
+		Variation v2 = Variation.createNew("sinusoidal", .5);
 		Variation v3 = Variation.createNew("cylinder", .5);
 		Variation v4 = Variation.createNew("spiral", .5);
 
-		f1.addVariation(v1).addVariation(v2);
-		f2.addVariation(v1).addVariation(v3);
-		f3.addVariation(v1).addVariation(v4);
-		f4.addVariation(v2).addVariation(v3);
+		f1.addVariation(v1).addVariation(v4);
+		f2.addVariation(v2).addVariation(v3);
+		f3.addVariation(v1).addVariation(v2);
+		f4.addVariation(v2).addVariation(v4);
 		f5.addVariation(v3).addVariation(v4);
 
 		ifs.addFunction(f1, 0.2);

@@ -17,6 +17,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JPanel;
 
 import mathlib.Point2D;
+import mathlib.PointSet;
 import mathlib.complex.Complex;
 import mathlib.complex.ComplexPlane;
 import mathlib.complex.TriangleGridColoring;
@@ -1292,19 +1293,31 @@ public class TestFrame extends javax.swing.JFrame implements IBroadcastClient {
 		String param1 = param1TextField.getText();
 		int npoints = (param1 == null || param1.length() == 0) ? 100000 : Integer
 				.parseInt(param1);
+		String param2 = bailoutTextField.getText();
+		int repeats = (param2 == null || param2.length()==0 ) ? 1 : Integer.parseInt(param2);
 
 		// TODO: SET the desired IFS here
 		IteratedFunctionSystem ifs = IteratedFunctionSystem.IFS2();
 		
-		ChaosGame game = new ChaosGame(ifs, 100000, 5);
+		ChaosGame game = new ChaosGame(ifs, npoints, repeats);
 		game.setMaxIterations(npoints);
-		game.start();
-		while (!game.isComplete()) {
-			Point2D<Number> point = game.next();
-			x = (int) (point.getX().doubleValue() * width);
-			y = (int) (point.getY().doubleValue() * height);
+		PointSet<Number> pointSet = game.run();
+		List<Point2D<Number>> points = pointSet.getPoints();
+		double maxX = pointSet.getMaxXValue().doubleValue();
+		double minX = pointSet.getMinXValue().doubleValue();
+		double maxY = pointSet.getMaxYValue().doubleValue();
+		double minY = pointSet.getMinYValue().doubleValue();
+		double rangeX = maxX - minX;
+		double rangeY = maxY - minY;
+		for(Point2D<Number> point : points) {
+			//x = (int) (point.getX().doubleValue() * width);
+			//y = (int) (point.getY().doubleValue() * height);
+			double xprime = (point.getX().doubleValue() - minX)/rangeX;
+			double yprime = (point.getY().doubleValue() - minY)/rangeY;
+			x = (int) (xprime * width);
+			y = (int) (yprime *height);
 			g.drawOval(x, y, 1, 1);
-			g.drawOval(x, y, 2, 2);
+			//g.drawOval(x, y, 2, 2);
 		}
 
 		/*		for (int i = 0; i < npoints; i++) {

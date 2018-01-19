@@ -136,7 +136,7 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 					f();
 		Point2D<BigDecimal> result = new Point2D<BigDecimal>(x,y);
 		for(Variation v : variations) {
-			v.apply(result);
+			result = v.apply(result);
 		}
 		return result;
 	}
