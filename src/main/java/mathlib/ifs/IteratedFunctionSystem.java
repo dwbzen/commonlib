@@ -121,8 +121,8 @@ public class IteratedFunctionSystem {
 		 *  weight="0.333333333333333" 
 		 * 	coefs="0.192318735701774 0.626289901255116 -0.85410800259596 0.698886714971427 -0.292309265118092 -0.853723430074751"
 		 * xform coeficient order is x1,x2,y1,y2,o1,o2 (across rows first)
-		 * and for some odd reason, x2,y1,o2 are -1*value. So the Apophysis UI in the above example
-		 * shows x2 as -0.62629, y1 as 0.854108, and o2 as 0.853723
+		 * and for some odd reason, x2,y1,o2 are -1*value shown in the Apophysis UI
+		 * So the Apophysis UI in the above example shows x2 as -0.62629, y1 as 0.854108, and o2 as 0.853723
 		 * 
 		 */
 		Matrix<Number> function = null;
@@ -241,11 +241,11 @@ public class IteratedFunctionSystem {
 	
 	/**
 	 * Sierpinksi in upper left diagonal of square canvas. Data set sierpinski
-	 * In Apophysis the .flame file transform gives the coeficients in order { {a, b, c}, {d, e, f} }
+	 * In Apophysis the .flame file transform gives the coeficients in order  { {a, c, e}, {b, d, f} } 
 	 *    
-	 *  <xform weight="0.5" color="0" linear="1" coefs="0.5  0  0   0.5   0.5  -0.5"  opacity="1" />
-   	 *  <xform weight="0.5" color="0" linear="1" coefs="0.5  0  0   0.5   0.5   0"    opacity="1" />
-     *  <xform weight="0.5" color="0" linear="1" coefs="0.5  0  0   0.5   0     0"    opacity="1" />
+	 *  <xform weight="0.5" color="0" linear="1" coefs="0.5  0  0     0.5   0.5  -0.5"  opacity="1" />
+   	 *  <xform weight="0.5" color="0" linear="1" coefs="0.5  0  0     0.5   0.5   0"    opacity="1" />
+     *  <xform weight="0.5" color="0" linear="1" coefs="0.5  0  0     0.5   0     0"    opacity="1" />
      * In the Apophysis editor UI:
      * Transform 1
      * 	X	0.5		  0
@@ -285,6 +285,45 @@ public class IteratedFunctionSystem {
 		return ifs;
 	}
 	
+	/**
+	 * In Apophysis the .flame file transform gives the coeficients in order { {a, c, e}, {b, d, f} } </p>
+	 * 
+	 * xform weight="0.5" color="0" linear="1" coefs="0.51 -0.1 -0.2 0.52 0.53 -0.54" </p>
+	 * xform weight="0.5" color="0" linear="1" coefs="0.5 0 0 0.5 0.5 0"  </p>
+	 * xform weight="0.5" color="0" linear="1" coefs="0.5 0 0 0.5 0 0" </p>
+	 * 
+	 * In the Apophysis editor UI: </p>
+     * Transform 1, L-R, T-B reads a, b, c, d, e, f  </p>
+     * 	X	0.51	0.1 </p>
+     *  Y	0.2		0.52 </p>
+     *  O   0.53	0.54 </p>
+     *  
+	 * @return IteratedFunctionSystem
+	 */
+	public static IteratedFunctionSystem Sierpinski1() {
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
+		
+		double[][] dm1 = { {0.51, -0.2, 0.53}, {-0.1, 0.52, -0.54} };
+		double[][] dm2 = { {.5, 0, .5}, {0, .5, 0} };
+		double[][] dm3 = { {.5, 0, 0}, {0, .5, 0} };
+		double weight = 0.5;
+		LinearFunction f1 = new LinearFunction(dm1);
+		f1.setName("f1");
+		LinearFunction f2 = new LinearFunction(dm2);
+		f2.setName("f2");
+		LinearFunction f3 = new LinearFunction(dm3);
+		f3.setName("f3");
+		
+		Variation v5 = Variation.createNew("spherical", .5);
+		f1.addVariation(v5);
+		
+		ifs.addFunction(f1, weight);
+		ifs.addFunction(f2, weight);
+		ifs.addFunction(f3, weight);
+		
+		return ifs;
+	}
+
 	/**
 	 * Sierpinksi in upper right diagonal of square canvas.
 	 * @return
@@ -443,6 +482,33 @@ public class IteratedFunctionSystem {
 
 	}
 
+	/**
+	 *
+	 * xform weight="0.333333333333333" swirl="0.5" horseshoe="0.5"  coefs="-0.080798 0.525611    0.906202 -0.146845   -0.371499 0.566276"</p>
+	 * xform weight="0.333333333333333" swirl="0.5" cylinder="0.5"   coefs="-0.896688 -0.123683  -0.930711  0.010323   -0.442994 -1.309826" </p>
+     * xform weight="0.333333333333333" sinusoidal="0.5" swirl="0.5" coefs="0.359647 -0.393232    0.544532  0.396986    0.48317 1.394057"</p>
+	 * xform coeficient order is x1, x2, y1, y2, o1, o2 (across rows first) and for some odd reason, x2,y1,o2 are -1*value.</p>
+	 *
+	 * @return IteratedFunctionSystem
+	 */
+	public static IteratedFunctionSystem IFS3() {
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
+		double[][] dm1 = { {0.0, 0.65, 0.85}, {0.646604, 0.009, 0.54} };
+		double[][] dm2 = { {0.576, 0.0, 0.78}, {0.297797, 0.0, 0.244441} };
+		double[][] dm3 = { {.5, 0, 0}, {0, .5, .1} };
+		double[][] dm4 = { {.5, 0, .5}, {0, .5, .5} };
+		double[][] dm5 = { {.5, 0, .25}, {0, .5, 0} };
+
+		LinearFunction f1 = new LinearFunction(dm1);
+		f1.setName("f1");
+		LinearFunction f2 = new LinearFunction(dm2);
+		f2.setName("f2");
+		LinearFunction f3 = new LinearFunction(dm3);
+		f3.setName("f3");
+		
+		return ifs;
+	}
+	
 	/**
 	 * Data set ifs3
 	 * @return

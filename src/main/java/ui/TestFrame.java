@@ -1297,7 +1297,7 @@ public class TestFrame extends javax.swing.JFrame implements IBroadcastClient {
 		int repeats = (param2 == null || param2.length()==0 ) ? 1 : Integer.parseInt(param2);
 
 		// TODO: SET the desired IFS here
-		IteratedFunctionSystem ifs = IteratedFunctionSystem.IFS2();
+		IteratedFunctionSystem ifs = IteratedFunctionSystem.Sierpinski1();
 		
 		ChaosGame game = new ChaosGame(ifs, npoints, repeats);
 		game.setMaxIterations(npoints);

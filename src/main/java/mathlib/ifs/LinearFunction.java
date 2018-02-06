@@ -18,7 +18,7 @@ import mathlib.util.IJson;
   * <b>F<sub>i</sub>(x, y) = V<sub>i</sub>(a<sub>i</sub> x + b<sub>i</sub> y + c<sub>i</sub>, d<sub>i</sub> x + e<sub>i</sub> y + f<sub>i</sub>)</b></p>
  * and is represented internally as a 2 x 3 Matrix:</p>
  * &#9474; a&emsp;b&emsp;c &#9474;<br>
- * &#9474; b&emsp;e&emsp;f&ensp;&#9474;</p>
+ * &#9474; d&emsp;e&emsp;f&ensp;&#9474;</p>
  * 
  * @author don_bacon
  *
