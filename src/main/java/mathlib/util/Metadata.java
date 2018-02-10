@@ -83,7 +83,7 @@ public class Metadata implements IJson {
 		metadata.setDoubleProperty("pi", Double.valueOf(3.14159));
 		metadata.setIntegerProperty("age", 65);
 		metadata.setNumberProperty("maxNumber", Double.MAX_VALUE);
-		String js = metadata.toJSON();
+		String js = metadata.toJson(true);
 		System.out.println(js);
 		
 	}

@@ -2,24 +2,37 @@ package mathlib.util;
 
 import java.io.Serializable;
 
-import org.mongodb.morphia.Morphia;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
- * TODO: refactor the classes implementing this interface to use the Jackson toJson().
- * TODO: remove all Morphia dependencies for JSON.
  * 
  * @author don_bacon
  *
  */
 public interface IJson extends Serializable {
-	static Morphia morphia = new Morphia();
 	static ObjectMapper mapper = new ObjectMapper();
 	
+	@Deprecated
 	default String toJSON() {
-		return morphia.toDBObject(this).toString();
+		return toJson();
+	}
+	
+	default String toJson(boolean pretty) {
+		String result = null;
+		if(pretty) {
+			mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		}
+		mapper.configure(SerializationFeature.INDENT_OUTPUT, pretty);
+		try {
+			result = pretty ? mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this) :
+							  mapper.writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			System.err.println("Cannot serialize because " + e.toString());
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	default String toJson() {

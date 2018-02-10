@@ -157,7 +157,7 @@ public class IteratedFunctionSystem {
 					LinearFunction lf = new LinearFunction(function);
 					lf.setWeight(weight);
 					lf.setName("F"+i);
-					log.debug(lf.toJSON());
+					log.debug(lf.toJson());
 					addFunction(lf);
 				}
 			}
@@ -195,7 +195,7 @@ public class IteratedFunctionSystem {
 		}
 		IteratedFunctionSystem ifs = new IteratedFunctionSystem(filename, flameName);
 		for(LinearFunction lf : ifs.getFunctions()) {
-			System.out.println(lf.toJSON());
+			System.out.println(lf.toJson());
 		}
 	}
 
@@ -397,7 +397,7 @@ public class IteratedFunctionSystem {
 		Variation v1 = Variation.createNew("swirl", .5);
 		Variation v2 = Variation.createNew("horseshoe", .5);
 		Variation v3 = Variation.createNew("cylinder", .5);
-		Variation v4 = Variation.createNew("spiral", .5);
+		//Variation v4 = Variation.createNew("spiral", .5);
 		f1.addVariation(v1).addVariation(v2);
 		f2.addVariation(v1).addVariation(v2);
 		f3.addVariation(v1).addVariation(v3);
@@ -496,8 +496,8 @@ public class IteratedFunctionSystem {
 		double[][] dm1 = { {0.0, 0.65, 0.85}, {0.646604, 0.009, 0.54} };
 		double[][] dm2 = { {0.576, 0.0, 0.78}, {0.297797, 0.0, 0.244441} };
 		double[][] dm3 = { {.5, 0, 0}, {0, .5, .1} };
-		double[][] dm4 = { {.5, 0, .5}, {0, .5, .5} };
-		double[][] dm5 = { {.5, 0, .25}, {0, .5, 0} };
+		//double[][] dm4 = { {.5, 0, .5}, {0, .5, .5} };
+		//double[][] dm5 = { {.5, 0, .25}, {0, .5, 0} };
 
 		LinearFunction f1 = new LinearFunction(dm1);
 		f1.setName("f1");

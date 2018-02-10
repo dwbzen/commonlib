@@ -40,7 +40,7 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 		LinearFunction f1 = new LinearFunction(dm3);
 		f1.setName("f1");
 		System.out.println(f1);
-		System.out.println(f1.toJSON());
+		System.out.println(f1.toJson());
 	}
 	
 	public LinearFunction() {

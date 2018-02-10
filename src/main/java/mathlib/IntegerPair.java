@@ -83,7 +83,7 @@ public class IntegerPair implements IJson {
 	public static void main(String... args) {
 		IntegerPair pair = new IntegerPair(201, 301);
 		// { "className" : "math.IntegerPair" , "x" : 201 , "y" : 301}
-		System.out.println(pair.toJSON());
+		System.out.println(pair.toJson());
 	}
 
 }
