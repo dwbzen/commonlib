@@ -2,7 +2,9 @@ package mathlib;
 
 import java.util.List;
 
-public interface IPoint {
+import mathlib.util.IJson;
+
+public interface IPoint extends IJson {
 	List<Number> getCoordinates();
 	
 }

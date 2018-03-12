@@ -1,7 +1,5 @@
 package junit;
 
-import javax.json.stream.JsonParser;
-
 import junit.framework.TestCase;
 import mathlib.Point2D;
 
@@ -22,30 +20,29 @@ public class JSONParseTest  extends TestCase {
 		point2.setProperty("type", "point");
 		point2.setX( 0.3064109);
 		point2.setY(0.6935743);
-		point2.set_id("ObjectId(\"52b49229e5bb8c8c26bbc603\")");
 	}
 	
 	/**
 	 * {"name": "sierpinski", "type": "point", "Point2D": [ 0.1030576, 0.01955528 ]}
-	 *  { "_id" : "52b49229e5bb8c8c26bbc603", "name" : "ifs1", "type" : "point", "Point2D" : [  0.3064109,  0.6935743 ] }
+	 *  {"name" : "ifs1", "type" : "point", "Point2D" : [  0.3064109,  0.6935743 ] }
 	 */
 	
 	public void testParsePoint2D2() {
-		String jstr1 = point1.toJSON();
+		String jstr1 = point1.toJson();
 		System.out.println(jstr1);
 		
 		Point2D<Number> p2d = Point2D.fromJSONString(jstr1);
 		if(p2d != null) {
-			System.out.println(p2d.toJSON());
+			System.out.println(p2d.toJson());
 		}
 		
 		p2d.setX(2.687086E-4 );
 		p2d.setY(1.829826E-4);
-		String jstr2 = p2d.toJSON();
+		String jstr2 = p2d.toJson();
 		System.out.println(jstr2);
 		Point2D<Number> p2 = Point2D.fromJSONString(jstr2);
 		if(p2 != null) {
-			System.out.println(p2.toJSON());
+			System.out.println(p2.toJson());
 		}
 
 	}

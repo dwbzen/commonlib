@@ -7,22 +7,17 @@ import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Transient;
-import com.mongodb.DBObject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity(value="matrix", noClassnameStored=false)
 public class Matrix<T extends Number> extends AbstractArray<Number> implements Serializable  {
 
 	private static final long serialVersionUID = -212209984266289457L;
-	@Property("rows")	protected int rows = 0;
-	@Property("cols")	protected int columns = 0;
-	@Property("array")	protected List<List<Number>> matrix = null;
+	@JsonProperty("rows")	protected int rows = 0;
+	@JsonProperty("cols")	protected int columns = 0;
+	@JsonProperty("array")	protected List<List<Number>> matrix = null;
 	
-	@Transient	private MathContext mathContext = MathContext.DECIMAL32;	// the default
-	@Transient	private Morphia morphia = null;
+	@JsonIgnore	private MathContext mathContext = MathContext.DECIMAL32;	// the default
 	
 	public static void main(String[] args) {
 		Matrix<BigDecimal> matrix = new Matrix<BigDecimal>(3, 4, "A");
@@ -187,11 +182,7 @@ public class Matrix<T extends Number> extends AbstractArray<Number> implements S
 	}
 	
 	public String toJSON() {
-		if(morphia == null) {
-			morphia = new Morphia();
-		}
-		DBObject dbo = morphia.toDBObject(this);
-		return dbo.toString();
+		return toJson();
 	}
 	
 	public String toString() {

@@ -1,15 +1,19 @@
 package mathlib;
 
-import org.mongodb.morphia.annotations.Property;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public abstract class AbstractArray<T extends Number> {
+import mathlib.util.IJson;
+
+public abstract class AbstractArray<T extends Number> implements IJson {
 	
+	private static final long serialVersionUID = -5630583197997148925L;
+
 	public AbstractArray() {
 	}
 	
-	@Property	protected String _id;		// optional ID - 24 char hex string
-	@Property	protected int rank = 2;
-	@Property	private String name;	// optional name used for display, maps etc.
+	@JsonProperty	protected String _id;		// optional ID
+	@JsonProperty	protected int rank = 2;
+	@JsonProperty	private String name;		// optional name used for display, maps etc.
 	
 	public String getName() {
 		return name;

@@ -3,14 +3,15 @@ package mathlib;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Property;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * 
@@ -23,15 +24,15 @@ import org.mongodb.morphia.annotations.Property;
  * 
  * @param <T>
  */
-@Entity(value="point2D", noClassnameStored=true)
-public class Point2D<T extends Number>  extends JSONObject implements IPoint, Comparable<Point2D<T>>  {
+public class Point2D<T extends Number>  implements IPoint, Comparable<Point2D<T>>  {
 
 	private static final long serialVersionUID = 7492212210472351442L;
 	protected static final Logger log = LogManager.getLogger(Point2D.class);
 	public static String OBJECT_TYPE = "point";
 			
-	@Property("x")	private Number x = BigDecimal.ZERO;
-	@Property("y")	private Number y = BigDecimal.ZERO;
+	@JsonProperty("x")	private Number x = BigDecimal.ZERO;
+	@JsonProperty("y")	private Number y = BigDecimal.ZERO;
+	@JsonProperty		protected Map<String, String> properties = new HashMap<String, String>();
 
 	static MathContext mathContext = MathContext.DECIMAL32;
 	
@@ -44,7 +45,7 @@ public class Point2D<T extends Number>  extends JSONObject implements IPoint, Co
 	}
 	
 	public Point2D() {
-		setProperty(TYPE, OBJECT_TYPE);
+		properties.put("type", OBJECT_TYPE);
 	}
 	
 	public Point2D(Number x, Number y) {
@@ -86,15 +87,7 @@ public class Point2D<T extends Number>  extends JSONObject implements IPoint, Co
 		String[] fv = valueString.split(":");
 		String fname = fv[0];
 		String fval = (fv.length == 2) ? fv[1]  : "{" + fv[1] + ":" + fv[2] + "}";
-		if(fname.equalsIgnoreCase("name")) {
-			ps.setName(fval);
-		}
-		else if(fname.equalsIgnoreCase("_id")) {
-			ps.set_id(fval);
-		}
-		else if(fname.equalsIgnoreCase("type")) {
-			ps.setType(fval);
-		}
+		ps.getProperties().put(fname, fval);
 	}
 
 	public Number getX() {
@@ -110,25 +103,16 @@ public class Point2D<T extends Number>  extends JSONObject implements IPoint, Co
 		this.y = y;
 	}
 	
-	public String toString() {
-		return "[ " + x + ", " + y + " ]";
+	public Map<String, String> getProperties() {
+		return properties;
 	}
 	
-	public String toJSON() {
-		StringBuffer jsonstr = new StringBuffer("{");
-		String name = getProperty(NAME);
-		String type = getProperty(TYPE);
-		if(_id != null) {
-			jsonstr.append(quote("_id", _id)).append(", ");
-		}
-		if(name != null){
-			jsonstr.append(quote("name" ,name)).append(", ");
-		}
-		if(type != null) {
-			jsonstr.append(quote("type", type)).append(", ");
-		}
-		jsonstr.append(quote("Point2D")).append(": ").append(toString()).append("}");
-		return jsonstr.toString();
+	public void setProperty(String key, String value) {
+		properties.put(key, value);
+	}
+	
+	public String toString() {
+		return "[ " + x + ", " + y + " ]";
 	}
 	
 	public String toJSON(String nameLabel, String nameValue, String type) {
@@ -152,7 +136,7 @@ public class Point2D<T extends Number>  extends JSONObject implements IPoint, Co
 				log.debug("group: " + i + "= " + m.group(i));
 				Point2D.addFieldValue(point, m.group(i));
 			}
-			log.debug("point: " + point.toJSON());
+			log.debug("point: " + point.toJson());
 		}
 		return point;
 	}

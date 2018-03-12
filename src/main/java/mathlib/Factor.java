@@ -18,7 +18,6 @@ import java.util.List;
 public class Factor implements Serializable {
 
 	private static final long serialVersionUID = 2788855972961763480L;
-	private static final int[] factorPowers = {1, 0, -1, -2, -3, -4, -5, -6};
 	private static MathContext mathContext = new MathContext(4);	// 4-places rounding half-up
 	private List<Integer> factors = null;
 	private int dots = 0;

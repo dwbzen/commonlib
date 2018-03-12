@@ -13,7 +13,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  */
 public interface IJson extends Serializable {
 	static ObjectMapper mapper = new ObjectMapper();
-	
+	static final String QUOTE = "\"";
+
 	@Deprecated
 	default String toJSON() {
 		return toJson();
@@ -44,5 +45,18 @@ public interface IJson extends Serializable {
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	default String quote(String key, String val) {
+		return QUOTE.concat(key).concat(QUOTE).concat(": ").concat(QUOTE).concat(val).concat(QUOTE);
+	}
+	default String quote(String key, int val) {
+		return QUOTE.concat(key).concat(QUOTE).concat(": ").concat(String.valueOf(val));
+	}
+	default String quote(String key, Double val) {
+		return QUOTE.concat(key).concat(QUOTE).concat(": ").concat(String.valueOf(val));
+	}
+	default String quote(String s) {
+		return QUOTE.concat(s).concat(QUOTE);
 	}
 }
