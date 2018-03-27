@@ -76,10 +76,6 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 	public Point3D(double x, double y, double z) {
 		this(new BigDecimal(x, mathContext), new BigDecimal(y, mathContext), new BigDecimal(z, mathContext));
 	}
-
-	public Point3D(int x, int y, int z) {
-		this(new Integer(x), new Integer(y), new Integer(z));
-	}
 	
 	public Point3D(Point2D<Number> p) {
 		this(p.getX().doubleValue(), p.getY().doubleValue(), 0.0);
@@ -183,9 +179,9 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 		String[] raw = s.split(":");
 		Matcher m = DECIMAL_REGEX.matcher(raw[raw.length-1]);
 		if(m.matches() &&  m.groupCount()==3) {
-			x=new Double(Double.parseDouble(m.group(1)));
-			y=new Double(Double.parseDouble(m.group(2)));
-			z=new Double(Double.parseDouble(m.group(3)));
+			x=Double.parseDouble(m.group(1));
+			y=Double.parseDouble(m.group(2));
+			z=Double.parseDouble(m.group(3));
 		}
 		else {
 			throw new NumberFormatException("Unknown format " +s );

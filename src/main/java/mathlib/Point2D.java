@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  * @param <T>
  */
-public class Point2D<T extends Number>  implements IPoint, Comparable<Point2D<T>>  {
+public class Point2D<T extends Number> extends JSONObject  implements IPoint, Comparable<Point2D<T>>  {
 
 	private static final long serialVersionUID = 7492212210472351442L;
 	protected static final Logger log = LogManager.getLogger(Point2D.class);
@@ -60,8 +60,8 @@ public class Point2D<T extends Number>  implements IPoint, Comparable<Point2D<T>
 	}
 	public Point2D(int x, int y) {
 		this();
-		this.x = new Integer(x);
-		this.y = new Integer(y);
+		this.x = x;
+		this.y = y;
 	}
 	public Point2D(Point2D<BigDecimal> p) {
 		this(p.x.doubleValue(), p.y.doubleValue());
@@ -75,8 +75,8 @@ public class Point2D<T extends Number>  implements IPoint, Comparable<Point2D<T>
 		String[] raw = s.split(":");
 		Matcher m = DECIMAL_REGEX.matcher(raw[raw.length-1]);
 		if(m.matches() &&  m.groupCount()==2) {
-			x=new Double(Double.parseDouble(m.group(1)));
-			y=new Double(Double.parseDouble(m.group(2)));
+			x= Double.parseDouble(m.group(1));
+			y= Double.parseDouble(m.group(2));
 		}
 		else {
 			throw new NumberFormatException("Unknown format " +s );

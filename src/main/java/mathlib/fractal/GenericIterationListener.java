@@ -23,7 +23,7 @@ public class GenericIterationListener implements IterationListener, IBroadcastSe
 	private BroadcastEvent completeEvent = new BroadcastEvent(BroadcastEvent.EVENT_TYPE.IterationComplete);
 	
 	public int afterIterations(Object obj) {
-		completeEvent.setNumberPayload(new Long(iterations));
+		completeEvent.setNumberPayload( iterations);
 		completeEvent.setObjectPayload(obj);
 		broadcast(completeEvent);
 		return iterations;

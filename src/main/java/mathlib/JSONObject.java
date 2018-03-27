@@ -1,9 +1,14 @@
 package mathlib;
 
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.json.Json;
+import javax.json.stream.JsonParser;
+import javax.json.stream.JsonParser.Event;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +38,6 @@ public abstract class JSONObject implements IJson  {
 	@JsonProperty	protected String _id;		// optional ID
 	@JsonProperty	protected Map<String, String> properties = new HashMap<String, String>();
 	
-	public abstract String toJSON();
 	public abstract String toString();
 	
 	/**
@@ -62,7 +66,48 @@ public abstract class JSONObject implements IJson  {
 		return ts.length==2 ? ts[1] : UNKNOWN;
 	}
 
-	
+    public static JSONObject analyzeMessage(String messageText) {
+        String type = JSONObject.getType(messageText);
+        JSONObject obj = null;
+          log.trace("process :" + messageText + "\n " + type);
+          if(type.equals("message")) {
+              obj = CommandMessage.fromJSONString(messageText);
+          }
+          else if(type.equals("point")) {
+              obj = Point2D.fromJSONString(messageText);
+          }
+          else if(type.equals("stats")) {
+              obj = PointSet.fromJSONString(messageText);
+          }
+          else if(type.equalsIgnoreCase(JSONObject.UNKNOWN)) {
+              log.error("JSONObject: Unknown message type: " + messageText);
+              obj = BaseJSONObject.fromJSONString(messageText);
+          }
+          return obj;
+   }
+   
+   public static void parseJSONMessage(String messageText) {
+        JsonParser parser = Json.createParser(new StringReader(messageText));
+        String eventType;
+        Event event = null;
+        String keyName;
+        String valueString;
+        while(parser.hasNext()) {
+            event = parser.next();
+            eventType = event.toString();
+            System.out.println(event.toString());
+            if(eventType.equals("KEY_NAME")) {
+                keyName = parser.getString();
+                System.out.println("   " + keyName);
+            }
+            else if(eventType.equals("VALUE_STRING")) {
+                valueString = parser.getString();
+                System.out.println("   " + valueString);
+            }
+        }
+        parser.close();
+   }
+
 	/**
 	 * Represents properties as JSON string.
 	 * Key names are quoted as are key values.
@@ -107,11 +152,4 @@ public abstract class JSONObject implements IJson  {
 		properties.put(key, value);
 	}
 	
-	/**
-	 * Test of the different message types
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-	}
 }

@@ -110,9 +110,10 @@ public class ChaosGame implements IPointProducer {
 		this.repeats = repeats;
 	}
 	/**
-	 * Usage: ChaosGame [-n num] [-name datasetname] [-start text] [-trailing text] > filename.json
+	 * Usage: ChaosGame [-n num] [-name datasetname] [-ifs ifsname] [-start text] [-trailing text] > filename.json
 	 * where num is #iterations (defaults to 10000)
 	 * -start "START" -trailing "SHUTDOWN" is also default if not specified
+	 * ifsname is the name of one of the builtin IteratedFunctionSystems 
 	 * 
 	 * Outputs JSON format suitable for importing into MongoDB
 	 * Example 1:
@@ -141,7 +142,7 @@ public class ChaosGame implements IPointProducer {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int niterations = 100000;
+		int niterations = 10000;
 		int nrepeats = 1;
 		String dataSetName = "ifs1";
 		String trailingMessage = "SHUTDOWN";

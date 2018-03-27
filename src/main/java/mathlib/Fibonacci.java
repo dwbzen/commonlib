@@ -36,8 +36,8 @@ public class Fibonacci<T extends Number> implements ISequence<T> {
 	
 	public void createSeries(int f0,int f1, int len) {
 		intSeries = new ArrayList<Long>();
-		intSeries.add(new Long(f0));
-		intSeries.add(new Long(f1));
+		intSeries.add((long)f0);
+		intSeries.add((long)f1);
 		for(int i=2; i<len; i++) {
 			intSeries.add(intSeries.get(i-1) + intSeries.get(i-2));
 		}
