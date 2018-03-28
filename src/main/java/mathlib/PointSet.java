@@ -236,8 +236,8 @@ public class PointSet<T extends Number>  extends JSONObject {
 			jsonstr.append(quote("LinearFunction", linearFunction)).append(", ");
 		}
 		jsonstr.append(getJSONProperties()  + ", ");
-		if(_id != null) {
-			jsonstr.append( quote("_id:", _id)).append(", ");
+		if(get_id() != null) {
+			jsonstr.append( quote("_id:", get_id())).append(", ");
 		}
 		
 		jsonstr.append(quote("n", n)).append(", ");

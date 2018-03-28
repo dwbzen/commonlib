@@ -129,8 +129,9 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 		StringBuffer jsonstr = new StringBuffer("{");
 		String name = getProperty(NAME);
 		String type = getProperty(TYPE);
-		if(_id != null) {
-			jsonstr.append(quote("_id", _id)).append(",");
+		String id = get_id();
+		if(id != null) {
+			jsonstr.append(quote("_id", id)).append(",");
 		}
 		if(name != null){
 			jsonstr.append(quote("name" ,name)).append(",");

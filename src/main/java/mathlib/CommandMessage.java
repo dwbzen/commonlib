@@ -92,9 +92,9 @@ public class CommandMessage extends JSONObject {
 		StringBuffer jsonstr = new StringBuffer("{");
 		String name = getProperty(NAME);
 		String type = getProperty(TYPE);
-
-		if(_id != null) {
-			jsonstr.append("\"_id\": " + _id + ",");
+		String id = get_id();
+		if(id != null) {
+			jsonstr.append("\"_id\": " + id + ",");
 		}
 		if(name != null){
 			jsonstr.append("\"name\": \"" + name + "\",");

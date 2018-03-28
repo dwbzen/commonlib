@@ -35,8 +35,8 @@ public abstract class JSONObject implements IJson  {
 	public static final String TYPE = "type";	// Property
 	static final String QUOTE = "\"";
 	
-	@JsonProperty	protected String _id;		// optional ID
-	@JsonProperty	protected Map<String, String> properties = new HashMap<String, String>();
+	@JsonProperty	private String _id;		// optional ID
+	@JsonProperty	private Map<String, String> properties = new HashMap<String, String>();
 	
 	public abstract String toString();
 	
@@ -150,6 +150,10 @@ public abstract class JSONObject implements IJson  {
 	
 	public void setProperty(String key, String value) {
 		properties.put(key, value);
+	}
+	
+	protected Map<String, String> getProperties() {
+		return properties;
 	}
 	
 }

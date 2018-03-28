@@ -3,14 +3,13 @@ package mathlib;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -32,7 +31,6 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 			
 	@JsonProperty("x")	private Number x = BigDecimal.ZERO;
 	@JsonProperty("y")	private Number y = BigDecimal.ZERO;
-	@JsonProperty		protected Map<String, String> properties = new HashMap<String, String>();
 
 	static MathContext mathContext = MathContext.DECIMAL32;
 	
@@ -45,7 +43,7 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 	}
 	
 	public Point2D() {
-		properties.put("type", OBJECT_TYPE);
+		setProperty("type", OBJECT_TYPE);
 	}
 	
 	public Point2D(Number x, Number y) {
@@ -101,14 +99,6 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 	}
 	public void setY(Number y) {
 		this.y = y;
-	}
-	
-	public Map<String, String> getProperties() {
-		return properties;
-	}
-	
-	public void setProperty(String key, String value) {
-		properties.put(key, value);
 	}
 	
 	public String toString() {
