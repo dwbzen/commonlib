@@ -31,7 +31,7 @@ public class MarkovChain<K, T extends List<K>> extends CollectorStatsMap<K,T> im
 
 	private static final long serialVersionUID = 8849870001304925919L;
 	
-	@JsonProperty	private String name = NAME;		// storage key
+	@JsonProperty	private String name = DEFAULT_NAME;		// storage key
 	@JsonProperty	private int order;
 	
 	static String COMMA_SPACE = ", ";
@@ -74,7 +74,7 @@ public class MarkovChain<K, T extends List<K>> extends CollectorStatsMap<K,T> im
 	 * 
 	 * 
 	 */
-	public String toJSON() {
+	public String toJson() {
 		return toJson();
 	}
 

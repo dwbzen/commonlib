@@ -123,7 +123,7 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 	 *
 	 * @return JSON String
 	 */
-	public String toJSON() {
+	public String toJson() {
 		return toJson();
 	}
 	

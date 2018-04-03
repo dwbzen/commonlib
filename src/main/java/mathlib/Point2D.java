@@ -107,15 +107,15 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 	
 	public String toJSON(String nameLabel, String nameValue, String type) {
 		StringBuffer jsonstr = new StringBuffer("{");
-		jsonstr.append( quote(nameLabel, nameValue));
+		jsonstr.append( quoteString(nameLabel, nameValue));
 		if(type != null && type.length()>0) {
-			jsonstr.append(", ").append(quote("type", type));
+			jsonstr.append(", ").append(quoteString("type", type));
 		}
-		jsonstr.append(", ").append(quote("Point2D")).append(": ").append(toString()).append("}");
+		jsonstr.append(", ").append(quoteString("Point2D")).append(": ").append(toString()).append("}");
 		return jsonstr.toString();
 	}
 
-	public static Point2D<Number>  fromJSONString(String jsonstr) {
+	public static Point2D<Number>  fromJson(String jsonstr) {
 		String raw = jsonstr.replaceAll("[\"\\s{}]", "");	// deletes spaces, curly braces and quotes
 		Matcher m = JSON_REGEX.matcher(raw);
 		Point2D<Number> point = null;
@@ -170,7 +170,7 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 	}
 	
 	public boolean equals(Point2D<T> other) {
-		return other.getX().equals(this.getX()) & other.getY().equals(this.getY());
+		return other.getX().equals(this.getX()) && other.getY().equals(this.getY());
 	}
 
 	@Override

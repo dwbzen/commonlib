@@ -42,8 +42,8 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 	public static void main(String[] args) {
 		if(args.length > 0) {
 			// assumes a JSON point from MongoDB
-			Point3D<Double> point = Point3D.fromJSON(args[0]);
-			System.out.println("point: " + point.toJSON());
+			Point3D<Double> point = Point3D.fromJson(args[0]);
+			System.out.println("point: " + point.toJson());
 			
 		}
 
@@ -116,8 +116,8 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 
 	
 	public boolean equals(Point3D<T> other) {
-		return other.getX().equals(this.getX()) & 
-			   other.getY().equals(this.getY()) &
+		return other.getX().equals(this.getX()) && 
+			   other.getY().equals(this.getY()) &&
 			   other.getZ().equals(this.getZ());
 	}
 	
@@ -125,35 +125,36 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 		return "[ " + x + ", " + y + ", " + z + " ]";
 	}
 	
-	public String toJSON() {
+	@Override
+	public String toJson() {
 		StringBuffer jsonstr = new StringBuffer("{");
 		String name = getProperty(NAME);
 		String type = getProperty(TYPE);
-		String id = get_id();
+		String id = getId();
 		if(id != null) {
-			jsonstr.append(quote("_id", id)).append(",");
+			jsonstr.append(quoteString("_id", id)).append(",");
 		}
 		if(name != null){
-			jsonstr.append(quote("name" ,name)).append(",");
+			jsonstr.append(quoteString("name" ,name)).append(",");
 		}
 		if(type != null) {
-			jsonstr.append(quote("type", type)).append(",");
+			jsonstr.append(quoteString("type", type)).append(",");
 		}
-		jsonstr.append(quote("Point3D")).append(": ").append(toString()).append("}");
+		jsonstr.append(quoteString("Point3D")).append(": ").append(toString()).append("}");
 		return jsonstr.toString();
 	}
 	
-	public String toJSON(String nameLabel, String nameValue, String type) {
+	public String toJson(String nameLabel, String nameValue, String type) {
 		StringBuffer jsonstr = new StringBuffer("{");
-		jsonstr.append( quote(nameLabel, nameValue));
+		jsonstr.append( quoteString(nameLabel, nameValue));
 		if(type != null && type.length()>0) {
-			jsonstr.append(", ").append(quote("type", type));
+			jsonstr.append(", ").append(quoteString("type", type));
 		}
-		jsonstr.append(", ").append(quote("Point3D")).append(": ").append(toString()).append("}");
+		jsonstr.append(", ").append(quoteString("Point3D")).append(": ").append(toString()).append("}");
 		return jsonstr.toString();
 	}
 
-	public static Point3D<Double> fromJSON(String jsonstr) {
+	public static Point3D<Double> fromJson(String jsonstr) {
 		String raw = jsonstr.replaceAll("[\"\\s{}]", "");	// deletes spaces, curly braces and quotes
 		Point3D<Double> point = null;
 		Pattern pat = JSON_REGEX;
@@ -166,7 +167,7 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 				log.debug("group: " + i + "= " + m.group(i));
 				Point3D.addFieldValue(point, m.group(i));
 			}
-			log.debug("point: " + point.toJSON());
+			log.debug("point: " + point.toJson());
 		}
 		return point;
 	}
@@ -197,7 +198,7 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 			ps.setName(fval);
 		}
 		else if(fname.equalsIgnoreCase("_id")) {
-			ps.set_id(fval);
+			ps.setId(fval);
 		}
 		else if(fname.equalsIgnoreCase("type")) {
 			ps.setType(fval);

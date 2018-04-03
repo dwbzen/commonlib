@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public interface INameable extends Serializable {
 	
-	public static final String NAME = "name";
+	public static final String DEFAULT_NAME = "name";
 	
 	void setName(String name);
 	String getName();

@@ -76,7 +76,7 @@ public class IntegerPair implements IJson {
 	
 
 	@Override
-	public String toJSON() {
+	public String toJson() {
 		return toJson();
 	}
 	

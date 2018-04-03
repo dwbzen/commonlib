@@ -24,10 +24,10 @@ public class BaseJSONObject extends JSONObject {
 		if(args.length >= 0) {
 			String sample = " { \"_id\" : ObjectId(\"52b30e7eba2912447205bd4e\"), \"name\" : \"ifs2\", \"type\" : \"unknown\" }";
 			BaseJSONObject cm = BaseJSONObject.fromJSONString(sample);
-			System.out.println(cm.toJSON());
+			System.out.println(cm.toJson());
 			sample = " { \"_id\" :  { \"$oid\" : \"52e331a8781aae933310ea29\"}, \"name\" : \"ifs2\", \"type\" : \"unknown\" }";
 			cm = BaseJSONObject.fromJSONString(sample);
-			System.out.println(cm.toJSON());
+			System.out.println(cm.toJson());
 			
 		}
 	}
@@ -63,7 +63,7 @@ public class BaseJSONObject extends JSONObject {
 			cm.setName(fval);
 		}
 		else if(fname.equalsIgnoreCase("_id")) {
-			cm.set_id(fval);
+			cm.setId(fval);
 		}
 		else if(fname.equalsIgnoreCase("type")) {
 			cm.setType(fval);
@@ -71,11 +71,11 @@ public class BaseJSONObject extends JSONObject {
 	}
 	
 	@Override
-	public String toJSON() {
+	public String toJson() {
 		StringBuffer jsonstr = new StringBuffer("{");
 		String name = getProperty(NAME);
 		String type = getProperty(TYPE);
-		String id = get_id();
+		String id = getId();
 		if(id != null) {
 			jsonstr.append("_id:" + id + ",");
 		}
@@ -91,7 +91,7 @@ public class BaseJSONObject extends JSONObject {
 	
 	@Override
 	public String toString() {
-		return toJSON();
+		return toJson();
 	}
 
 }

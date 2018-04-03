@@ -22,7 +22,6 @@ public class EisensteinInteger extends Complex {
 	
 	private double a;
 	private double b;
-	private Complex omega = new Complex(OMEGA);
 	
 	public EisensteinInteger(int a, int b) {
 		super(a-0.5*b, b*0.86602540378443864676372317075294);
@@ -47,11 +46,7 @@ public class EisensteinInteger extends Complex {
 	}
 
 	public Complex getOmega() {
-		return omega;
-	}
-
-	public void setOmega(Complex omega) {
-		this.omega = omega;
+		return OMEGA;
 	}
 
 }

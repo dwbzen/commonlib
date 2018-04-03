@@ -13,9 +13,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Matrix<T extends Number> extends AbstractArray<Number> implements Serializable  {
 
 	private static final long serialVersionUID = -212209984266289457L;
-	@JsonProperty("rows")	protected int rows = 0;
-	@JsonProperty("cols")	protected int columns = 0;
-	@JsonProperty("array")	protected List<List<Number>> matrix = null;
+	@JsonProperty("rows")	private int rows = 0;
+	@JsonProperty("cols")	private int columns = 0;
+	@JsonProperty("array")	private List<List<Number>> array = null;
 	
 	@JsonIgnore	private MathContext mathContext = MathContext.DECIMAL32;	// the default
 	
@@ -32,7 +32,7 @@ public class Matrix<T extends Number> extends AbstractArray<Number> implements S
 		prod.setName("AxB");
 		System.out.println(prod);
 
-		System.out.println(prod.toJSON());
+		System.out.println(prod.toJson());
 	}
 	
 	public Matrix() {
@@ -50,17 +50,17 @@ public class Matrix<T extends Number> extends AbstractArray<Number> implements S
 	}
 	public Matrix(int ncols) {
 		columns = ncols;
-		matrix = new ArrayList<List<Number>>();
+		array = new ArrayList<List<Number>>();
 	}
 	
 	public Matrix(Matrix<? extends Number> other) {
 		rows = other.rows;
 		columns = other.columns;
-		matrix = new ArrayList<List<Number>>();
+		array = new ArrayList<List<Number>>();
 		for(int i=0; i<rows; i++) {
 			ArrayList<Number> arow = new ArrayList<Number>();
 			for(int j=0; j<columns; j++) { arow.add(other.index(i, j)); }
-			matrix.add(arow);
+			array.add(arow);
 		}		
 	}
 	
@@ -120,7 +120,7 @@ public class Matrix<T extends Number> extends AbstractArray<Number> implements S
 	
 	public void fill(Number n) {
 		for(int r=0; r<rows; r++) {
-			List<Number> row = matrix.get(r);
+			List<Number> row = array.get(r);
 			for(int c=0; c<columns; c++) {
 				Number bd = new BigDecimal(n.doubleValue(), mathContext);
 				row.set(c, bd);
@@ -132,7 +132,7 @@ public class Matrix<T extends Number> extends AbstractArray<Number> implements S
 	}
 	public void fill() {
 		for(int r=0; r<rows; r++) {
-			List<Number> row = matrix.get(r);
+			List<Number> row = array.get(r);
 			for(int c=0; c<columns; c++) {
 				Number bd = new BigDecimal(c + r*columns, mathContext);
 				row.set(c, bd);
@@ -140,24 +140,24 @@ public class Matrix<T extends Number> extends AbstractArray<Number> implements S
 		}	
 	}
 	protected void createNew() {
-		matrix = new ArrayList<List<Number>>();
+		array = new ArrayList<List<Number>>();
 		for(int r=0; r<rows; r++) {
 			ArrayList<Number> arow = new ArrayList<Number>();
 			for(int c=0; c<columns; c++) { arow.add(BigInteger.ZERO); }
-			matrix.add(arow);
+			array.add(arow);
 		}
 	}
 	
 	public List<Number> column(int columnNumber) {
 		List<Number> column = new ArrayList<Number>();
 		for(int i=0;i<rows; i++) {
-			column.add(matrix.get(i).get(columnNumber));
+			column.add(array.get(i).get(columnNumber));
 		}
 		return column;
 	}
 	
 	public List<Number> row(int rowNumber) {
-		return matrix.get(rowNumber);
+		return array.get(rowNumber);
 	}
 	
 	/**
@@ -177,19 +177,16 @@ public class Matrix<T extends Number> extends AbstractArray<Number> implements S
 	public void addRow(double[] drow) {
 		List<Number> rlist = new ArrayList<Number>();
 		for(int i=0; i<drow.length;i++) { rlist.add(new BigDecimal(drow[i], mathContext)); }
-		matrix.add(rlist);
+		array.add(rlist);
 		rows++;
 	}
 	
-	public String toJSON() {
-		return toJson();
-	}
-	
+	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer("{");
 		for(int r=0; r<rows; r++) {
 			sb.append( " [ ");
-			List<Number> row = matrix.get(r);
+			List<Number> row = array.get(r);
 			for(int c=0; c<columns; c++) {
 				sb.append(row.get(c));
 				if(c+1 < columns) {
@@ -220,7 +217,7 @@ public class Matrix<T extends Number> extends AbstractArray<Number> implements S
 		}
 		Matrix<Number> result = new Matrix<Number>(rows, other.columns);
 		for(int tr = 0; tr<rows; tr++) {
-			List<Number> trow = matrix.get(tr);
+			List<Number> trow = array.get(tr);
 			for(int ocol=0; ocol<other.columns; ocol++) {
 				
 				double sum = 0;

@@ -26,14 +26,14 @@ public class CommandMessage extends JSONObject {
 		if(args.length >= 0) {
 			String sample = " {\"name\" : \"ifs2\", \"type\" : \"message\", \"command\" : \"SHUTDOWN\" }";
 			CommandMessage cm = CommandMessage.fromJSONString(sample);
-			System.out.println(cm.toJSON());
+			System.out.println(cm.toJson());
 			
 			String sample2 = " {\"name\" : \"ifs2\", \"type\" : \"message\", \"command\" : \"START\" }";
 			cm = CommandMessage.fromJSONString(sample2);
-			System.out.println(cm.toJSON());
+			System.out.println(cm.toJson());
 
 			CommandMessage cmShutdown = new CommandMessage("test", "SHUTDOWN");
-			System.out.println(cmShutdown.toJSON());
+			System.out.println(cmShutdown.toJson());
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class CommandMessage extends JSONObject {
 			cm.setName(fval);
 		}
 		else if(fname.equalsIgnoreCase("_id")) {
-			cm.set_id(fval);
+			cm.setId(fval);
 		}
 		else if(fname.equalsIgnoreCase("type")) {
 			cm.setType(fval);
@@ -88,11 +88,11 @@ public class CommandMessage extends JSONObject {
 	}
 	
 	@Override
-	public String toJSON() {
+	public String toJson() {
 		StringBuffer jsonstr = new StringBuffer("{");
 		String name = getProperty(NAME);
 		String type = getProperty(TYPE);
-		String id = get_id();
+		String id = getId();
 		if(id != null) {
 			jsonstr.append("\"_id\": " + id + ",");
 		}
@@ -109,7 +109,7 @@ public class CommandMessage extends JSONObject {
 	
 	@Override
 	public String toString() {
-		return toJSON();
+		return toJson();
 	}
 
 }

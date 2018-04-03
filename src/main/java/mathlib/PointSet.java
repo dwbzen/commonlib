@@ -104,7 +104,7 @@ public class PointSet<T extends Number>  extends JSONObject {
 			ps.setName(fval);
 		}
 		else if(fname.equalsIgnoreCase("_id")) {
-			ps.set_id(fval);
+			ps.setId(fval);
 		}
 		else if(fname.equals("LinearFunction")) {
 			ps.setLinearFunction(valueString.substring(valueString.indexOf(":") + 1));
@@ -230,29 +230,29 @@ public class PointSet<T extends Number>  extends JSONObject {
 	}
 
 	@Override
-	public String toJSON() {
+	public String toJson() {
 		StringBuffer jsonstr = new StringBuffer("{ ");
 		if(linearFunction != null) {
-			jsonstr.append(quote("LinearFunction", linearFunction)).append(", ");
+			jsonstr.append(quoteString("LinearFunction", linearFunction)).append(", ");
 		}
 		jsonstr.append(getJSONProperties()  + ", ");
-		if(get_id() != null) {
-			jsonstr.append( quote("_id:", get_id())).append(", ");
+		if(getId() != null) {
+			jsonstr.append( quoteString("_id:", getId())).append(", ");
 		}
 		
-		jsonstr.append(quote("n", n)).append(", ");
-		jsonstr.append(quote("minX", minXValue)).append(", ");
-		jsonstr.append(quote("minY", minYValue)).append(", ");
-		jsonstr.append(quote("maxX", maxXValue )).append(", ");
-		jsonstr.append(quote("maxY", maxYValue)).append(", ");
-		jsonstr.append(quote("minPoint")).append(":").append(minPoint.toString()).append("," );
-		jsonstr.append(quote("maxPoint")).append(":").append(maxPoint.toString()).append(" }" );
+		jsonstr.append(quoteString("n", n)).append(", ");
+		jsonstr.append(quoteString("minX", minXValue)).append(", ");
+		jsonstr.append(quoteString("minY", minYValue)).append(", ");
+		jsonstr.append(quoteString("maxX", maxXValue )).append(", ");
+		jsonstr.append(quoteString("maxY", maxYValue)).append(", ");
+		jsonstr.append(quoteString("minPoint")).append(":").append(minPoint.toString()).append("," );
+		jsonstr.append(quoteString("maxPoint")).append(":").append(maxPoint.toString()).append(" }" );
 		return jsonstr.toString();
 	}
 	
 	@Override
 	public String toString() {
-		return toJSON();
+		return toJson();
 	}
 	
 }

@@ -1,14 +1,9 @@
 package mathlib;
 
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.json.Json;
-import javax.json.stream.JsonParser;
-import javax.json.stream.JsonParser.Event;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,8 +30,8 @@ public abstract class JSONObject implements IJson  {
 	public static final String TYPE = "type";	// Property
 	static final String QUOTE = "\"";
 	
-	@JsonProperty	private String _id;		// optional ID
-	@JsonProperty	private Map<String, String> properties = new HashMap<String, String>();
+	@JsonProperty	private String id;		// optional ID
+	@JsonProperty	private Map<String, String> properties = new HashMap<>();
 	
 	public abstract String toString();
 	
@@ -74,7 +69,7 @@ public abstract class JSONObject implements IJson  {
               obj = CommandMessage.fromJSONString(messageText);
           }
           else if(type.equals("point")) {
-              obj = Point2D.fromJSONString(messageText);
+              obj = Point2D.fromJson(messageText);
           }
           else if(type.equals("stats")) {
               obj = PointSet.fromJSONString(messageText);
@@ -84,28 +79,6 @@ public abstract class JSONObject implements IJson  {
               obj = BaseJSONObject.fromJSONString(messageText);
           }
           return obj;
-   }
-   
-   public static void parseJSONMessage(String messageText) {
-        JsonParser parser = Json.createParser(new StringReader(messageText));
-        String eventType;
-        Event event = null;
-        String keyName;
-        String valueString;
-        while(parser.hasNext()) {
-            event = parser.next();
-            eventType = event.toString();
-            System.out.println(event.toString());
-            if(eventType.equals("KEY_NAME")) {
-                keyName = parser.getString();
-                System.out.println("   " + keyName);
-            }
-            else if(eventType.equals("VALUE_STRING")) {
-                valueString = parser.getString();
-                System.out.println("   " + valueString);
-            }
-        }
-        parser.close();
    }
 
 	/**
@@ -118,18 +91,21 @@ public abstract class JSONObject implements IJson  {
 	public String getJSONProperties() {
 		StringBuffer sb = new StringBuffer();
 		for(String key : properties.keySet()) {
-			sb.append(quote(key,  properties.get(key)));
+			sb.append(quoteString(key,  properties.get(key)));
 			sb.append(",");
 		}
 		return sb.deleteCharAt(sb.length()-1).toString();
 	}
 	
-	public String get_id() {
-		return _id;
+
+	public String getId() {
+		return id;
 	}
-	public void set_id(String _id) {
-		this._id = _id;
+
+	public void setId(String id) {
+		this.id = id;
 	}
+
 	public String getName() {
 		return properties.get(NAME);
 	}

@@ -248,15 +248,15 @@ public class ChaosGame implements IPointProducer {
 			cmtrailing = new CommandMessage(dataSetName, trailingMessage);
 		}
 		if(startMessage != null) {
-			System.out.println(cmstart.toJSON());
+			System.out.println(cmstart.toJson());
 		}
-		System.out.println(points.toJSON());
+		System.out.println(points.toJson());
 				
 		for(Point2D<Number> point : points.getPoints()) {
 			 System.out.println(point.toJSON("name", dataSetName, "point"));
 		}
 		if(trailingMessage != null) {
-			System.out.println(cmtrailing.toJSON());
+			System.out.println(cmtrailing.toJson());
 		}
 
 		log.trace("minX=" + points.getMinXValue() + " minY=" + points.getMinYValue());
