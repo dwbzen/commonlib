@@ -1,6 +1,6 @@
 package mathlib.complex;
 
-public class Complex extends Number implements Cloneable, Comparable<Number> {
+public class Complex extends Number implements Comparable<Number> {
 
 	private static final long serialVersionUID = 2081526108466484928L;
 	public static final double SQRT3 = Math.sqrt(3.0);
@@ -65,12 +65,7 @@ public class Complex extends Number implements Cloneable, Comparable<Number> {
     	x = w.real();
     	y = w.imag();
     }
-    
-    @Override
-    public Complex clone() {
-    	return new Complex(x, y);
-    }
-    
+
     public void assign(Complex other) {
     	this.x = other.x;
     	this.y = other.y;

@@ -2,6 +2,7 @@ package mathlib;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import mathlib.Matrix;
 import mathlib.util.IJson;
 
 public abstract class AbstractArray<T extends Number> implements IJson {
@@ -27,7 +28,7 @@ public abstract class AbstractArray<T extends Number> implements IJson {
 	}
 	
 	protected abstract void createNew();
-	public abstract Matrix<T> times(Matrix<? extends Number> other);
+	public abstract Matrix<Number> times(Matrix<? extends Number> other);
 	public abstract void clear();
 	public abstract String toString();
 }

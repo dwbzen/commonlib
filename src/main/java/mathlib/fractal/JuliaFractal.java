@@ -29,12 +29,12 @@ public class JuliaFractal extends FractalFormula {
 		//Complex point = ipoint.getPixel();
 		
 		int iters = 0;
-		Complex zmax = COMPLEX_ZERO.clone();
-		Complex zmin = COMPLEX_MAX.clone();
+		Complex zmax = COMPLEX_ZERO;
+		Complex zmin = COMPLEX_MAX;
 
 		boolean bails = false;
 		boolean cycles = false;
-		z =  ipoint.getPixel().clone();
+		z =  ipoint.getPixel();
 
 		while(iters <= maxIterations ) {
 			// TODO: handle complex cases and when power != 2

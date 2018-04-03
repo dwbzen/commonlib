@@ -44,7 +44,7 @@ public class MandlebrotFractal extends FractalFormula {
 	}
 	
 	private Complex power = new Complex(2,0);
-	private Complex start = COMPLEX_ZERO.clone();
+	private Complex start = COMPLEX_ZERO;
 	
 	/**
 	 * init:  z = @start
@@ -56,11 +56,11 @@ public class MandlebrotFractal extends FractalFormula {
 		resetZHistory();	// only if cycleCheck is true
 		
 		int iters = 0;
-		Complex zmax = COMPLEX_ZERO.clone();
-		Complex zmin = COMPLEX_MAX.clone();
+		Complex zmax = COMPLEX_ZERO;
+		Complex zmin = COMPLEX_MAX;
 		boolean bails = false;
 		boolean cycles = false;
-		z = getStart().clone();
+		z = getStart();
 		
 		while(iters <= maxIterations ) {
 			// TODO: handle complex cases and when power != 2
