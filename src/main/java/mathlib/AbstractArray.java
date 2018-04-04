@@ -28,7 +28,8 @@ public abstract class AbstractArray<T extends Number> implements IJson {
 	}
 	
 	protected abstract void createNew();
-	public abstract Matrix<Number> times(Matrix<? extends Number> other);
+	public abstract Matrix<T> times(Matrix<? extends Number> other);
+	public abstract T getValue(int rownum, int colnum);
 	public abstract void clear();
 	public abstract String toString();
 }

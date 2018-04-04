@@ -16,26 +16,22 @@ import org.apache.logging.log4j.Logger;
  */
 public class BaseJSONObject extends JSONObject {
 
-	private static final long serialVersionUID = -322492144640842630L;
+	private static final long serialVersionUID = 971201573697726504L;
 	public static final Pattern JSON_REGEX = Pattern.compile("(_id:.+),(name:.+),(type:.+)");
 	protected static final Logger log = LogManager.getLogger(BaseJSONObject.class);
 	
 	public static void main(String[] args) {
-		if(args.length >= 0) {
-			String sample = " { \"_id\" : ObjectId(\"52b30e7eba2912447205bd4e\"), \"name\" : \"ifs2\", \"type\" : \"unknown\" }";
+		if(args.length > 0) {
+			String sample = " { \"_id\" : \"52b30e7eba2912447205bd4e\", \"name\" : \"ifs2\", \"type\" : \"unknown\" }";
 			BaseJSONObject cm = BaseJSONObject.fromJSONString(sample);
-			System.out.println(cm.toJson());
-			sample = " { \"_id\" :  { \"$oid\" : \"52e331a8781aae933310ea29\"}, \"name\" : \"ifs2\", \"type\" : \"unknown\" }";
-			cm = BaseJSONObject.fromJSONString(sample);
-			System.out.println(cm.toJson());
-			
+			log.warn( cm!= null ? cm.toJson() : "null");
 		}
 	}
 	
 	public BaseJSONObject() {
 		setProperty(TYPE, UNKNOWN);
 	}
-	public BaseJSONObject(String name, String command) {
+	public BaseJSONObject(String name) {
 		setProperty(NAME, name);
 		setProperty(TYPE, UNKNOWN);
 	}
@@ -72,7 +68,7 @@ public class BaseJSONObject extends JSONObject {
 	
 	@Override
 	public String toJson() {
-		StringBuffer jsonstr = new StringBuffer("{");
+		StringBuilder jsonstr = new StringBuilder("{");
 		String name = getProperty(NAME);
 		String type = getProperty(TYPE);
 		String id = getId();

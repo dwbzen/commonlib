@@ -19,7 +19,7 @@ public class Factor implements Serializable {
 
 	private static final long serialVersionUID = 2788855972961763480L;
 	private static MathContext mathContext = new MathContext(4);	// 4-places rounding half-up
-	private List<Integer> factors = null;
+	private List<Integer> factors = new ArrayList<>();
 	private int dots = 0;
 	private double factoredNumber = 0;
 	private double numberToFactor = 0;
@@ -27,7 +27,6 @@ public class Factor implements Serializable {
 	private int places = 6;
 	
 	public Factor() {
-		factors = new ArrayList<Integer>();
 	}
 	
 	public Factor(List<Integer> f) {
@@ -45,7 +44,7 @@ public class Factor implements Serializable {
 		factors = new ArrayList<Integer>();
 		this.factors.addAll(MathUtil.factor(numberToFactor, places));
 		setDots(MathUtil.dots(factors));
-		factoredNumber = new BigDecimal(getFactoredNumber(factors)).round(mathContext).doubleValue();
+		factoredNumber = BigDecimal.valueOf(getFactoredNumber(factors)).round(mathContext).doubleValue();
 		remainder = numberToFactor - factoredNumber;
 	}
 	
@@ -69,7 +68,7 @@ public class Factor implements Serializable {
 	}
 	
 	public void setDots() {
-		if(factors != null && factors.size() > 0) {
+		if(factors != null && !factors.isEmpty()) {
 			this.dots = MathUtil.dots(factors);
 		}
 	}

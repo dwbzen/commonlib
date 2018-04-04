@@ -38,10 +38,6 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 	public static final Pattern DECIMAL_REGEX = Pattern.compile("\\[\\s*(.+),\\s*(.+)\\s*\\]");
 	public static final Pattern JSON_REGEX = Pattern.compile("(name:.+),(type:.+),(Point2D:.+)");
 	
-	public static void main(String[] args) {
-
-	}
-	
 	public Point2D() {
 		setProperty("type", OBJECT_TYPE);
 	}

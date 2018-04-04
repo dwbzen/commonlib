@@ -28,7 +28,7 @@ public class Matrix<T extends Number> extends AbstractArray<Number> implements S
 		System.out.print(matrix);
 		System.out.print(mb);
 		
-		Matrix <Number> prod = matrix.times(mb);
+		Matrix<Number> prod = matrix.times(mb);
 		prod.setName("AxB");
 		System.out.println(prod);
 
@@ -248,5 +248,11 @@ public class Matrix<T extends Number> extends AbstractArray<Number> implements S
 	public int getColumns() {
 		return columns;
 	}
+
+	@Override
+	public Number getValue(int rownum, int colnum) {
+		return index(rownum, colnum);
+	}
+
 }
 

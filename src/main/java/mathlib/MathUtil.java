@@ -161,7 +161,7 @@ public class MathUtil {
 	}
 	
 	public static void main(String[] args) {
-
+		String factorsOf = "factors of ";
 		if(args.length == 4) {
 			// "Usage: factor(int divsPerMeasure, int beats, int beatNote, int noteUnits"
 			int divsPerMeasure = Integer.parseInt(args[0]);
@@ -177,12 +177,12 @@ public class MathUtil {
 			System.out.println("log base 2(" + noteUnits + ") = " + log2((double)noteUnits));
 			
 			factors = factor(noteUnits);
-			System.out.println("factors of " + noteUnits + " = " + factors);
+			System.out.println(factorsOf + noteUnits + " = " + factors);
 			double beatNotes = noteUnits / ((double)divsPerMeasure/beats);
-			System.out.println("factors of " + beatNotes + " = " + factor(beatNotes));
+			System.out.println(factorsOf + beatNotes + " = " + factor(beatNotes));
 			
 			double d = 7 + (1.00/3.00);
-			System.out.println("factors of " + d + " = " +  factor(d) + " " + factor(d, 10));
+			System.out.println(factorsOf + d + " = " +  factor(d) + " " + factor(d, 10));
 		}
 		else if(args.length == 3) {
 			// make a table of factors

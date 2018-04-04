@@ -23,17 +23,17 @@ public class CommandMessage extends JSONObject {
 	private String command;
 	
 	public static void main(String[] args) {
-		if(args.length >= 0) {
+		if(args.length > 0) {
 			String sample = " {\"name\" : \"ifs2\", \"type\" : \"message\", \"command\" : \"SHUTDOWN\" }";
 			CommandMessage cm = CommandMessage.fromJSONString(sample);
-			System.out.println(cm.toJson());
+			log.warn( cm!= null ? cm.toJson() : "null");
 			
 			String sample2 = " {\"name\" : \"ifs2\", \"type\" : \"message\", \"command\" : \"START\" }";
 			cm = CommandMessage.fromJSONString(sample2);
-			System.out.println(cm.toJson());
+			log.warn( cm!= null ? cm.toJson() : "null");
 
 			CommandMessage cmShutdown = new CommandMessage("test", "SHUTDOWN");
-			System.out.println(cmShutdown.toJson());
+			log.warn( cmShutdown!= null ? cmShutdown.toJson() : "null");
 		}
 	}
 	
@@ -89,7 +89,7 @@ public class CommandMessage extends JSONObject {
 	
 	@Override
 	public String toJson() {
-		StringBuffer jsonstr = new StringBuffer("{");
+		StringBuilder jsonstr = new StringBuilder("{");
 		String name = getProperty(NAME);
 		String type = getProperty(TYPE);
 		String id = getId();
