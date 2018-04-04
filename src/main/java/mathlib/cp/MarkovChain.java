@@ -65,17 +65,5 @@ public class MarkovChain<K, T extends List<K>> extends CollectorStatsMap<K,T> im
 	public void setOrder(int order) {
 		this.order = order;
 	}
-	
-	@Override
-	/**
-	 * The "toState" uses a shorthand notation of dropping the from state tokens.
-	 * For example, "ab" --> "bc" is represented as "ab" --> "c" (the "b" is implied).
-	 * Another example with kelylength of 3, "acb" --> "cbx" is just "acb" --> "x"
-	 * 
-	 * 
-	 */
-	public String toJson() {
-		return toJson();
-	}
 
 }
