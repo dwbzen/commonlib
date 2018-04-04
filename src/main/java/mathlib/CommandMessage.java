@@ -23,18 +23,16 @@ public class CommandMessage extends JSONObject {
 	private String command;
 	
 	public static void main(String[] args) {
-		if(args.length > 0) {
-			String sample = " {\"name\" : \"ifs2\", \"type\" : \"message\", \"command\" : \"SHUTDOWN\" }";
-			CommandMessage cm = CommandMessage.fromJSONString(sample);
-			log.warn( cm!= null ? cm.toJson() : "null");
-			
-			String sample2 = " {\"name\" : \"ifs2\", \"type\" : \"message\", \"command\" : \"START\" }";
-			cm = CommandMessage.fromJSONString(sample2);
-			log.warn( cm!= null ? cm.toJson() : "null");
+		String sample = " {\"name\" : \"ifs2\", \"type\" : \"message\", \"command\" : \"SHUTDOWN\" }";
+		CommandMessage cm = CommandMessage.fromJSONString(sample);
+		log.warn( cm!= null ? cm.toJson() : "null");
+		
+		String sample2 = " {\"name\" : \"ifs2\", \"type\" : \"message\", \"command\" : \"START\" }";
+		cm = CommandMessage.fromJSONString(sample2);
+		log.warn( cm!= null ? cm.toJson() : "null");
 
-			CommandMessage cmShutdown = new CommandMessage("test", "SHUTDOWN");
-			log.warn( cmShutdown!= null ? cmShutdown.toJson() : "null");
-		}
+		CommandMessage cmShutdown = new CommandMessage("test", "SHUTDOWN");
+		log.warn( cmShutdown.toJson());
 	}
 	
 	public CommandMessage() {

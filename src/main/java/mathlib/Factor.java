@@ -41,7 +41,7 @@ public class Factor implements Serializable {
 		this();
 		this.numberToFactor = numToFactor;
 		this.places = places;
-		factors = new ArrayList<Integer>();
+		factors = new ArrayList<>();
 		this.factors.addAll(MathUtil.factor(numberToFactor, places));
 		setDots(MathUtil.dots(factors));
 		factoredNumber = BigDecimal.valueOf(getFactoredNumber(factors)).round(mathContext).doubleValue();
@@ -83,7 +83,7 @@ public class Factor implements Serializable {
 	 * @param f List<Integer> of factors
 	 */
 	public void setFactors(List<Integer> f) {
-		factors = new ArrayList<Integer>();
+		factors = new ArrayList<>();
 		factors.addAll(f);
 		factoredNumber = 0;
 		for(int n : factors) {
@@ -100,9 +100,9 @@ public class Factor implements Serializable {
 	public void setNumberToFactor(double d) {
 		this.numberToFactor = d;
 		if(factors == null) {
-			factors = new ArrayList<Integer>();
+			factors = new ArrayList<>();
 		}
-		else if(factors.size()>0) {
+		else if(!factors.isEmpty()) {
 			factors.removeIf(a -> true);
 		}
 		factors.addAll(MathUtil.factor(d, places));
@@ -112,7 +112,7 @@ public class Factor implements Serializable {
 	public int size() {
 		return factors.size();
 	}
-	public Integer get(int index) throws IndexOutOfBoundsException {
+	public Integer get(int index) {
 			return factors.get(index);
 	}
 	

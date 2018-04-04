@@ -15,7 +15,7 @@
 </Appenders>
 <Loggers>
 
-    <Logger name="math" additivity="false">
+    <Logger name="mathlib" additivity="false">
 		<level value="INFO"/>
 		<appender-ref ref="STDOUT"/>
 	</Logger>
