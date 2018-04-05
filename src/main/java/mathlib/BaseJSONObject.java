@@ -20,20 +20,16 @@ public class BaseJSONObject extends JSONObject {
 	public static final Pattern JSON_REGEX = Pattern.compile("(_id:.+),(name:.+),(type:.+)");
 	protected static final Logger log = LogManager.getLogger(BaseJSONObject.class);
 	
-	public static void main(String[] args) {
-		if(args.length > 0) {
-			String sample = " { \"_id\" : \"52b30e7eba2912447205bd4e\", \"name\" : \"ifs2\", \"type\" : \"unknown\" }";
-			BaseJSONObject cm = BaseJSONObject.fromJSONString(sample);
-			log.warn( cm!= null ? cm.toJson() : "null");
-		}
-	}
-	
 	public BaseJSONObject() {
 		setProperty(TYPE, UNKNOWN);
 	}
 	public BaseJSONObject(String name) {
 		setProperty(NAME, name);
 		setProperty(TYPE, UNKNOWN);
+	}
+	public BaseJSONObject(String name, String type) {
+		setProperty(NAME, name);
+		setProperty(TYPE, type);
 	}
 	
 	public static BaseJSONObject fromJSONString(String jsonstr) {

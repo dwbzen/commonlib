@@ -12,36 +12,21 @@ import org.apache.logging.log4j.Logger;
  * @author don_bacon
  *
  */
-public class CommandMessage extends JSONObject {
+public class CommandMessage extends BaseJSONObject {
 
 	private static final long serialVersionUID = -322492144640842630L;
-	public static final String MESSAGE = "message";
+	public static final String MESSAGE_TYPE = "message";
 	public static final Pattern JSON_REGEX = Pattern.compile("(name:.+),(type:.+),(command:.+)");
 	protected static final Logger log = LogManager.getLogger(CommandMessage.class);
-	public static final String TYPE = "message";
 	
 	private String command;
 	
-	public static void main(String[] args) {
-		String sample = " {\"name\" : \"ifs2\", \"type\" : \"message\", \"command\" : \"SHUTDOWN\" }";
-		CommandMessage cm = CommandMessage.fromJSONString(sample);
-		log.warn( cm!= null ? cm.toJson() : "null");
-		
-		String sample2 = " {\"name\" : \"ifs2\", \"type\" : \"message\", \"command\" : \"START\" }";
-		cm = CommandMessage.fromJSONString(sample2);
-		log.warn( cm!= null ? cm.toJson() : "null");
-
-		CommandMessage cmShutdown = new CommandMessage("test", "SHUTDOWN");
-		log.warn( cmShutdown.toJson());
-	}
-	
 	public CommandMessage() {
-		setProperty(TYPE, MESSAGE);
+		super(NAME, MESSAGE_TYPE);
 	}
 	public CommandMessage(String name, String command) {
-		setProperty(NAME, name);
+		super(name, MESSAGE_TYPE);
 		this.command = command;
-		setProperty(TYPE, MESSAGE);
 	}
 
 	public String getCommand() {
@@ -86,25 +71,25 @@ public class CommandMessage extends JSONObject {
 	}
 	
 	@Override
-	public String toJson() {
-		StringBuilder jsonstr = new StringBuilder("{");
-		String name = getProperty(NAME);
-		String type = getProperty(TYPE);
-		String id = getId();
-		if(id != null) {
-			jsonstr.append("\"_id\": " + id + ",");
-		}
-		if(name != null){
-			jsonstr.append("\"name\": \"" + name + "\",");
-		}
-		if(type != null) {
-			jsonstr.append("\"type\": \"" + type + "\",");
-		}
-		jsonstr.append("\"command\": \"" + command + "\" }" );
-		return jsonstr.toString();
+    public String toJson() {
+        StringBuilder jsonstr = new StringBuilder("{");
+        String name = getProperty(NAME);
+        String type = getProperty(TYPE);
+        String id = getId();
+        if(id != null) {
+            jsonstr.append("\"_id\": " + id + ",");
+        }
+        if(name != null){
+            jsonstr.append("\"name\": \"" + name + "\",");
+        }
+        if(type != null) {
+            jsonstr.append("\"type\": \"" + type + "\",");
+        }
+        jsonstr.append("\"command\": \"" + command + "\" }" );
+        return jsonstr.toString();
 
-	}
-	
+    }
+
 	@Override
 	public String toString() {
 		return toJson();
