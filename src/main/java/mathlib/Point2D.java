@@ -1,7 +1,6 @@
 package mathlib;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -27,38 +26,37 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 
 	private static final long serialVersionUID = 7492212210472351442L;
 	protected static final Logger log = LogManager.getLogger(Point2D.class);
-	public static String OBJECT_TYPE = "point";
+	public static final String ObjectType = "point";
 			
 	@JsonProperty("x")	private Number x = BigDecimal.ZERO;
 	@JsonProperty("y")	private Number y = BigDecimal.ZERO;
-
-	static MathContext mathContext = MathContext.DECIMAL32;
 	
-	public static final Point2D<Double> ORIGIN = new Point2D<Double>(0.0, 0.0);
+	public static final Point2D<Double> ORIGIN = new Point2D<>(0.0, 0.0);
 	public static final Pattern DECIMAL_REGEX = Pattern.compile("\\[\\s*(.+),\\s*(.+)\\s*\\]");
 	public static final Pattern JSON_REGEX = Pattern.compile("(name:.+),(type:.+),(Point2D:.+)");
 	
-	public Point2D() {
-		setProperty("type", OBJECT_TYPE);
+	protected Point2D() {
+		setProperty("type", ObjectType);
 	}
 	
-	public Point2D(Number x, Number y) {
-		this();
-		this.x = new BigDecimal(x.doubleValue(), mathContext);
-		this.y = new BigDecimal(y.doubleValue(), mathContext);
-	}
-	public Point2D(double x, double y) {
-		this();
-		this.x = new BigDecimal(x, mathContext);
-		this.y = new BigDecimal(y, mathContext);
-	}
-	public Point2D(int x, int y) {
+	public Point2D(Double x, Double y) {
 		this();
 		this.x = x;
 		this.y = y;
 	}
+	public Point2D(double x, double y) {
+		this();
+		this.x = BigDecimal.valueOf(x);
+		this.y = BigDecimal.valueOf(y);
+	}
+	public Point2D(int x, int y) {
+		this();
+		this.x = BigDecimal.valueOf(x);
+		this.y = BigDecimal.valueOf(y);
+	}
 	public Point2D(Point2D<BigDecimal> p) {
-		this(p.x.doubleValue(), p.y.doubleValue());
+		x = p.x;
+		y = p.y;
 	}
 	/**
 	 * Format:  [ 0.9082574, 0.07519616 ]
@@ -87,14 +85,9 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 	public Number getX() {
 		return x;
 	}
-	public void setX(Number x) {
-		this.x = x;
-	}
+
 	public Number getY() {
 		return y;
-	}
-	public void setY(Number y) {
-		this.y = y;
 	}
 	
 	public String toString() {
@@ -102,7 +95,7 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 	}
 	
 	public String toJSON(String nameLabel, String nameValue, String type) {
-		StringBuffer jsonstr = new StringBuffer("{");
+		StringBuilder jsonstr = new StringBuilder("{");
 		jsonstr.append( quoteString(nameLabel, nameValue));
 		if(type != null && type.length()>0) {
 			jsonstr.append(", ").append(quoteString("type", type));
@@ -134,19 +127,17 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 	 */
 	public double distance(Point2D<Number> point) {
 		double dist = 0;
-		dist = Math.abs(point.getX().doubleValue() - this.getX().doubleValue()) + 
-				Math.abs(point.getY().doubleValue() - this.getY().doubleValue());
+		dist = Math.abs(point.getX().doubleValue() - getX().doubleValue()) + 
+				Math.abs(point.getY().doubleValue() - getY().doubleValue());
 		return dist;
 	}
 	
 	/**
 	 * Modulus is the same as distance(0,0) so it depends on the metric
-	 * TODO - allow pluggable metric. And compute when constructed as Double.
 	 * @return
 	 */
 	public double mod() {
-		double m = Math.abs(this.getX().doubleValue()) + Math.abs(this.getY().doubleValue());
-		return m;
+		return Math.abs(getX().doubleValue()) + Math.abs(getY().doubleValue());
 	}
 	
 	/**
@@ -160,13 +151,21 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 	
 	@Override
 	public int compareTo(Point2D<T> other) {
+		if(equals(other)) {
+			return 0;
+		}
 		double modMe = mod();
 		double modOther = other.mod();
-		return (equals(other)) ? 0 : (modMe < modOther) ? -1 : 1;
+		return (modMe < modOther) ? -1 : 1;
 	}
 	
-	public boolean equals(Point2D<T> other) {
-		return other.getX().equals(this.getX()) && other.getY().equals(this.getY());
+	@Override
+	public boolean equals(Object other) {
+		boolean equals = false;
+		if(other instanceof Point2D) {
+			equals = ((Point2D<?>)other).getX().equals(getX()) && ((Point2D<?>)other).getY().equals(getY());
+		}
+		return equals;
 	}
 
 	@Override

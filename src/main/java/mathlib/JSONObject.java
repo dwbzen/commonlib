@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import mathlib.util.IJson;
@@ -30,7 +31,7 @@ public abstract class JSONObject implements IJson  {
 	public static final String TYPE = "type";	// Property
 	static final String QUOTE = "\"";
 	
-	@JsonProperty	private String id;		// optional ID
+	@JsonIgnore	private String id;		// optional ID
 	@JsonProperty	private Map<String, String> properties = new HashMap<>();
 	
 	public abstract String toString();
