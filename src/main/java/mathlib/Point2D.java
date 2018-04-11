@@ -167,6 +167,11 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 		}
 		return equals;
 	}
+	
+	  @Override
+	  public int hashCode() {
+		  return (x.toString() + y.toString()).hashCode();
+	  }
 
 	@Override
 	public List<Number> getCoordinates() {
