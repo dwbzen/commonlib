@@ -21,6 +21,7 @@ apply plugin: "jacoco"
 sourceCompatibility = 9
 version = '1.0'
 project.group  = 'math-lib'
+project.tasks["sonarqube"].dependsOn "jacocoTestReport"
 
 jar {
     manifest {
