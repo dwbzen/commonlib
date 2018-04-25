@@ -15,21 +15,20 @@ import mathlib.util.IJson;
 
 /**
  * NOTE - dropped MongoDB support for now. Need to update queries to NOT return the _id
- * TODO: rewrite using Jackson
  * 
  * @author don_bacon
  *
  */
 public abstract class JSONObject implements IJson  {
 
-	private static final long serialVersionUID = 347831929602095478L;
-	protected static final Logger log = LogManager.getLogger(JSONObject.class);
-
-	public static final Pattern JSON_REGEX = Pattern.compile("(name:.+),(type:.+),(.+?)");
+	public static final Pattern baseJsonRegex = Pattern.compile("(_id:.+),(name:.+),(type:.+)");
 	public final static String UNKNOWN = "unknown";
 	public static final String NAME = "name";	// Property
 	public static final String TYPE = "type";	// Property
-	static final String QUOTE = "\"";
+	public static final String QUOTE = "\"";
+	protected static final Logger log = LogManager.getLogger(IJson.class);
+
+	private static final long serialVersionUID = 347831929602095478L;
 	
 	@JsonIgnore	private String id;		// optional ID
 	@JsonProperty	private Map<String, String> properties = new HashMap<>();
@@ -47,7 +46,7 @@ public abstract class JSONObject implements IJson  {
 		String raw = jsonstr.replaceAll("[\"\\s{}]", "");	// deletes spaces, curly braces and quotes
 		int n = raw.indexOf("name");
 		int index = (n<=0) ? 0 : n;
-		Matcher m = JSON_REGEX.matcher(raw.substring(index));
+		Matcher m = baseJsonRegex.matcher(raw.substring(index));
 		int ind = 0;
 		if(m.matches()) {
 			type = m.group(2);
@@ -58,7 +57,7 @@ public abstract class JSONObject implements IJson  {
 		else {
 			type = "type:" + UNKNOWN;
 		}
-		String ts[] = type.split(":");
+		String[] ts = type.split(":");
 		return ts.length==2 ? ts[1] : UNKNOWN;
 	}
 
@@ -89,13 +88,10 @@ public abstract class JSONObject implements IJson  {
 	 * No comma appended to the last element.
 	 * @return JSON String
 	 */
-	public String getJSONProperties() {
-		StringBuffer sb = new StringBuffer();
-		for(String key : properties.keySet()) {
-			sb.append(quoteString(key,  properties.get(key)));
-			sb.append(",");
-		}
-		return sb.deleteCharAt(sb.length()-1).toString();
+	public String getJsonProperties() {
+		StringBuilder builder = new StringBuilder();
+		properties.entrySet().forEach(s-> builder.append(quoteString(s.getValue())).append(","));
+		return builder.deleteCharAt(builder.length()-1).toString();
 	}
 	
 

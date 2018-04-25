@@ -3,6 +3,9 @@ package mathlib;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import mathlib.complex.Complex;
 
 public class Fibonacci<T extends Number> implements ISequence<T> {
@@ -11,11 +14,12 @@ public class Fibonacci<T extends Number> implements ISequence<T> {
 	private List<Complex> complexSeries = null;
 	private int order = 2;	// for Fibonacci, for tribonacci order = 3, etc.
 	private int len = 0;
-	public static int DEFAULT_LEN = 10;
+	public static final int defaultLength = 10;
+	static final Logger log = LogManager.getLogger(ISequence.class);
 	
 	public static <T extends Number> ISequence<T> createSequence(T[] args) {
 		Fibonacci<T> fib = null;
-		fib = new Fibonacci<T>();
+		fib = new Fibonacci<>();
 		fib.newSequence(args);
 		return fib;
 	}
@@ -30,12 +34,12 @@ public class Fibonacci<T extends Number> implements ISequence<T> {
 	}
 	
 	public void newSequence(T[] args) {
-		len = (args.length == 3) ? (Integer)args[2] : DEFAULT_LEN;
+		len = (args.length == 3) ? (Integer)args[2] : defaultLength;
 		order = (args.length >= 3) ? args.length - 1: 2;
 	}
 	
 	public void createSeries(int f0,int f1, int len) {
-		intSeries = new ArrayList<Long>();
+		intSeries = new ArrayList<>();
 		intSeries.add((long)f0);
 		intSeries.add((long)f1);
 		for(int i=2; i<len; i++) {
@@ -45,7 +49,7 @@ public class Fibonacci<T extends Number> implements ISequence<T> {
 	}
 
 	public void createSeries(Complex c0, Complex c1, int len) {
-		complexSeries = new ArrayList<Complex>();
+		complexSeries = new ArrayList<>();
 		complexSeries.add(new Complex(c0));
 		complexSeries.add(new Complex(c1));
 		for(int i=2; i<len; i++) {
@@ -61,7 +65,7 @@ public class Fibonacci<T extends Number> implements ISequence<T> {
 			System.err.println("Usage: Fibonacci -len n [start start+1]");
 			return;
 		}
-		List<Complex> temp = new ArrayList<Complex>();
+		List<Complex> temp = new ArrayList<>();
 		// default: 0 1 1 2 3 5 etc.
 		temp.add(new Complex(0,0));
 		temp.add(new Complex(1,0));
@@ -80,18 +84,18 @@ public class Fibonacci<T extends Number> implements ISequence<T> {
 		}
 		Fibonacci<?> fib = null;
 		if(complex) {
-			fib = new Fibonacci<Complex>();
+			fib = new Fibonacci<>();
 			fib.createSeries(temp.get(0), temp.get(1), len);
 		}
 		else {
-			fib = new Fibonacci<Long>();
+			fib = new Fibonacci<>();
 			fib.createSeries((int)temp.get(0).real(), (int)temp.get(1).real(), len);
 		}
-		System.out.println(fib.toString());
+		log.info(fib.toString());
 	}
 	
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if(intSeries != null) {
 			for(int i=0; i<len; i++ ){
 				sb.append(intSeries.get(i));
@@ -109,10 +113,6 @@ public class Fibonacci<T extends Number> implements ISequence<T> {
 	
 	public List<Long> getIntSeries() {
 		return intSeries;
-	}
-
-	public List<Complex> getComplexSeries() {
-		return complexSeries;
 	}
 
 	public List<Complex> getSequence() {

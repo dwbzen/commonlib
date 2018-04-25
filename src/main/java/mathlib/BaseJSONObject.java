@@ -1,10 +1,6 @@
 package mathlib;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * { "_id" : ObjectId("52e331aa781aae93331270ca"), "name" : "ifs1", "type" : "message", "command" : "SHUTDOWN" }
@@ -17,8 +13,6 @@ import org.apache.logging.log4j.Logger;
 public class BaseJSONObject extends JSONObject {
 
 	private static final long serialVersionUID = 971201573697726504L;
-	public static final Pattern JSON_REGEX = Pattern.compile("(_id:.+),(name:.+),(type:.+)");
-	protected static final Logger log = LogManager.getLogger(BaseJSONObject.class);
 	
 	public BaseJSONObject() {
 		setProperty(TYPE, UNKNOWN);
@@ -34,7 +28,7 @@ public class BaseJSONObject extends JSONObject {
 	
 	public static BaseJSONObject fromJSONString(String jsonstr) {
 		String raw = jsonstr.replaceAll("[\"\\s{}]", "");	// deletes spaces, curly braces and quotes
-		Matcher m = JSON_REGEX.matcher(raw);
+		Matcher m = baseJsonRegex.matcher(raw);
 		BaseJSONObject cm = null;
 		if(m.matches()) {
 			log.debug("# groups: " + m.groupCount());

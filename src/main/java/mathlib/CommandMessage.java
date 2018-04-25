@@ -3,9 +3,6 @@ package mathlib;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * { "name" : "ifs1", "type" : "message", "command" : "SHUTDOWN" }
  * 
@@ -14,10 +11,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class CommandMessage extends BaseJSONObject {
 
-	private static final long serialVersionUID = -322492144640842630L;
 	public static final String MESSAGE_TYPE = "message";
-	public static final Pattern JSON_REGEX = Pattern.compile("(name:.+),(type:.+),(command:.+)");
-	protected static final Logger log = LogManager.getLogger(CommandMessage.class);
+	public static final Pattern commandRegex = Pattern.compile("(name:.+),(type:.+),(command:.+)");
+	private static final long serialVersionUID = -322492144640842630L;
 	
 	private String command;
 	
@@ -38,7 +34,7 @@ public class CommandMessage extends BaseJSONObject {
 	
 	public static CommandMessage fromJSONString(String jsonstr) {
 		String raw = jsonstr.replaceAll("[\"\\s{}]", "");	// deletes spaces, curly braces and quotes
-		Matcher m = JSON_REGEX.matcher(raw);
+		Matcher m = commandRegex.matcher(raw);
 		CommandMessage cm = null;
 		if(m.matches()) {
 			log.debug("# groups: " + m.groupCount());
