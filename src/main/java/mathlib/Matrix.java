@@ -20,8 +20,8 @@ public class Matrix<T extends Number> extends AbstractArray<Number> implements S
 	@JsonIgnore	private MathContext mathContext = MathContext.DECIMAL32;	// the default
 	
 	public static void main(String[] args) {
-		Matrix<BigDecimal> matrix = new Matrix<BigDecimal>(3, 4, "A");
-		Matrix<BigDecimal> mb = new Matrix<BigDecimal>(4, 2, "B");
+		Matrix<BigDecimal> matrix = new Matrix<>(3, 4, "A");
+		Matrix<BigDecimal> mb = new Matrix<>(4, 2, "B");
 		matrix.fill();
 		mb.fill();
 		
