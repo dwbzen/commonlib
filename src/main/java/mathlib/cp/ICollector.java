@@ -1,4 +1,5 @@
 package mathlib.cp;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -45,4 +46,8 @@ import java.util.function.Function;
  */
 public interface ICollector<T, R, K> extends Function<T, R> , Consumer<K> {
 	void collect();
+	
+	default void collect(List<T> listOfT) {
+		// override this as default is a no-op
+	}
 }
