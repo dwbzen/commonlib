@@ -32,6 +32,7 @@ public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, Collecto
 	
 	@JsonIgnore private Map<T, Integer> summaryMap = null;
 	@JsonIgnore protected boolean trace = false;
+	@JsonIgnore boolean pickInitialSeed = false;
 
 	protected static final Logger log = LogManager.getLogger(CollectorStatsMap.class);
 
@@ -51,16 +52,27 @@ public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, Collecto
 		this.trace = trace;
 	}
 
+	public boolean isPickInitialSeed() {
+		return pickInitialSeed;
+	}
+
+	public void setPickInitialSeed(boolean pickInitialSeed) {
+		this.pickInitialSeed = pickInitialSeed;
+	}
+
 	/**
 	 * @return T seed
 	 */
 	public T pickSeed() {
 		T seed = null;
 		CollectorStats<K,T> cstats = null;
-		do {
+		while(true) {
 			seed = pickCandidateSeed();
 			cstats = get(seed);
-		} while(cstats.isTerminal());
+			if(!pickInitialSeed || (pickInitialSeed && cstats.isInitial())) {
+				break;
+			}
+		}
 		logMessage("picked seed: '" + seed + "'");
 		return seed;
 	}

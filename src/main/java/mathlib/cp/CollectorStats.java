@@ -26,7 +26,8 @@ public class CollectorStats<K, T extends List<K>> {
 	
 	public static final int LOW = 0;
 	public static final int HIGH = 1;
-	private boolean terminal = false;	// true if this is a terminal state
+	@JsonProperty	private boolean terminal = false;	// true if this is a terminal state
+	@JsonProperty	private boolean initial = false;	// true if this is an initial state
 	
 	public CollectorStats() {
 	}
@@ -62,6 +63,14 @@ public class CollectorStats<K, T extends List<K>> {
 
 	public void setTerminal(boolean terminal) {
 		this.terminal = terminal;
+	}
+
+	public boolean isInitial() {
+		return initial;
+	}
+
+	public void setInitial(boolean initial) {
+		this.initial = initial;
 	}
 
 	public Map<K, OccurrenceProbability> getOccurrenceProbabilityMap() {
