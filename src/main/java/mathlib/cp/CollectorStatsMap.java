@@ -31,6 +31,7 @@ public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, Collecto
 	private static final long serialVersionUID = 4801227327750662977L;
 	
 	@JsonIgnore private Map<T, Integer> summaryMap = null;
+	@JsonIgnore private Map<Integer, T> invertedSummaryMap = null;
 	@JsonIgnore protected boolean trace = false;
 	@JsonIgnore boolean pickInitialSeed = false;
 
@@ -112,10 +113,16 @@ public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, Collecto
 	public Map<T, Integer> getSummaryMap() {
 		if(summaryMap == null) {
 			summaryMap = new TreeMap<T, Integer>();
+			invertedSummaryMap = new TreeMap<Integer, T>();
 		}
 		for(T key : this.keySet()) {
 			CollectorStats<K, T> cstats = this.get(key);
-			summaryMap.put(key, cstats.getTotalOccurrance());
+			Integer totalOccurrance = cstats.getTotalOccurrance();
+			summaryMap.put(key, totalOccurrance);
+			if(invertedSummaryMap.containsKey(totalOccurrance)) {
+				T val = invertedSummaryMap.get(totalOccurrance);
+				log.debug("T val: " + val.toString());
+			}
 		}
 		return summaryMap;
 	}
