@@ -65,5 +65,16 @@ public class MarkovChain<K, T extends List<K>> extends CollectorStatsMap<K,T> im
 	public void setOrder(int order) {
 		this.order = order;
 	}
-
+	
+	/**
+	 * Displays the MarkovChain
+	 */
+	public void display() {
+		for(T key : this.keySet()) {
+			CollectorStats<K, T> cstats = this.get(key);
+			System.out.println("'" + key.toString() + "'\t" + cstats.getTotalOccurrance());
+			System.out.print(cstats.toString(true));
+		}
+	}
 }
+

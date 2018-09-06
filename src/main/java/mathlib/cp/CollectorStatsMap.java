@@ -1,5 +1,6 @@
 package mathlib.cp;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, Collecto
 	private static final long serialVersionUID = 4801227327750662977L;
 	
 	@JsonIgnore private Map<T, Integer> summaryMap = null;
-	@JsonIgnore private Map<Integer, T> invertedSummaryMap = null;
+	@JsonIgnore private Map<Integer, List<T>> invertedSummaryMap = null;
 	@JsonIgnore protected boolean trace = false;
 	@JsonIgnore boolean pickInitialSeed = false;
 
@@ -102,37 +103,73 @@ public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, Collecto
 		return sb.toString();
 	}
 	
-	public void display() {
+	private void createSummaryMap() {
+		summaryMap = new TreeMap<T, Integer>();
 		for(T key : this.keySet()) {
 			CollectorStats<K, T> cstats = this.get(key);
-			System.out.println("'" + key.toString() + "'\t" + cstats.getTotalOccurrance());
-			System.out.print(cstats.toString());
+			Integer totalOccurrance = cstats.getTotalOccurrance();
+			summaryMap.put(key, totalOccurrance);
 		}
 	}
 
 	public Map<T, Integer> getSummaryMap() {
 		if(summaryMap == null) {
-			summaryMap = new TreeMap<T, Integer>();
-			invertedSummaryMap = new TreeMap<Integer, T>();
-		}
-		for(T key : this.keySet()) {
-			CollectorStats<K, T> cstats = this.get(key);
-			Integer totalOccurrance = cstats.getTotalOccurrance();
-			summaryMap.put(key, totalOccurrance);
-			if(invertedSummaryMap.containsKey(totalOccurrance)) {
-				T val = invertedSummaryMap.get(totalOccurrance);
-				log.debug("T val: " + val.toString());
-			}
+			createSummaryMap();
 		}
 		return summaryMap;
 	}
 	
-	public void displaySummaryMap() {
+	private void createInvertedSummaryMap() {
+		invertedSummaryMap = new TreeMap<Integer, List<T>>(new MapComparator());
+		for(T key : this.keySet()) {
+			CollectorStats<K, T> cstats = this.get(key);
+			Integer totalOccurrance = cstats.getTotalOccurrance();
+			if(invertedSummaryMap.containsKey(totalOccurrance)) {
+				List<T> vals = invertedSummaryMap.get(totalOccurrance);
+				vals.add(key);
+				log.debug("T val: " + vals.toString());
+			}
+			else {
+				List<T> vals = new ArrayList<T>();
+				vals.add(key);
+				invertedSummaryMap.put(totalOccurrance, vals);
+			}
+		}
+	}
+	
+	public Map<Integer, List<T>> getInvertedSummaryMap() {
+		if(invertedSummaryMap == null) {
+			createInvertedSummaryMap();
+		}
+		return invertedSummaryMap;
+	}
+	
+	public String displaySummaryMap() {
+		StringBuilder sb = new StringBuilder();
 		getSummaryMap();
 		for(T key : summaryMap.keySet()) {
 			Integer count = summaryMap.get(key);
-			System.out.println("'" + key + "'\t" + count);
+			String text = "'" + key + "'\t" + count + "\n";
+			System.out.print(text);
+			sb.append(text);
 		}
+		return sb.toString();
+	}
+	
+	public String displayInvertedSummaryMap() {
+		StringBuilder sb = new StringBuilder();
+		getInvertedSummaryMap();
+		for(Integer count : invertedSummaryMap.keySet()) {
+			String header = "Count: " + count + "\n";
+			System.out.print(header);
+			List<T> valList = invertedSummaryMap.get(count);
+			for(T val :  valList) {
+				String text = "\t'" + val + "'\n";
+				sb.append(text);
+				System.out.print(text);
+			}
+		}
+		return sb.toString();
 	}
 	
 	private void logMessage(String text) {
@@ -141,4 +178,18 @@ public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, Collecto
 			System.out.println(text);
 		}
 	}
+}
+
+class MapComparator implements Comparator<Integer>
+{
+
+	@Override
+	public int compare(Integer int1, Integer int2) {
+		int result = 0;
+		if(!int1.equals(int2)) {
+			result = int1.intValue() < int2.intValue() ? 1 : -1;
+		}
+		return result;
+	}
+	
 }

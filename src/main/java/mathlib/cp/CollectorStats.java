@@ -134,17 +134,22 @@ public class CollectorStats<K, T extends List<K>> {
 		this.totalOccurrance = totalOccurrance;
 	}
 
-	public String toString() {
+	public String toString(boolean totalsOnly) {
 		StringBuffer sb = new StringBuffer();
 		for(K key : occurrenceProbabilityMap.keySet()) {
 			OccurrenceProbability op = occurrenceProbabilityMap.get(key);
 			int[] rng = op.getRange();
-			sb.append("   '" + key.toString() + "'\t" + op.getOccurrence() + 
-					"\t" + rng[0] + "," + rng[1] +
-					"\t" + op.getProbability());
+			sb.append("   '" + key.toString() + "'\t" + op.getOccurrence());
+			if(!totalsOnly) {
+				sb.append("\t" + rng[0] + "," + rng[1] + "\t" + op.getProbability());
+			}
 			sb.append("\n");
 		}
 		return sb.toString();
+	}
+	
+	public String toString() {
+		return toString(false);
 	}
 	
 	public String toJson() {
