@@ -69,12 +69,15 @@ public class MarkovChain<K, T extends List<K>> extends CollectorStatsMap<K,T> im
 	/**
 	 * Displays the MarkovChain
 	 */
-	public void display() {
+	public String getMarkovChainDisplayText() {
+		StringBuilder sb = new StringBuilder();
 		for(T key : this.keySet()) {
 			CollectorStats<K, T> cstats = this.get(key);
-			System.out.println("'" + key.toString() + "'\t" + cstats.getTotalOccurrance());
-			System.out.print(cstats.toString(true));
+			sb.append("'" + key.toString() + "'\t" + cstats.getTotalOccurrance());
+			sb.append("\n");
+			sb.append(cstats.toString(true));
 		}
+		return sb.toString();
 	}
 }
 

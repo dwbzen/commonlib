@@ -144,31 +144,35 @@ public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, Collecto
 		return invertedSummaryMap;
 	}
 	
-	public String displaySummaryMap() {
+	public String getSummaryMapText() {
 		StringBuilder sb = new StringBuilder();
 		getSummaryMap();
+		int totalCount = 0;
 		for(T key : summaryMap.keySet()) {
 			Integer count = summaryMap.get(key);
+			totalCount += count;
 			String text = "'" + key + "'\t" + count + "\n";
-			System.out.print(text);
 			sb.append(text);
 		}
+		sb.insert(0, "Total Count: " + totalCount + "\n");
 		return sb.toString();
 	}
 	
-	public String displayInvertedSummaryMap() {
+	public String getInvertedSummaryMapText() {
 		StringBuilder sb = new StringBuilder();
 		getInvertedSummaryMap();
+		int totalCount = 0;
 		for(Integer count : invertedSummaryMap.keySet()) {
 			String header = "Count: " + count + "\n";
-			System.out.print(header);
+			sb.append(header);
 			List<T> valList = invertedSummaryMap.get(count);
 			for(T val :  valList) {
 				String text = "\t'" + val + "'\n";
 				sb.append(text);
-				System.out.print(text);
+				totalCount += count;
 			}
 		}
+		sb.insert(0, "Total Count: " + totalCount + "\n");
 		return sb.toString();
 	}
 	
