@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * A TreeMap bound to a base class K and some class T that implements a List<K>
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, CollectorStats<K, T>> {
 
 	private static final long serialVersionUID = 4801227327750662977L;
+	static ObjectMapper objectMapper = new ObjectMapper();
 	
 	@JsonIgnore private Map<T, Integer> summaryMap = null;
 	@JsonIgnore private Map<Integer, List<T>> invertedSummaryMap = null;
@@ -159,21 +161,49 @@ public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, Collecto
 	}
 	
 	public String getInvertedSummaryMapText() {
+		return getInvertedSummaryMapText(false);
+	}
+	
+	public String getInvertedSummaryMapText(boolean jsonFormat) {
+		return getInvertedSummaryMapText(jsonFormat, false);
+	}
+	
+	public String getInvertedSummaryMapText(boolean jsonFormat, boolean pretty) {
 		StringBuilder sb = new StringBuilder();
+		String result = "";
 		getInvertedSummaryMap();
-		int totalCount = 0;
-		for(Integer count : invertedSummaryMap.keySet()) {
-			String header = "Count: " + count + "\n";
-			sb.append(header);
-			List<T> valList = invertedSummaryMap.get(count);
-			for(T val :  valList) {
-				String text = "\t'" + val + "'\n";
-				sb.append(text);
-				totalCount += count;
+		if(jsonFormat) {
+			sb.append("{\n");
+			for(Integer count : invertedSummaryMap.keySet()) {
+				sb.append( "\"" + count + "\": [ ");
+				List<T> valList = invertedSummaryMap.get(count);
+				int nvals = valList.size();
+				int valCount = 0;
+				for(T val :  valList) {
+					valCount++;
+					if(pretty) {sb.append("\n    "); }
+					sb.append("\"" + val + "\"" + ( valCount < nvals ? ", " : ""));
+				}
+				sb.append(pretty ? "\n    ],\n" : "],\n");
 			}
+			result = sb.substring(0, sb.length()-2) + "\n}\n";
 		}
-		sb.insert(0, "Total Count: " + totalCount + "\n");
-		return sb.toString();
+		else {
+			int totalCount = 0;
+			for(Integer count : invertedSummaryMap.keySet()) {
+				String header = "Count: " + count + "\n";
+				sb.append(header);
+				List<T> valList = invertedSummaryMap.get(count);
+				for(T val :  valList) {
+					String text = "\t'" + val + "'\n";
+					sb.append(text);
+					totalCount += count;
+				}
+			}
+			sb.insert(0, "Total Count: " + totalCount + "\n");
+			result = sb.toString();
+		}
+		return result;
 	}
 	
 	private void logMessage(String text) {
