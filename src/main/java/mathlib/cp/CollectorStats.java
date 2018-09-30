@@ -1,6 +1,7 @@
 package mathlib.cp;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author don_Bacon
  *
  */
-public class CollectorStats<K, T extends List<K>> {
+public class CollectorStats<K, T extends List<K>> implements Comparable<CollectorStats<K, T>> {
 
 	ObjectMapper mapper = new ObjectMapper();
 	
@@ -28,6 +29,7 @@ public class CollectorStats<K, T extends List<K>> {
 	public static final int HIGH = 1;
 	@JsonProperty	private boolean terminal = false;	// true if this is a terminal state
 	@JsonProperty	private boolean initial = false;	// true if this is an initial state
+	//private Comparator<CollectorStats<K,T>> comparator = new CollectorStatsComparator<>();
 	
 	public CollectorStats() {
 	}
@@ -163,5 +165,38 @@ public class CollectorStats<K, T extends List<K>> {
 		return result;
 	}
 
+	@Override
+	public int compareTo(CollectorStats<K, T> other) {
+		int result =  other.getTotalOccurrance() == totalOccurrance ? 0 : (other.getTotalOccurrance() < totalOccurrance) ? 1 : -1;
+		return result;
+	}
+
+}
+
+class CollectorStatsComparator<K extends Comparable<K>,T extends List<K>> implements Comparator<CollectorStats<K,T>> {
+	private boolean reverse = true;
+	public CollectorStatsComparator() {
+		
+	}
+	public CollectorStatsComparator(boolean reverseSortOrder) {
+		reverse = reverseSortOrder;
+	}
+	
+	@Override
+	public int compare(CollectorStats<K,T> o1, CollectorStats<K,T> o2) {
+		int result = 0;
+		if(o1.getTotalOccurrance() == o2.getTotalOccurrance()) {
+			
+		}
+		else {
+			if(reverse) {
+				result =  o1.getTotalOccurrance() < o2.getTotalOccurrance() ? 1 : -1;
+			}
+			else {
+				result = o1.getTotalOccurrance() < o2.getTotalOccurrance() ? -1 : 1;
+			}
+		}
+		return result;
+	}
 }
 

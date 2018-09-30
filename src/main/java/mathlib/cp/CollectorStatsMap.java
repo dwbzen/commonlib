@@ -216,12 +216,23 @@ public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, Collecto
 
 class MapComparator implements Comparator<Integer>
 {
-
+	private boolean reverse = true;
+	public MapComparator() {
+		
+	}
+	public MapComparator(boolean reverseSortOrder) {
+		reverse = reverseSortOrder;
+	}
 	@Override
 	public int compare(Integer int1, Integer int2) {
 		int result = 0;
 		if(!int1.equals(int2)) {
-			result = int1.intValue() < int2.intValue() ? 1 : -1;
+			if(reverse) {
+				result = int1.intValue() < int2.intValue() ? 1 : -1;
+			}
+			else {
+				result = int1.intValue() < int2.intValue() ? -1 : 1;
+			}
 		}
 		return result;
 	}
