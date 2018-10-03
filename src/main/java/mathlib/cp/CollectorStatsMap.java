@@ -2,6 +2,7 @@ package mathlib.cp;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -114,6 +115,12 @@ public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, Collecto
 		}
 	}
 
+	public Map<?,?> sortByValue() {
+		return this.entrySet().stream()
+			.sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
+			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+	}
+	
 	public Map<T, Integer> getSummaryMap() {
 		if(summaryMap == null) {
 			createSummaryMap();

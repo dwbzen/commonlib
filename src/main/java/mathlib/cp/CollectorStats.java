@@ -29,7 +29,7 @@ public class CollectorStats<K, T extends List<K>> implements Comparable<Collecto
 	public static final int HIGH = 1;
 	@JsonProperty	private boolean terminal = false;	// true if this is a terminal state
 	@JsonProperty	private boolean initial = false;	// true if this is an initial state
-	//private Comparator<CollectorStats<K,T>> comparator = new CollectorStatsComparator<>();
+	//@JsonIgnore		private Comparator<CollectorStats<K, T>> comparator = new CollectorStatsComparator();
 	
 	public CollectorStats() {
 	}
@@ -167,7 +167,7 @@ public class CollectorStats<K, T extends List<K>> implements Comparable<Collecto
 
 	@Override
 	public int compareTo(CollectorStats<K, T> other) {
-		int result =  other.getTotalOccurrance() == totalOccurrance ? 0 : (other.getTotalOccurrance() < totalOccurrance) ? 1 : -1;
+		int result =  other.getTotalOccurrance() == totalOccurrance ? 0 : (other.getTotalOccurrance() < totalOccurrance) ? -1 : 1;
 		return result;
 	}
 
