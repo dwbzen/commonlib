@@ -115,6 +115,11 @@ public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, Collecto
 		}
 	}
 
+	/**
+	 * TODO - add toJson()
+	 * 
+	 * @return LinkedHashMap 
+	 */
 	public Map<?,?> sortByValue() {
 		return this.entrySet().stream()
 			.sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
