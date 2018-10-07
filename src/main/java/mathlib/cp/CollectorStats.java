@@ -167,7 +167,17 @@ public class CollectorStats<K, T extends List<K>> implements Comparable<Collecto
 
 	@Override
 	public int compareTo(CollectorStats<K, T> other) {
-		int result =  other.getTotalOccurrance() == totalOccurrance ? 0 : (other.getTotalOccurrance() < totalOccurrance) ? -1 : 1;
+		int result = 0;
+		Map<K, OccurrenceProbability> otherProbabilityMap = other.getOccurrenceProbabilityMap();
+		Map<K, OccurrenceProbability> probabilityMap = getOccurrenceProbabilityMap();
+		T subset = getSubset();
+		T otherSubset = other.getSubset();
+		//OccurrenceProbability occurrenceProbability = probabilityMap.get(subset);
+		//OccurrenceProbability otherOccurrenceProbability  = otherProbabilityMap.get(otherSubset);
+		if( other.getTotalOccurrance() == totalOccurrance ) {
+
+		}
+		result =  other.getTotalOccurrance() == totalOccurrance ? 0 : (other.getTotalOccurrance() < totalOccurrance) ? -1 : 1;
 		return result;
 	}
 
