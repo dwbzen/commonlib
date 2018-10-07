@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @param <K> a base class
  * @param <T> class that implements List<K>
  */
-public class CollectorStatsMap<K, T extends List<K>> extends TreeMap<T, CollectorStats<K, T>> {
+public class CollectorStatsMap<K, T extends List<K>  & Comparable<T>> extends TreeMap<T, CollectorStats<K, T>> {
 
 	private static final long serialVersionUID = 4801227327750662977L;
 	static ObjectMapper objectMapper = new ObjectMapper();

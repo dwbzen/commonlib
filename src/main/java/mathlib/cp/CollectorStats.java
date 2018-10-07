@@ -2,10 +2,12 @@ package mathlib.cp;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author don_Bacon
  *
  */
-public class CollectorStats<K, T extends List<K>> implements Comparable<CollectorStats<K, T>> {
+public class CollectorStats<K, T extends List<K> & Comparable<T>> implements Comparable<CollectorStats<K, T>> {
 
 	ObjectMapper mapper = new ObjectMapper();
 	
@@ -29,7 +31,6 @@ public class CollectorStats<K, T extends List<K>> implements Comparable<Collecto
 	public static final int HIGH = 1;
 	@JsonProperty	private boolean terminal = false;	// true if this is a terminal state
 	@JsonProperty	private boolean initial = false;	// true if this is an initial state
-	//@JsonIgnore		private Comparator<CollectorStats<K, T>> comparator = new CollectorStatsComparator();
 	
 	public CollectorStats() {
 	}
@@ -168,22 +169,27 @@ public class CollectorStats<K, T extends List<K>> implements Comparable<Collecto
 	@Override
 	public int compareTo(CollectorStats<K, T> other) {
 		int result = 0;
-		Map<K, OccurrenceProbability> otherProbabilityMap = other.getOccurrenceProbabilityMap();
-		Map<K, OccurrenceProbability> probabilityMap = getOccurrenceProbabilityMap();
 		T subset = getSubset();
 		T otherSubset = other.getSubset();
-		//OccurrenceProbability occurrenceProbability = probabilityMap.get(subset);
-		//OccurrenceProbability otherOccurrenceProbability  = otherProbabilityMap.get(otherSubset);
+		assert(subset instanceof Comparable<?> && otherSubset instanceof Comparable<?>);
 		if( other.getTotalOccurrance() == totalOccurrance ) {
-
+			result = subset.compareTo(otherSubset);
 		}
-		result =  other.getTotalOccurrance() == totalOccurrance ? 0 : (other.getTotalOccurrance() < totalOccurrance) ? -1 : 1;
+		else {
+			result =  other.getTotalOccurrance() == totalOccurrance ? 0 : (other.getTotalOccurrance() < totalOccurrance) ? -1 : 1;
+		}
 		return result;
+	}
+	
+	public Map<?,?> sortByValue() {
+		return this.occurrenceProbabilityMap.entrySet().stream()
+			.sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
+			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 	}
 
 }
 
-class CollectorStatsComparator<K extends Comparable<K>,T extends List<K>> implements Comparator<CollectorStats<K,T>> {
+class CollectorStatsComparator<K extends Comparable<K>,T extends List<K> &  Comparable<T>> implements Comparator<CollectorStats<K,T>> {
 	private boolean reverse = true;
 	public CollectorStatsComparator() {
 		
