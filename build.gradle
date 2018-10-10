@@ -19,7 +19,7 @@ apply plugin: 'maven'
 apply plugin: "jacoco"
 
 sourceCompatibility = 10
-version = '1.0'
+version = '2.0'
 project.group  = 'math-lib'
 project.tasks["sonarqube"].dependsOn "jacocoTestReport"
 
