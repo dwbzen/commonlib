@@ -120,8 +120,8 @@ public class CollectorStatsMap<K, T extends List<K>  & Comparable<T>> extends Tr
 	 * 
 	 * @return LinkedHashMap 
 	 */
-	public Map<?,?> sortByValue() {
-		return this.entrySet().stream()
+	public LinkedHashMap<T,CollectorStats<K,T>>  sortByValue() {
+		return (LinkedHashMap<T,CollectorStats<K,T>> ) this.entrySet().stream()
 			.sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 	}

@@ -181,8 +181,8 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>> implements Com
 		return result;
 	}
 	
-	public Map<?,?> sortByValue() {
-		return this.occurrenceProbabilityMap.entrySet().stream()
+	public LinkedHashMap<K, OccurrenceProbability> sortByValue() {
+		return (LinkedHashMap<K, OccurrenceProbability>) this.occurrenceProbabilityMap.entrySet().stream()
 			.sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 	}

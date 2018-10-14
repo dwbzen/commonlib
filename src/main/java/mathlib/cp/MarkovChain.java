@@ -1,7 +1,9 @@
 package mathlib.cp;
 
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -36,6 +38,8 @@ public class MarkovChain<K, T extends List<K> & Comparable<T>> extends Collector
 	
 	static String COMMA_SPACE = ", ";
 
+	static OutputStyle outputStyle = OutputStyle.TEXT;
+	
 	/**
 	 * Creates a MarkovChain with a given Comparator.
 	 * @param comparator Comparator to use to order the map, if null natural ordering is used.
@@ -76,6 +80,27 @@ public class MarkovChain<K, T extends List<K> & Comparable<T>> extends Collector
 			sb.append("'" + key.toString() + "'\t" + cstats.getTotalOccurrance());
 			sb.append("\n");
 			sb.append(cstats.toString(true));
+		}
+		return sb.toString();
+	}
+	
+	public String getSortedDisplayText(OutputStyle outputStyle) {
+		StringBuilder sb = new StringBuilder();
+		LinkedHashMap<T, CollectorStats<K,T>> sortedChain = (LinkedHashMap<T, CollectorStats<K,T>>) sortByValue();
+		for(T t : sortedChain.keySet()) {
+			CollectorStats<K, T>  cstats = (CollectorStats<K, T>) sortedChain.get(t);
+			Map<K, OccurrenceProbability> sortedStats = (Map<K, OccurrenceProbability>) cstats.sortByValue();
+			sb.append(t.toString() + "\t" + cstats.getTotalOccurrance());
+			if(outputStyle==OutputStyle.TEXT) {
+				sb.append("\n");
+			}
+			for(K key2 : sortedStats.keySet()) {
+				OccurrenceProbability op = sortedStats.get(key2);
+				sb.append("\t" + key2 + "\t" + op.getOccurrence() + "\t" + op.getProbability());
+				if(outputStyle==OutputStyle.TEXT) {
+					sb.append("\n");
+				}
+			}
 		}
 		return sb.toString();
 	}
