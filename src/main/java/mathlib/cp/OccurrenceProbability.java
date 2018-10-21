@@ -15,7 +15,8 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 	@JsonProperty	private double probability = 0.0;
 	@JsonProperty	private int[] range = {0, 0};
 	@JsonIgnore		private Comparator<OccurrenceProbability> comparator = null;
-
+	static int probabilityDigits = 5;		// default
+	
 	public OccurrenceProbability() {
 		comparator = new OccurrenceProbabilityComparator();
 	}
@@ -36,6 +37,16 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 
 	public double getProbability() {
 		return probability;
+	}
+	
+	public String getProbabilityText(int ndigits) {
+		String s = "" + probability;
+		int slen = 2 + ndigits; 	// account for "0."
+		return s.length() <= slen ? s : s.substring(0, s.length() - slen);
+	}
+	
+	public String getProbabilityText() {
+		return getProbabilityText(probabilityDigits);
 	}
 
 	public void setProbability(double probability) {

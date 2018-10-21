@@ -18,20 +18,24 @@ import java.util.function.Function;
  * to produce a Set<R> based on a starting seed R.
  * 
  * Example: CharacterCollector - collects stats on Characters within Words. 
- *  Would implement ICollector<Word, CollectorStatsMap<Character, Word>, Sentence> where
+ *  ICollector<Word, MarkovChain<Character, Word>, Sentence> implements ICollector<T, R, K>
+ *  T :: Word
+ *  R :: Character
+ *  K :: Sentence
+ *  
  *  Word implements List<Character> and Comparable<Word>
  *  Sentence implements Supplier<Word>, overriding Word get();
  *  CollectorStatsMap<Character, Word> extends TreeMap<Character, CollectorStats<Character, Word>>
  *  The corresponding IProducer class is WordProducer.
  *  
  * Example: WordCollector - collects stats on Words within Sentences.
- *  Would implement ICollector<Sentence, CollectorStatsMap<Word, Sentence>, Book> where
+ *  Would implement ICollector<Sentence, MarkovChain<Word, Sentence>, Book> where
  *  Sentence implements List<Word> and Comparable<Sentence>
  *  Book implements Supplier<Sentence>, overriding Sentence get();
  *  CollectorStatsMap<Word, Sentence> extends TreeMap<Word, CollectorStats<Word, Sentence>>
  *  The Corresponding IProducer class is SentenceProducer.
  *  
- * Example: ICollector<ChordProgression, CollectorStatsMap<HarmonyChord, ChordProgression>, Song>
+ * Example: ICollector<ChordProgression, MarkovChain<HarmonyChord, ChordProgression>, Song>
  *  ChordProgression implements List<HarmonyChord> and Comparable<ChordProgression>
  *  Song implements Supplier<ChordProgression>, overriding ChordProgression get();
  *  CollectorStatsMap<HarmonyChord, ChordProgression> extends TreeMap<HarmonyChord, CollectorStats<HarmonyChord, ChordProgression>
@@ -44,10 +48,24 @@ import java.util.function.Function;
  *  
  * @author don_bacon
  */
-public interface ICollector<T, R, K> extends Function<T, R> , Consumer<K> {
+public interface ICollector<T, K, L> extends Function<T, K>, Consumer<L> {
 	void collect();
 	
 	default void collect(List<T> listOfT) {
 		// override this as default is a no-op
+	}
+	
+	/**
+	 * Implements Consumer<K>
+	 */
+	default void accept(L thing) {
+		// override this as default is a no-op
+	}
+	/**
+	 * Implements Function<T, R>
+	 */
+	default K apply(T thingToApply) {
+		// override this
+		return null;
 	}
 }

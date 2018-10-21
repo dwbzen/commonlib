@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import mathlib.util.IJson;
@@ -32,12 +33,12 @@ import mathlib.util.INameable;
 public class MarkovChain<K, T extends List<K> & Comparable<T>> extends CollectorStatsMap<K,T> implements IJson, INameable {
 
 	private static final long serialVersionUID = 8849870001304925919L;
+	static ObjectMapper mapper = new ObjectMapper();
 	
 	@JsonProperty	private String name = DEFAULT_NAME;		// storage key
 	@JsonProperty	private int order;
 	
 	static String COMMA_SPACE = ", ";
-
 	static OutputStyle outputStyle = OutputStyle.TEXT;
 	
 	/**
@@ -90,17 +91,33 @@ public class MarkovChain<K, T extends List<K> & Comparable<T>> extends Collector
 		for(T t : sortedChain.keySet()) {
 			CollectorStats<K, T>  cstats = (CollectorStats<K, T>) sortedChain.get(t);
 			Map<K, OccurrenceProbability> sortedStats = (Map<K, OccurrenceProbability>) cstats.sortByValue();
-			sb.append(t.toString() + "\t" + cstats.getTotalOccurrance());
 			if(outputStyle==OutputStyle.TEXT) {
+				sb.append(t.toString() + "\t" + cstats.getTotalOccurrance());
 				sb.append("\n");
+			}
+			else if(outputStyle==OutputStyle.JSON) {
+				sb.append("\n{ " + "\"" + t.toString() + "\" : {" );
 			}
 			for(K key2 : sortedStats.keySet()) {
 				OccurrenceProbability op = sortedStats.get(key2);
-				sb.append("\t" + key2 + "\t" + op.getOccurrence() + "\t" + op.getProbability());
 				if(outputStyle==OutputStyle.TEXT) {
+					sb.append("\t" + key2 + "\t" + op.getOccurrence() + "\t" + op.getProbabilityText());
 					sb.append("\n");
 				}
+				else if(outputStyle==OutputStyle.JSON) {
+					sb.append("\n    \"" + key2 + "\": {\n" 
+							+ "      \"occurrence\" : "  + op.getOccurrence() + ",\n"
+							+ "      \"probability\" : " + op.getProbabilityText());
+					sb.append("\n    },");
+				}
 			}
+			if(outputStyle==OutputStyle.JSON) {
+				sb.deleteCharAt(sb.length()-1);	// trailing comma
+				sb.append("\n},");		// closing brace
+			}
+		}
+		if(outputStyle==OutputStyle.JSON) {
+			sb.deleteCharAt(sb.length()-1);	// trailing comma
 		}
 		return sb.toString();
 	}
