@@ -135,8 +135,9 @@ public class CollectorStatsMap<K, T extends List<K>  & Comparable<T>> extends Tr
 	
 	private void createInvertedSummaryMap() {
 		invertedSummaryMap = new TreeMap<Integer, List<T>>(new MapComparator());
-		for(T key : this.keySet()) {
-			CollectorStats<K, T> cstats = this.get(key);
+		int keySetSize = keySet().size();
+		for(T key : keySet()) {
+			CollectorStats<K, T> cstats = get(key);
 			Integer totalOccurrance = cstats.getTotalOccurrance();
 			if(invertedSummaryMap.containsKey(totalOccurrance)) {
 				List<T> vals = invertedSummaryMap.get(totalOccurrance);

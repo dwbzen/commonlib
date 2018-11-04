@@ -1,0 +1,11 @@
+@startuml
+[CollectorDataSource] --> IDataSource
+[InputFormatter] -up-> IDataFormatter
+[CollectorDataSource] --> [InputFormatter] : rawData
+Package "cp" {
+  [Collector<T, MarkovChain<K,T>, L>] --> [ICollector<T, K, L>]
+  [Producer<<T, MarkovChain<K,T>>] --> [IProducer<K,T>]
+  [Collector<T, MarkovChain<K,T>, L>] --> [Producer<<T, MarkovChain<K,T>>] : MarkovChain
+}
+[InputFormatter] --> [Collector<T, MarkovChain<K,T>, L>]
+@enduml

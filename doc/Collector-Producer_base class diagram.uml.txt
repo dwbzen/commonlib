@@ -1,0 +1,53 @@
+@startuml
+interface "ICollector<T,K,L>" as ICollector_T_K_L_ [[java:mathlib.cp.ICollector]] {
+	void collect()
+	void collect(List<T> listOfT)
+	void accept(L thing)
+	K apply(T thingToApply)
+}
+interface "Function<T,K>" as Function_T_K_ {
+}
+Function_T_K_ <|-- ICollector_T_K_L_
+interface "Consumer<L>" as Consumer_L_ {
+}
+Consumer_L_ <|-- ICollector_T_K_L_
+interface "IProducer<T,R>" as IProducer_T_R_ [[java:mathlib.cp.IProducer]] {
+	R apply(T arg)
+	Set<R> produce()
+}
+interface "Function<T,R>" as Function_T_R_ {
+}
+Function_T_R_ <|-- IProducer_T_R_
+class WordCollector [[java:org.dwbzen.text.cp.WordCollector]] {
+	-int order
+	-MarkovChain<Word,Sentence> markovChain
+	-Book book
+	-List<String> filterWords
+	-Configuration configuration
+	-boolean ignoreCase
+	-boolean isFilteringInputText
+	-boolean isFilteringPunctuation
+	-boolean substituteWordVariants
+	-IDataFormatter<String> dataFormatter
+	-Map<String,String> variantMap
+	+{static}WordCollector getWordCollector(int order, boolean ignorecase, 
+                  TYPE type, String[] args)
+	+void collect()
+	+void accept(Book sourceBook)
+	+MarkovChain<Word,Sentence> apply(Sentence sentence)
+	+MarkovChain<Word,Sentence> getMarkovChain()
+}
+ICollector_T_K_L_ <|.. WordCollector
+class SentenceProducer [[java:org.dwbzen.text.cp.SentenceProducer]] {
+	-int numberToGenerate
+	-Sentence seed
+	-int order
+	-MarkovChain<Word,Sentence> markovChain
+	-int minimumLength
+	+{static}SentenceProducer getSentenceProducer(int order, 
+                  MarkovChain<Word,Sentence> markovChain, Sentence seed)
+	+Set<Sentence> produce()
+	+Sentence apply(MarkovChain<Word,Sentence> markovChain)
+}
+IProducer_T_R_ <|.. SentenceProducer
+@enduml
