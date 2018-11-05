@@ -13,12 +13,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import mathlib.util.IJson;
+
 /**
  * 
  * @author don_Bacon
  *
  */
-public class CollectorStats<K, T extends List<K> & Comparable<T>> implements Comparable<CollectorStats<K, T>> {
+public class CollectorStats<K, T extends List<K> & Comparable<T>> implements IJson, Comparable<CollectorStats<K, T>> {
+
+	private static final long serialVersionUID = 9036890665958155561L;
 
 	ObjectMapper mapper = new ObjectMapper();
 	
@@ -29,6 +33,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>> implements Com
 	
 	public static final int LOW = 0;
 	public static final int HIGH = 1;
+	
 	@JsonProperty	private boolean terminal = false;	// true if this is a terminal state
 	@JsonProperty	private boolean initial = false;	// true if this is an initial state
 	
@@ -141,10 +146,9 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>> implements Com
 		StringBuffer sb = new StringBuffer();
 		for(K key : occurrenceProbabilityMap.keySet()) {
 			OccurrenceProbability op = occurrenceProbabilityMap.get(key);
-			int[] rng = op.getRange();
 			sb.append("   '" + key.toString() + "'\t" + op.getOccurrence());
 			if(!totalsOnly) {
-				sb.append("\t" + rng[0] + "," + rng[1] + "\t" + op.getProbability());
+				sb.append("\t" + op.toString());
 			}
 			sb.append("\n");
 		}
@@ -155,6 +159,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>> implements Com
 		return toString(false);
 	}
 	
+	@Override
 	public String toJson() {
 		String result = null;
 		try {
@@ -214,5 +219,6 @@ class CollectorStatsComparator<K extends Comparable<K>,T extends List<K> &  Comp
 		}
 		return result;
 	}
+
 }
 

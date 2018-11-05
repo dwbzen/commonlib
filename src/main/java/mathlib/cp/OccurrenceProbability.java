@@ -1,5 +1,6 @@
 package mathlib.cp;
 
+import java.text.DecimalFormat;
 import java.util.Comparator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,7 +16,13 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 	@JsonProperty	private double probability = 0.0;
 	@JsonProperty	private int[] range = {0, 0};
 	@JsonIgnore		private Comparator<OccurrenceProbability> comparator = null;
-	static int probabilityDigits = 5;		// default
+	public static String formatPattern = null;
+	static DecimalFormat format = null;
+	
+	static {
+		formatPattern = "0.0####";
+		format = new DecimalFormat(formatPattern);
+	}
 	
 	public OccurrenceProbability() {
 		comparator = new OccurrenceProbabilityComparator();
@@ -39,14 +46,9 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 		return probability;
 	}
 	
-	public String getProbabilityText(int ndigits) {
-		String s = "" + probability;
-		int slen = 2 + ndigits; 	// account for "0."
-		return s.length() <= slen ? s : s.substring(0, s.length() - slen);
-	}
-	
+	@JsonIgnore
 	public String getProbabilityText() {
-		return getProbabilityText(probabilityDigits);
+		return format.format(probability);
 	}
 
 	public void setProbability(double probability) {
@@ -64,12 +66,17 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 		range[index] = val;
 	}
 	
+	public String toString() {
+		return range[0] + "," + range[1] + "\t" + getProbabilityText();
+	}
+	
 	public static void main(String... args) {
-		OccurrenceProbability p = new OccurrenceProbability(10, .1);
+		OccurrenceProbability p = new OccurrenceProbability(10, 0.01176470588);
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		int[] range = {1,10};
 		p.setRange(range);
 		System.out.println(p.toJson());
+		System.out.println(p.toString());
 	}
 	
 	@Override
