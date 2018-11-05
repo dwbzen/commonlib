@@ -1,9 +1,14 @@
 package mathlib.cp;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,7 +77,7 @@ public class MarkovChain<K, T extends List<K> & Comparable<T>> extends Collector
 	}
 	
 	/**
-	 * Displays the MarkovChain
+	 * Displays the MarkovChain - text output style
 	 */
 	public String getMarkovChainDisplayText() {
 		StringBuilder sb = new StringBuilder();
@@ -81,6 +86,67 @@ public class MarkovChain<K, T extends List<K> & Comparable<T>> extends Collector
 			sb.append("'" + key.toString() + "'\t" + cstats.getTotalOccurrance());
 			sb.append("\n");
 			sb.append(cstats.toString(true));
+		}
+		return sb.toString();
+	}
+	
+	public String getMarkovChainDisplayText(OutputStyle outputStyle) {
+		String output = null;
+		if(outputStyle == OutputStyle.TEXT) {
+			output =  getMarkovChainDisplayText() ;
+		}
+		else if(outputStyle==OutputStyle.JSON) {
+			output = toJson(true);
+		}
+		else if(outputStyle == OutputStyle.CSV) {
+			output = getMarkovChainCsv();
+		}
+		return output;
+	}
+	
+	private String getMarkovChainCsv() {
+		StringBuilder sb = new StringBuilder();		// rows+values
+		StringBuilder sbColumnHeadings = new StringBuilder();
+		StringBuilder sbRowHeadings = new StringBuilder();
+		/*
+		 * Build a sorted list of column headings and values by row
+		 */
+		SortedSet<String> columnSet = new TreeSet<>();
+		SortedSet<String> rowSet = new TreeSet<>();
+		SortedMap<String, Map<String, OccurrenceProbability>> rowValues = new TreeMap<>();
+		
+		for(T key : this.keySet()) {
+			CollectorStats<K, T> cstats = get(key);
+			rowSet.add(key.toString());
+			Map<K, OccurrenceProbability> probabilityMap = cstats.getOccurrenceProbabilityMap();
+			for(K k : probabilityMap.keySet()) {
+				columnSet.add(k.toString());
+				OccurrenceProbability occurrenceProbability = probabilityMap.get(k);
+				Map<String, OccurrenceProbability> probValue = new HashMap<>();
+				probValue.put(k.toString(), occurrenceProbability);
+				rowValues.put(key.toString(), probValue);
+			}
+		}
+		/*
+		 * Create the spreadsheet from rowValues map
+		 */
+		sb.append("key");
+		for(String columnKey : columnSet) { // row 1 column headings
+			sb.append("," + columnKey);
+		}
+		sb.append("\n");
+		OccurrenceProbability zeroProb = new OccurrenceProbability();
+		for(String rowKey : rowValues.keySet()) {
+			Map<String, OccurrenceProbability> probValue = rowValues.get(rowKey);
+			sb.append(rowKey);
+			for(String columnKey : columnSet) {
+				OccurrenceProbability op = zeroProb;
+				if(probValue.containsKey(columnKey)) {
+					 op = probValue.get(columnKey);
+				}
+				sb.append("," + op.getProbabilityText());
+			}
+			sb.append("\n");
 		}
 		return sb.toString();
 	}
@@ -103,7 +169,6 @@ public class MarkovChain<K, T extends List<K> & Comparable<T>> extends Collector
 				sb.append("  \"totalOccurrence\" : " + cstats.getTotalOccurrance() + ",\n");
 			}
 			for(K key2 : sortedStats.keySet()) {
-				int totalCount = sortedStats.keySet().size();
 				OccurrenceProbability op = sortedStats.get(key2);
 				if(outputStyle==OutputStyle.TEXT) {
 					sb.append("  " + key2 + "\t" + op.getOccurrence() + "\t" + op.getProbabilityText());
