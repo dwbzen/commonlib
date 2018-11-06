@@ -152,6 +152,9 @@ public class MarkovChain<K, T extends List<K> & Comparable<T>> extends Collector
 	}
 	
 	public String getSortedDisplayText(OutputStyle outputStyle) {
+		if(outputStyle==OutputStyle.CSV) {
+			return getMarkovChainCsv();
+		}
 		StringBuilder sb = new StringBuilder();
 		LinkedHashMap<T, CollectorStats<K,T>> sortedChain = (LinkedHashMap<T, CollectorStats<K,T>>) sortByValue();
 		if(outputStyle==OutputStyle.JSON) {
