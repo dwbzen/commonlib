@@ -15,5 +15,15 @@ import java.util.function.Function;
  */
 public interface IProducer<T, R>  extends Function<T, R> {
 	R apply(T arg);
-	Set<R> produce();
+	/**
+	 * 
+	 * @param enableDisplay if true, writes to System.out results as they are produced.
+	 * @return Set<R> production results
+	 */
+	Set<R> produce(boolean enableDisplay);
+	
+	default Set<R> produce() {
+		return produce(true);
+	}
+	
 }
