@@ -5,18 +5,32 @@ class "MarkovChain<K,T>" as MarkovChain_K_T_ [[java:mathlib.cp.MarkovChain]] {
     +MarkovChain(Comparator<? super T> comparator, int order)
     +MarkovChain(int order)
 }
+
 class "CollectorStatsMap<K,T>" as CollectorStatsMap_K_T_ [[java:mathlib.cp.CollectorStatsMap]] {
+    -Map<T, Integer> summaryMap
+    -Map<Integer, List<T>> invertedSummaryMap
 }
+
 CollectorStatsMap_K_T_ <|-- MarkovChain_K_T_
+
 interface IJson [[java:mathlib.util.IJson]] {
     +String toJson()
 }
+
 IJson <|.. MarkovChain_K_T_
+
 class "TreeMap<T,CollectorStats<K,T>>" as TreeMap_T_CollectorStats_K_T__ {
 }
+
 TreeMap_T_CollectorStats_K_T__ <|-- CollectorStatsMap_K_T_
+
 class "CollectorStats<K,T>" as CollectorStats_K_T_ [[java:mathlib.cp.CollectorStats]] {
+    -int subsetLength
+    -T subset
+    -int totalOccurrance
+    -Map<K, OccurrenceProbability> occurrenceProbabilityMap
 }
+
 class OccurrenceProbability [[java:mathlib.cp.OccurrenceProbability]] {
 	-int occurrence
 	-double probability
@@ -31,6 +45,7 @@ interface "Comparable<T>" as Comparable_T {
 }
 interface "Map<K, OccurrenceProbability>" as MAP_K_OccurrenceProbability {
 }
+
 Comparable_CollectorStats_K_T__ <|.. CollectorStats_K_T_
 MAP_K_OccurrenceProbability <|.. CollectorStats_K_T_
 class "T" as T_ {
@@ -40,6 +55,4 @@ Comparable_T <|.. T_
 CollectorStats_K_T_ <--* TreeMap_T_CollectorStats_K_T__
 OccurrenceProbability <--*  CollectorStats_K_T_
 OccurrenceProbability <.. MAP_K_OccurrenceProbability
-
-center footer Copyright 2018 ConnectWise, Inc.
 @enduml
