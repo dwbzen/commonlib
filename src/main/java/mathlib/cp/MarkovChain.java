@@ -9,6 +9,7 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Supplier;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +36,7 @@ import mathlib.util.INameable;
  * @param <K> a base class
  * @param <T> class that implements List<K>
  */
-public class MarkovChain<K, T extends List<K> & Comparable<T>> extends CollectorStatsMap<K,T> implements IJson, INameable {
+public class MarkovChain<K, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> extends CollectorStatsMap<K,T,R> implements IJson, INameable {
 
 	private static final long serialVersionUID = 8849870001304925919L;
 	static ObjectMapper mapper = new ObjectMapper();
@@ -82,7 +83,7 @@ public class MarkovChain<K, T extends List<K> & Comparable<T>> extends Collector
 	public String getMarkovChainDisplayText() {
 		StringBuilder sb = new StringBuilder();
 		for(T key : this.keySet()) {
-			CollectorStats<K, T> cstats = this.get(key);
+			CollectorStats<K, T, R> cstats = this.get(key);
 			sb.append("'" + key.toString() + "'\t" + cstats.getTotalOccurrance());
 			sb.append("\n");
 			sb.append(cstats.toString(true));
@@ -106,8 +107,7 @@ public class MarkovChain<K, T extends List<K> & Comparable<T>> extends Collector
 	
 	private String getMarkovChainCsv() {
 		StringBuilder sb = new StringBuilder();		// rows+values
-		StringBuilder sbColumnHeadings = new StringBuilder();
-		StringBuilder sbRowHeadings = new StringBuilder();
+
 		/*
 		 * Build a sorted list of column headings and values by row
 		 */
@@ -116,7 +116,7 @@ public class MarkovChain<K, T extends List<K> & Comparable<T>> extends Collector
 		SortedMap<String, Map<String, OccurrenceProbability>> rowValues = new TreeMap<>();
 		
 		for(T key : this.keySet()) {
-			CollectorStats<K, T> cstats = get(key);
+			CollectorStats<K, T, R> cstats = get(key);
 			rowSet.add(key.toString());
 			Map<K, OccurrenceProbability> probabilityMap = cstats.getOccurrenceProbabilityMap();
 			for(K k : probabilityMap.keySet()) {
@@ -156,12 +156,12 @@ public class MarkovChain<K, T extends List<K> & Comparable<T>> extends Collector
 			return getMarkovChainCsv();
 		}
 		StringBuilder sb = new StringBuilder();
-		LinkedHashMap<T, CollectorStats<K,T>> sortedChain = (LinkedHashMap<T, CollectorStats<K,T>>) sortByValue();
+		LinkedHashMap<T, CollectorStats<K,T, R>> sortedChain = (LinkedHashMap<T, CollectorStats<K,T,R>>) sortByValue();
 		if(outputStyle==OutputStyle.JSON) {
 			sb.append("[\n");
 		}
 		for(T t : sortedChain.keySet()) {
-			CollectorStats<K, T>  cstats = (CollectorStats<K, T>) sortedChain.get(t);
+			CollectorStats<K, T, R>  cstats = (CollectorStats<K, T, R>) sortedChain.get(t);
 			Map<K, OccurrenceProbability> sortedStats = (Map<K, OccurrenceProbability>) cstats.sortByValue();
 			if(outputStyle==OutputStyle.TEXT) {
 				sb.append(t.toString() + "\t" + cstats.getTotalOccurrance());

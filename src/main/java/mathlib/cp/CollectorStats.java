@@ -7,20 +7,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mathlib.util.IJson;
+import mathlib.util.INameable;
 
 /**
  * 
  * @author don_Bacon
  *
  */
-public class CollectorStats<K, T extends List<K> & Comparable<T>> implements IJson, Comparable<CollectorStats<K, T>> {
+public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> implements IJson, Comparable<CollectorStats<K, T, R>> {
 
 	private static final long serialVersionUID = 9036890665958155561L;
 
@@ -28,6 +31,8 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>> implements IJs
 	
 	@JsonProperty	private int subsetLength;
 	@JsonProperty	private T subset;				// List of length subsetLength
+	@JsonIgnore		private R supplier;				// the Supplier<T> reference
+	@JsonProperty("name") private String supplierName;
 	@JsonProperty	private int totalOccurrance;	// total #times subset occurs
 	@JsonProperty	private Map<K, OccurrenceProbability> occurrenceProbabilityMap = new TreeMap<K, OccurrenceProbability>();
 	
@@ -85,15 +90,25 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>> implements IJs
 		return occurrenceProbabilityMap;
 	}
 	
-	public void addOccurrence(K toccur) {
+	public void addOccurrence(K toccur, R theSupplier) {
+		supplier = theSupplier;
 		if(occurrenceProbabilityMap.containsKey(toccur)) {
 			OccurrenceProbability op = occurrenceProbabilityMap.get(toccur);
 			op.setOccurrence(op.getOccurrence() + 1);
+			setSupplier(theSupplier);
 		}
 		else {
 			occurrenceProbabilityMap.put(toccur, new OccurrenceProbability(1, 1.0));
 		}
 		recomputeProbabilitie();
+	}
+	
+	/**
+	 * For backward compatibility
+	 * @param toccur
+	 */
+	public void addOccurrence(K toccur) {
+		addOccurrence(toccur, null);
 	}
 
 	/**
@@ -142,6 +157,15 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>> implements IJs
 		this.totalOccurrance = totalOccurrance;
 	}
 
+	public R getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(R supplier) {
+		this.supplier = supplier;
+		supplierName = supplier.getName();
+	}
+
 	public String toString(boolean totalsOnly) {
 		StringBuffer sb = new StringBuffer();
 		for(K key : occurrenceProbabilityMap.keySet()) {
@@ -172,7 +196,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>> implements IJs
 	}
 
 	@Override
-	public int compareTo(CollectorStats<K, T> other) {
+	public int compareTo(CollectorStats<K, T, R> other) {
 		int result = 0;
 		T subset = getSubset();
 		T otherSubset = other.getSubset();
@@ -194,17 +218,18 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>> implements IJs
 
 }
 
-class CollectorStatsComparator<K extends Comparable<K>,T extends List<K> &  Comparable<T>> implements Comparator<CollectorStats<K,T>> {
+class CollectorStatsComparator<K extends Comparable<K>,T extends List<K> &  Comparable<T>, R extends Supplier<T> & INameable> implements Comparator<CollectorStats<K,T,R>> {
 	private boolean reverse = true;
 	public CollectorStatsComparator() {
 		
 	}
+	
 	public CollectorStatsComparator(boolean reverseSortOrder) {
 		reverse = reverseSortOrder;
 	}
 	
 	@Override
-	public int compare(CollectorStats<K,T> o1, CollectorStats<K,T> o2) {
+	public int compare(CollectorStats<K,T,R> o1, CollectorStats<K,T,R> o2) {
 		int result = 0;
 		if(o1.getTotalOccurrance() == o2.getTotalOccurrance()) {
 			

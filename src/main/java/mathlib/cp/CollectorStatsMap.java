@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import mathlib.util.INameable;
 
 /**
  * A TreeMap bound to a base class K and some class T that implements a List<K>
@@ -29,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @param <K> a base class
  * @param <T> class that implements List<K>
  */
-public class CollectorStatsMap<K, T extends List<K>  & Comparable<T>> extends TreeMap<T, CollectorStats<K, T>> {
+public class CollectorStatsMap<K, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> extends TreeMap<T, CollectorStats<K, T, R>> {
 
 	private static final long serialVersionUID = 4801227327750662977L;
 	static ObjectMapper objectMapper = new ObjectMapper();
@@ -70,7 +73,7 @@ public class CollectorStatsMap<K, T extends List<K>  & Comparable<T>> extends Tr
 	 */
 	public T pickSeed() {
 		T seed = null;
-		CollectorStats<K,T> cstats = null;
+		CollectorStats<K,T,R> cstats = null;
 		while(true) {
 			seed = pickCandidateSeed();
 			cstats = get(seed);
@@ -99,7 +102,7 @@ public class CollectorStatsMap<K, T extends List<K>  & Comparable<T>> extends Tr
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		for(T key : this.keySet()) {
-			CollectorStats<K, T> cstats = this.get(key);
+			CollectorStats<K, T, R> cstats = this.get(key);
 			sb.append("'" + key.toString() + "'\t" + cstats.getTotalOccurrance());
 			sb.append("\n");
 		}
@@ -109,7 +112,7 @@ public class CollectorStatsMap<K, T extends List<K>  & Comparable<T>> extends Tr
 	private void createSummaryMap() {
 		summaryMap = new TreeMap<T, Integer>();
 		for(T key : this.keySet()) {
-			CollectorStats<K, T> cstats = this.get(key);
+			CollectorStats<K, T, R> cstats = this.get(key);
 			Integer totalOccurrance = cstats.getTotalOccurrance();
 			summaryMap.put(key, totalOccurrance);
 		}
@@ -120,8 +123,8 @@ public class CollectorStatsMap<K, T extends List<K>  & Comparable<T>> extends Tr
 	 * 
 	 * @return LinkedHashMap 
 	 */
-	public LinkedHashMap<T,CollectorStats<K,T>>  sortByValue() {
-		return (LinkedHashMap<T,CollectorStats<K,T>> ) this.entrySet().stream()
+	public LinkedHashMap<T, CollectorStats<K,T,R>>  sortByValue() {
+		return (LinkedHashMap<T,CollectorStats<K,T,R>> ) this.entrySet().stream()
 			.sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 	}
@@ -135,9 +138,8 @@ public class CollectorStatsMap<K, T extends List<K>  & Comparable<T>> extends Tr
 	
 	private void createInvertedSummaryMap() {
 		invertedSummaryMap = new TreeMap<Integer, List<T>>(new MapComparator());
-		int keySetSize = keySet().size();
 		for(T key : keySet()) {
-			CollectorStats<K, T> cstats = get(key);
+			CollectorStats<K, T,R> cstats = get(key); 
 			Integer totalOccurrance = cstats.getTotalOccurrance();
 			if(invertedSummaryMap.containsKey(totalOccurrance)) {
 				List<T> vals = invertedSummaryMap.get(totalOccurrance);
