@@ -21,6 +21,8 @@ import mathlib.util.INameable;
 /**
  * 
  * @author don_Bacon
+ * TODO: Need a List<Supplier> instead of just one. Could also include a count by supplier
+ * TODO so a Map<R, Integer> would work 
  *
  */
 public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> implements IJson, Comparable<CollectorStats<K, T, R>> {
@@ -108,7 +110,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 	 * @param toccur
 	 */
 	public void addOccurrence(K toccur) {
-		addOccurrence(toccur, null);
+		addOccurrence(toccur,null);
 	}
 
 	/**
@@ -163,7 +165,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 
 	public void setSupplier(R supplier) {
 		this.supplier = supplier;
-		supplierName = supplier.getName();
+		supplierName = (supplier != null) ?  supplier.getName() : "";
 	}
 
 	public String toString(boolean totalsOnly) {
