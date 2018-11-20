@@ -19,10 +19,11 @@ import mathlib.util.IJson;
 import mathlib.util.INameable;
 
 /**
+ * CollectorStats encapsulates probabilities for a particular T subset and Collection of Supplier.<br>
+ * For example in CollectorStats<HarmonyChord, ChordProgression, Song>, the subset is a ChordProgression,<br>
+ * the next state is a HarmonyChord and the Supplier is Song.
  * 
  * @author don_Bacon
- * TODO: Need a List<Supplier> instead of just one. Could also include a count by supplier
- * TODO so a Map<R, Integer> would work 
  *
  */
 public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> implements IJson, Comparable<CollectorStats<K, T, R>> {
@@ -31,11 +32,17 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 
 	ObjectMapper mapper = new ObjectMapper();
 	
-	@JsonProperty	private int subsetLength;
-	@JsonProperty	private T subset;				// List of length subsetLength
-	@JsonIgnore		private R supplier;				// the Supplier<T> reference
-	@JsonProperty("name") private String supplierName;
-	@JsonProperty	private int totalOccurrance;	// total #times subset occurs
+	@JsonProperty("length")	private int subsetLength;
+	@JsonProperty	private T subset;					// List of length subsetLength
+	/*
+	 * Maps Supplier name to Supplier instance
+	 */
+	@JsonIgnore		private Map<String, R> suppliers = new TreeMap<>();
+	/*
+	 * Count for each Supplier (by name)
+	 */
+	@JsonProperty("suppliers")   private Map<String, Integer> supplierNames = new TreeMap<>();
+	@JsonProperty	private int totalOccurrance;		// total #times subset occurs
 	@JsonProperty	private Map<K, OccurrenceProbability> occurrenceProbabilityMap = new TreeMap<K, OccurrenceProbability>();
 	
 	public static final int LOW = 0;
@@ -93,15 +100,20 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 	}
 	
 	public void addOccurrence(K toccur, R theSupplier) {
-		supplier = theSupplier;
+		int supplierCount = 1;
+		String name = theSupplier.getName();
+		if(supplierNames.containsKey(name)) {
+			supplierCount = supplierNames.get(name) + 1;
+		}
 		if(occurrenceProbabilityMap.containsKey(toccur)) {
 			OccurrenceProbability op = occurrenceProbabilityMap.get(toccur);
 			op.setOccurrence(op.getOccurrence() + 1);
-			setSupplier(theSupplier);
 		}
 		else {
 			occurrenceProbabilityMap.put(toccur, new OccurrenceProbability(1, 1.0));
+			suppliers.put(name, theSupplier);
 		}
+		supplierNames.put(name, supplierCount);
 		recomputeProbabilitie();
 	}
 	
@@ -159,13 +171,16 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 		this.totalOccurrance = totalOccurrance;
 	}
 
-	public R getSupplier() {
-		return supplier;
+	public Collection<R> getSuppliers() {
+		return suppliers.values();
 	}
-
-	public void setSupplier(R supplier) {
-		this.supplier = supplier;
-		supplierName = (supplier != null) ?  supplier.getName() : "";
+	
+	public Map<String, Integer> getSupplierNames() {
+		return this.supplierNames;
+	}
+	
+	public int getSupplierCount(R s) {
+		return (supplierNames.containsKey(s.getName())) ? supplierNames.get(s.getName()) : 0;
 	}
 
 	public String toString(boolean totalsOnly) {
@@ -176,6 +191,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 			if(!totalsOnly) {
 				sb.append("\t" + op.toString());
 			}
+			sb.append(getSupplierNames());
 			sb.append("\n");
 		}
 		return sb.toString();
