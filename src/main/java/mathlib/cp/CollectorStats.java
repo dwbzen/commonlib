@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import mathlib.OrderedPair;
 import mathlib.util.IJson;
 import mathlib.util.INameable;
 
@@ -39,9 +40,9 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 	 */
 	@JsonIgnore		private Map<String, R> suppliers = new TreeMap<>();
 	/*
-	 * Count for each Supplier (by name)
+	 * Count for each K + R (Supplier) (by name)
 	 */
-	@JsonProperty("suppliers")   private Map<String, Integer> supplierNames = new TreeMap<>();
+	@JsonProperty("supplierCounts")   private Map<OrderedPair<K,String>, Integer> supplierCounts = new TreeMap<>();
 	@JsonProperty	private int totalOccurrance;		// total #times subset occurs
 	@JsonProperty	private Map<K, OccurrenceProbability> occurrenceProbabilityMap = new TreeMap<K, OccurrenceProbability>();
 	
@@ -102,8 +103,9 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 	public void addOccurrence(K toccur, R theSupplier) {
 		int supplierCount = 1;
 		String name = theSupplier.getName();
-		if(supplierNames.containsKey(name)) {
-			supplierCount = supplierNames.get(name) + 1;
+		OrderedPair<K, String> supplierCollectable = new OrderedPair<>(toccur, name);
+		if(supplierCounts.containsKey(supplierCollectable)) {
+			supplierCount = supplierCounts.get(supplierCollectable) + 1;
 		}
 		if(occurrenceProbabilityMap.containsKey(toccur)) {
 			OccurrenceProbability op = occurrenceProbabilityMap.get(toccur);
@@ -113,7 +115,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 			occurrenceProbabilityMap.put(toccur, new OccurrenceProbability(1, 1.0));
 			suppliers.put(name, theSupplier);
 		}
-		supplierNames.put(name, supplierCount);
+		supplierCounts.put(supplierCollectable, supplierCount);
 		recomputeProbabilitie();
 	}
 	
@@ -175,12 +177,13 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 		return suppliers.values();
 	}
 	
-	public Map<String, Integer> getSupplierNames() {
-		return this.supplierNames;
+	public Map<OrderedPair<K,String>, Integer> getSupplierCounts() {
+		return this.supplierCounts;
 	}
 	
-	public int getSupplierCount(R s) {
-		return (supplierNames.containsKey(s.getName())) ? supplierNames.get(s.getName()) : 0;
+	public int getSupplierCount(K collectable, R supplier) {
+		OrderedPair<K, String> key = new OrderedPair<>(collectable, supplier.getName());
+		return (supplierCounts.containsKey(key)) ? supplierCounts.get(key) : 0;
 	}
 
 	public String toString(boolean totalsOnly) {
@@ -191,7 +194,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 			if(!totalsOnly) {
 				sb.append("\t" + op.toString());
 			}
-			sb.append(getSupplierNames());
+			sb.append(getSupplierCounts());
 			sb.append("\n");
 		}
 		return sb.toString();
