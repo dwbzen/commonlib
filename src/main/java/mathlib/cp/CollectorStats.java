@@ -39,6 +39,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 	 * Maps Supplier name to Supplier instance
 	 */
 	@JsonIgnore		private Map<String, R> suppliers = new TreeMap<>();
+	@JsonIgnore		private boolean showSupplierCounts = true;
 	/*
 	 * Count for each K + R (Supplier) (by name)
 	 */
@@ -104,6 +105,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 		int supplierCount = 1;
 		String name = theSupplier.getName();
 		OrderedPair<K, String> supplierCollectable = new OrderedPair<>(toccur, name);
+		System.out.println("  " + toccur + ": " + name);
 		if(supplierCounts.containsKey(supplierCollectable)) {
 			supplierCount = supplierCounts.get(supplierCollectable) + 1;
 		}
@@ -194,7 +196,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 			if(!totalsOnly) {
 				sb.append("\t" + op.toString());
 			}
-			sb.append(getSupplierCounts());
+			if(showSupplierCounts) { sb.append(getSupplierCounts()); }
 			sb.append("\n");
 		}
 		return sb.toString();
