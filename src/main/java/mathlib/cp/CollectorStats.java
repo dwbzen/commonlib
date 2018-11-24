@@ -40,6 +40,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 	 */
 	@JsonIgnore		private Map<String, R> suppliers = new TreeMap<>();
 	@JsonIgnore		private boolean showSupplierCounts = true;
+	@JsonIgnore		 R noSupplier = null;
 	/*
 	 * Count for each K + R (Supplier) (by name)
 	 */
@@ -52,6 +53,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 	
 	@JsonProperty	private boolean terminal = false;	// true if this is a terminal state
 	@JsonProperty	private boolean initial = false;	// true if this is an initial state
+	public static boolean trace = false;
 	
 	public CollectorStats() {
 	}
@@ -103,9 +105,9 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 	
 	public void addOccurrence(K toccur, R theSupplier) {
 		int supplierCount = 1;
-		String name = theSupplier.getName();
+		String name = theSupplier!= null ? theSupplier.getName() : "Unnamed";
 		OrderedPair<K, String> supplierCollectable = new OrderedPair<>(toccur, name);
-		System.out.println("  " + toccur + ": " + name);
+		if(trace) { System.out.println("  " + toccur + ": " + name); }
 		if(supplierCounts.containsKey(supplierCollectable)) {
 			supplierCount = supplierCounts.get(supplierCollectable) + 1;
 		}
@@ -123,10 +125,12 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 	
 	/**
 	 * For backward compatibility
+	 * @deprecated use addOccurrence(K toccur, R theSupplier)
 	 * @param toccur
 	 */
 	public void addOccurrence(K toccur) {
-		addOccurrence(toccur,null);
+		R supplier = null;
+		addOccurrence(toccur,supplier);
 	}
 
 	/**
@@ -189,14 +193,30 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 	}
 
 	public String toString(boolean totalsOnly) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for(K key : occurrenceProbabilityMap.keySet()) {
 			OccurrenceProbability op = occurrenceProbabilityMap.get(key);
 			sb.append("   '" + key.toString() + "'\t" + op.getOccurrence());
 			if(!totalsOnly) {
 				sb.append("\t" + op.toString());
 			}
-			if(showSupplierCounts) { sb.append(getSupplierCounts()); }
+			if(showSupplierCounts) { 
+				Map<OrderedPair<K,String>, Integer> scounts = getSupplierCounts();
+				int i=0;
+				for(OrderedPair<K,String> suppop : scounts.keySet()) {
+					if(suppop.getX().equals(key)) {
+						if(i == 0) {
+							sb.append("\t{");
+						}
+						i++;
+						sb.append(suppop.getY() + ":" + scounts.get(suppop) + ",");
+					}
+				}
+				if(i > 0) {
+					sb.deleteCharAt(sb.length()-1);
+					sb.append("}");
+				}
+			}
 			sb.append("\n");
 		}
 		return sb.toString();
