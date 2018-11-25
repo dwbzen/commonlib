@@ -27,7 +27,8 @@ import mathlib.util.INameable;
  * @author don_Bacon
  *
  */
-public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> implements IJson, Comparable<CollectorStats<K, T, R>> {
+public class CollectorStats<K extends Comparable<K>, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> 
+		implements IJson, Comparable<CollectorStats<K, T, R>> {
 
 	private static final long serialVersionUID = 9036890665958155561L;
 
@@ -53,7 +54,7 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 	
 	@JsonProperty	private boolean terminal = false;	// true if this is a terminal state
 	@JsonProperty	private boolean initial = false;	// true if this is an initial state
-	public static boolean trace = false;
+	public static boolean trace = true;
 	
 	public CollectorStats() {
 	}
@@ -204,7 +205,8 @@ public class CollectorStats<K, T extends List<K> & Comparable<T>, R extends Supp
 				Map<OrderedPair<K,String>, Integer> scounts = getSupplierCounts();
 				int i=0;
 				for(OrderedPair<K,String> suppop : scounts.keySet()) {
-					if(suppop.getX().equals(key)) {
+					K x = suppop.getX();
+					if(x.compareTo(key)==0) {
 						if(i == 0) {
 							sb.append("\t{");
 						}

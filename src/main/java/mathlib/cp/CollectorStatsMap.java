@@ -32,7 +32,7 @@ import mathlib.util.INameable;
  * @param <K> a base class
  * @param <T> class that implements List<K>
  */
-public class CollectorStatsMap<K, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> extends TreeMap<T, CollectorStats<K, T, R>> {
+public class CollectorStatsMap<K extends Comparable<K>, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> extends TreeMap<T, CollectorStats<K, T, R>> {
 
 	private static final long serialVersionUID = 4801227327750662977L;
 	static ObjectMapper objectMapper = new ObjectMapper();

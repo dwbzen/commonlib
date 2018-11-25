@@ -36,7 +36,7 @@ import mathlib.util.INameable;
  * @param <K> a base class
  * @param <T> class that implements List<K>
  */
-public class MarkovChain<K, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> extends CollectorStatsMap<K,T,R> implements IJson, INameable {
+public class MarkovChain<K extends Comparable<K>, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> extends CollectorStatsMap<K,T,R> implements IJson, INameable {
 
 	private static final long serialVersionUID = 8849870001304925919L;
 	static ObjectMapper mapper = new ObjectMapper();
