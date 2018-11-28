@@ -125,8 +125,7 @@ public class CollectorStats<K extends Comparable<K>, T extends List<K> & Compara
 	}
 	
 	/**
-	 * For backward compatibility
-	 * @deprecated use addOccurrence(K toccur, R theSupplier)
+	 * Use addOccurrence(K toccur, R theSupplier) if possible/
 	 * @param toccur
 	 */
 	public void addOccurrence(K toccur) {
