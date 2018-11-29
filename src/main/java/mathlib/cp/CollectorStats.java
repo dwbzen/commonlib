@@ -192,6 +192,14 @@ public class CollectorStats<K extends Comparable<K>, T extends List<K> & Compara
 		return (supplierCounts.containsKey(key)) ? supplierCounts.get(key) : 0;
 	}
 
+	public boolean isShowSupplierCounts() {
+		return showSupplierCounts;
+	}
+
+	public void setShowSupplierCounts(boolean showSupplierCounts) {
+		this.showSupplierCounts = showSupplierCounts;
+	}
+
 	public String toString(boolean totalsOnly) {
 		StringBuilder sb = new StringBuilder();
 		for(K key : occurrenceProbabilityMap.keySet()) {
