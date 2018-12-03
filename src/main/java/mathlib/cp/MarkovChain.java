@@ -81,20 +81,29 @@ public class MarkovChain<K extends Comparable<K>, T extends List<K> & Comparable
 	 * Displays the MarkovChain - text output style
 	 */
 	public String getMarkovChainDisplayText() {
+		return getMarkovChainDisplayText(false);
+	}
+	
+	public String getMarkovChainDisplayText(boolean showSupplierCounts) {
 		StringBuilder sb = new StringBuilder();
 		for(T key : this.keySet()) {
 			CollectorStats<K, T, R> cstats = this.get(key);
+			cstats.setShowSupplierCounts(showSupplierCounts);
 			sb.append("'" + key.toString() + "'\t" + cstats.getTotalOccurrance());
 			sb.append("\n");
-			sb.append(cstats.toString(true));
+			sb.append(cstats.toString(showSupplierCounts));
 		}
 		return sb.toString();
 	}
 	
 	public String getMarkovChainDisplayText(OutputStyle outputStyle) {
+		return getMarkovChainDisplayText(outputStyle, false);
+	}
+	
+	public String getMarkovChainDisplayText(OutputStyle outputStyle, boolean showSupplierCounts) {
 		String output = null;
 		if(outputStyle == OutputStyle.TEXT) {
-			output =  getMarkovChainDisplayText() ;
+			output =  getMarkovChainDisplayText(showSupplierCounts) ;
 		}
 		else if(outputStyle==OutputStyle.JSON) {
 			output = toJson(true);
@@ -152,6 +161,10 @@ public class MarkovChain<K extends Comparable<K>, T extends List<K> & Comparable
 	}
 	
 	public String getSortedDisplayText(OutputStyle outputStyle) {
+		return getSortedDisplayText(outputStyle, false);
+	}
+	
+	public String getSortedDisplayText(OutputStyle outputStyle, boolean showSupplierCounts) {
 		if(outputStyle==OutputStyle.CSV) {
 			return getMarkovChainCsv();
 		}
@@ -175,6 +188,9 @@ public class MarkovChain<K extends Comparable<K>, T extends List<K> & Comparable
 				OccurrenceProbability op = sortedStats.get(key2);
 				if(outputStyle==OutputStyle.TEXT) {
 					sb.append("  " + key2 + "\t" + op.getOccurrence() + "\t" + op.getProbabilityText());
+					if(showSupplierCounts) {
+						cstats.getSupplierCountsString(key2, sb);
+					}
 					sb.append("\n");
 				}
 				else if(outputStyle==OutputStyle.JSON) {

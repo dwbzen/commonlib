@@ -209,24 +209,32 @@ public class CollectorStats<K extends Comparable<K>, T extends List<K> & Compara
 				sb.append("\t" + op.toString());
 			}
 			if(showSupplierCounts) { 
-				Map<OrderedPair<K,String>, Integer> scounts = getSupplierCounts();
-				int i=0;
-				for(OrderedPair<K,String> suppop : scounts.keySet()) {
-					K x = suppop.getX();
-					if(x.compareTo(key)==0) {
-						if(i == 0) {
-							sb.append("\t{");
-						}
-						i++;
-						sb.append(suppop.getY() + ":" + scounts.get(suppop) + ",");
-					}
-				}
-				if(i > 0) {
-					sb.deleteCharAt(sb.length()-1);
-					sb.append("}");
-				}
+				getSupplierCountsString(key, sb);
 			}
 			sb.append("\n");
+		}
+		return sb.toString();
+	}
+	
+	public String getSupplierCountsString(K key, StringBuilder sb) {
+		if(sb == null) {
+			sb = new StringBuilder();
+		}
+		Map<OrderedPair<K,String>, Integer> scounts = getSupplierCounts();
+		int i=0;
+		for(OrderedPair<K,String> suppop : scounts.keySet()) {
+			K x = suppop.getX();
+			if(x.compareTo(key)==0) {
+				if(i == 0) {
+					sb.append("\t{");
+				}
+				i++;
+				sb.append(suppop.getY() + ":" + scounts.get(suppop) + ",");
+			}
+		}
+		if(i > 0) {
+			sb.deleteCharAt(sb.length()-1);
+			sb.append("}");
 		}
 		return sb.toString();
 	}

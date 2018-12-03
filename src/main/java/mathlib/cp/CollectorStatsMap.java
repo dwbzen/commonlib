@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import mathlib.cp.ISeedPicker;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +43,8 @@ public class CollectorStatsMap<K extends Comparable<K>, T extends List<K> & Comp
 	@JsonIgnore private Map<Integer, List<T>> invertedSummaryMap = null;
 	@JsonIgnore protected boolean trace = false;
 	@JsonIgnore boolean pickInitialSeed = false;
+	// optional bespoke class to pick seed
+	@JsonIgnore Optional<ISeedPicker<K,T,R>> seedPicker;	
 
 	protected static final Logger log = LogManager.getLogger(CollectorStatsMap.class);
 
@@ -74,6 +78,10 @@ public class CollectorStatsMap<K extends Comparable<K>, T extends List<K> & Comp
 	public T pickSeed() {
 		T seed = null;
 		CollectorStats<K,T,R> cstats = null;
+		if(seedPicker.isPresent()) {
+			ISeedPicker<K,T,R> mySeedPicker = seedPicker.get();
+			return mySeedPicker.pickSeed();
+		}
 		while(true) {
 			seed = pickCandidateSeed();
 			cstats = get(seed);
@@ -97,6 +105,21 @@ public class CollectorStatsMap<K extends Comparable<K>, T extends List<K> & Comp
 
 		log.debug("picked candidate seed: '" + seed + "'");
 		return seed;
+	}
+	
+
+	public ISeedPicker<K,T,R> getSeedPicker() {
+		return seedPicker.get();
+	}
+
+	/**
+	 * Sets the ISeedPicker to use.
+	 * @throws NullPointerException if null
+	 * 
+	 * @param mySeedPicker non-null ISeedPicker<K,T,R> instance.
+	 */
+	public void setSeedPicker(ISeedPicker<K,T,R> mySeedPicker) {
+		seedPicker = Optional.of(mySeedPicker);
 	}
 
 	public String toString() {
