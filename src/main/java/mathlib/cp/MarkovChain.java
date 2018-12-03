@@ -25,7 +25,7 @@ import mathlib.util.INameable;
  * and not on the sequence of events that preceded it.
  * The states are T instances, transitions from state T1 to state T2 are K instances
  * each transition has an associated probability and additional information
- * used by classes that generate Ts.
+ * used by classes that generate Ts.</p>
  * 
  * The order of the MarkovChain is the number of states that determine future states.
  *
@@ -35,6 +35,7 @@ import mathlib.util.INameable;
  * 
  * @param <K> a base class
  * @param <T> class that implements List<K>
+ * @param <R> clas that is a Supplier of <T>
  */
 public class MarkovChain<K extends Comparable<K>, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> extends CollectorStatsMap<K,T,R> implements IJson, INameable {
 

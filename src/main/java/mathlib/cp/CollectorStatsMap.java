@@ -22,11 +22,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import mathlib.util.INameable;
 
 /**
- * A TreeMap bound to a base class K and some class T that implements a List<K>
- * Some examples, 
- * K : HarmonyChord, T : ChordProgression (which implements List<HarmonyChord>
- * K : Character, T : Word (implements List<Character>)
- * K : Word, T : Sentence (implements List<Word> )
+ * A TreeMap bound to a base class K a class T that implements a List<K>, and class R which supplies T instances.
+ * Some examples, <br>
+ * K : HarmonyChord, T : ChordProgression (which implements List<HarmonyChord>) R : Song (Supplier of ChordProgression)<br>
+ * K : Character, T : Word (implements List<Character>), R : Sentence (Supplier of Word)<br>
+ * K : Word, T : Sentence (implements List<Word> ), R : Book (Supplier of Sentence)<br>
  * 
  * A Comparator must be provided so it knows how to order the elements in the TreeMap.
  * @author don_bacon

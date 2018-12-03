@@ -41,7 +41,7 @@ public class CollectorStats<K extends Comparable<K>, T extends List<K> & Compara
 	 */
 	@JsonIgnore		private Map<String, R> suppliers = new TreeMap<>();
 	@JsonIgnore		private boolean showSupplierCounts = true;
-	@JsonIgnore		 R noSupplier = null;
+	@JsonIgnore		R noSupplier = null;
 	/*
 	 * Count for each K + R (Supplier) (by name)
 	 */
