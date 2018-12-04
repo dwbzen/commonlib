@@ -44,7 +44,7 @@ public class CollectorStatsMap<K extends Comparable<K>, T extends List<K> & Comp
 	@JsonIgnore protected boolean trace = false;
 	@JsonIgnore boolean pickInitialSeed = false;
 	// optional bespoke class to pick seed
-	@JsonIgnore Optional<ISeedPicker<K,T,R>> seedPicker;	
+	@JsonIgnore Optional<ISeedPicker<K,T,R>> seedPicker = Optional.empty();	
 
 	protected static final Logger log = LogManager.getLogger(CollectorStatsMap.class);
 
