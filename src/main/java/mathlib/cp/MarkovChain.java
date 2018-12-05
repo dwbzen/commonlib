@@ -37,7 +37,8 @@ import mathlib.util.INameable;
  * @param <T> class that implements List<K>
  * @param <R> clas that is a Supplier of <T>
  */
-public class MarkovChain<K extends Comparable<K>, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> extends CollectorStatsMap<K,T,R> implements IJson, INameable {
+public class MarkovChain<K extends Comparable<K>, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> extends CollectorStatsMap<K,T,R> 
+	implements IJson, INameable {
 
 	private static final long serialVersionUID = 8849870001304925919L;
 	static ObjectMapper mapper = new ObjectMapper();
@@ -60,6 +61,14 @@ public class MarkovChain<K extends Comparable<K>, T extends List<K> & Comparable
 	
 	public MarkovChain(int order) {
 		this(null, order);
+	}
+	
+	/**
+	 * Effectively combine this and another MarkovChain into a single instance.
+	 * @param chainToAdd
+	 */
+	public void addMarkovChain(MarkovChain<K,T,R> chainToAdd) {
+		
 	}
 
 	public String getName() {

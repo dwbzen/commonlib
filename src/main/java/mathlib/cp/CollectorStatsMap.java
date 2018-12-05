@@ -34,7 +34,8 @@ import mathlib.util.INameable;
  * @param <K> a base class
  * @param <T> class that implements List<K>
  */
-public class CollectorStatsMap<K extends Comparable<K>, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> extends TreeMap<T, CollectorStats<K, T, R>> {
+public class CollectorStatsMap<K extends Comparable<K>, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> 
+	extends TreeMap<T, CollectorStats<K, T, R>> implements Cloneable {
 
 	private static final long serialVersionUID = 4801227327750662977L;
 	static ObjectMapper objectMapper = new ObjectMapper();
@@ -55,6 +56,11 @@ public class CollectorStatsMap<K extends Comparable<K>, T extends List<K> & Comp
 	public CollectorStatsMap(Comparator<? super T> comparator) {
 		super(comparator);
 	}
+	
+	public Object clone() {
+		return super.clone();
+	}
+	
 	
 	public boolean isTrace() {
 		return trace;
