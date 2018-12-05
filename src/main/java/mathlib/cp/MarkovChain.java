@@ -129,10 +129,10 @@ public class MarkovChain<K extends Comparable<K>, T extends List<K> & Comparable
 			CollectorStats<K, T, R> cstats = get(key);
 			rowSet.add(key.toString());
 			Map<K, OccurrenceProbability> probabilityMap = cstats.getOccurrenceProbabilityMap();
+			Map<String, OccurrenceProbability> probValue = new HashMap<>();
 			for(K k : probabilityMap.keySet()) {
 				columnSet.add(k.toString());
 				OccurrenceProbability occurrenceProbability = probabilityMap.get(k);
-				Map<String, OccurrenceProbability> probValue = new HashMap<>();
 				probValue.put(k.toString(), occurrenceProbability);
 				rowValues.put(key.toString(), probValue);
 			}
