@@ -64,11 +64,15 @@ public class MarkovChain<K extends Comparable<K>, T extends List<K> & Comparable
 	}
 	
 	/**
-	 * Effectively combine this and another MarkovChain into a single instance.
+	 * Effectively combine another MarkovChain to this to create a single instance.
 	 * @param chainToAdd
 	 */
-	public void addMarkovChain(MarkovChain<K,T,R> chainToAdd) {
-		
+	public MarkovChain<K,T,R> add(MarkovChain<K,T,R> chainToAdd) {
+		for(T key : chainToAdd.keySet()) {
+			CollectorStats<K, T, R> cstats = chainToAdd.get(key);
+			this.put(key, cstats);
+		}
+		return this;
 	}
 
 	public String getName() {
