@@ -1,8 +1,10 @@
 package mathlib;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -27,10 +29,20 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 
 	private static final long serialVersionUID = 6084450929057511808L;
 	@JsonProperty	private int degree = 1; 	// a scalar
-	@JsonProperty	private Collection<T> elements = null;
+	@JsonProperty	private List<T> elements = null;
 	@JsonProperty	private SortedSet<T> uniqueElements = new TreeSet<>();
 	@JsonIgnore		private T[] ts;
 	
+	/**
+	 * An Empty Tupple where elements are added one at a time.
+	 * Tupple is complete when #elements == degree
+	 * 
+	 * @param degree
+	 */
+	public Tupple(int degree) {
+		this.degree = degree;
+		elements = new ArrayList<T>();
+	}
 	
 	@SafeVarargs
 	public Tupple(T...ts ) {
@@ -44,15 +56,35 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 		uniqueElements.addAll(elements);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Tupple(Collection<T> tElements) {
+	public Tupple(List<T> tElements) {
 		degree = tElements.size();
 		elements = new ArrayList<>();
-		elements.addAll(tElements);
-		ts = (T[])elements.toArray();
+		createTArrayAndList(tElements);
 		uniqueElements.addAll(elements);
 	}
 
+	@SuppressWarnings("unchecked")
+	private void createTArrayAndList(List<T> tElements) {
+		@SuppressWarnings("rawtypes")
+		Class<? extends Comparable> tClass = tElements.iterator().next().getClass();
+		ts = (T[])Array.newInstance(tClass, degree);
+		for(int i=0;i<degree;i++) {
+			ts[i] = tElements.get(i);
+		}
+		Arrays.sort(ts);
+		elements = Arrays.asList(ts);
+	}
+
+	public int add(T t) {
+		if(elements.size() < degree) {
+			elements.add(t);
+			if(elements.size()==degree) {
+				createTArrayAndList(elements);
+			}
+		}
+		return elements.size();
+	}
+	
 	public int getDegree() {
 		return degree;
 	}
@@ -115,6 +147,20 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 		System.out.println(tupple3.toJson(true));
 		array[0] = "Alexander";
 		System.out.println(tupple3.toJson(true));
+		
+		List<Character> clist = new ArrayList<>();
+		clist.add('a');
+		clist.add('C');
+		clist.add('y');
+		Tupple<Character> ctupple = new Tupple<>(clist);
+		System.out.println(ctupple);
+		
+		Tupple<Character> ct2 = new Tupple<>(3);
+		ct2.add('b');
+		ct2.add('D');
+		ct2.add('z');
+		System.out.println(ct2);
+		
 		
 	}
 
