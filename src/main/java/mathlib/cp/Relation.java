@@ -7,10 +7,14 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Supplier;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import mathlib.Tupple;
 
 public class Relation<K extends Comparable<K>, T extends List<K>, S extends Supplier<T>> implements IRelation<K,T,S> {
-	
+	protected static final Logger log = LogManager.getLogger(Relation.class)
+			;
 	public Map<Tupple<K>, Integer> createPartitionKeys(T unit, int degree) {
 		Map<Tupple<K>, Integer> partitionKeyMap = new HashMap<>();
 		Set<Tupple<K>> partitions = partition(unit, degree);
@@ -20,28 +24,33 @@ public class Relation<K extends Comparable<K>, T extends List<K>, S extends Supp
 	
 	public Set<Tupple<K>> partition(T unit, int degree) {
 		Set<Tupple<K>> partitions = new TreeSet<>();
-		int n = unit.size();
-		double nSets = Math.pow(2, n);	// Power set cardinality
+		int len = unit.size();
+		int index = 0;
+		double nSets = Math.pow(2, len);	// Power set cardinality
 		for(int i = 1; i<nSets; i++) {
 			if(nbits(i) == degree) {
 				Tupple<K> tupple = new Tupple<>(degree);
-				for(int j=0; j<i; j++) {
+				int j = 0;
+				do {
 					if((1 & (i>>j)) == 1) {
-						tupple.add(unit.get(j));
+						index = len - 1 - j;
+						log.debug(i + " " + j + " " + index);
+						tupple.add(unit.get(index));
 					}
-				}
+				} while(Math.pow(2, j++) <= nSets);
 				partitions.add(tupple);
+				log.debug(tupple);
 			}
 		}
-		
 		return partitions;
 	}
 	
-	public int nbits(int n) {
+	public static int nbits(int n) {
 		int nbits = 0;
-		for(int i=0; i<n; i++) {
-			nbits += (1 & (n>>i));
-		}
+		int i = 0;
+		do {
+			nbits += (1 & (n>>i++));
+		} while(Math.pow(2, i) <= n);
 		return nbits;
 	}
 
@@ -51,6 +60,8 @@ public class Relation<K extends Comparable<K>, T extends List<K>, S extends Supp
 	}
 	
 	public static void main(String...strings) {
-		
+		for(int i=0; i<=128; i++) {
+			System.out.println("i: " + i + " nbits: " + Relation.nbits(i));
+		}
 	}
 }
