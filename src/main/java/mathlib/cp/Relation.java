@@ -12,9 +12,9 @@ import org.apache.logging.log4j.Logger;
 
 import mathlib.Tupple;
 
-public class Relation<K extends Comparable<K>, T extends List<K>, S extends Supplier<T>> implements IRelation<K,T,S> {
-	protected static final Logger log = LogManager.getLogger(Relation.class)
-			;
+public abstract class Relation<K extends Comparable<K>, T extends List<K>, S extends Supplier<T>> implements IRelation<K,T,S> {
+	protected static final Logger log = LogManager.getLogger(Relation.class);
+	
 	public Map<Tupple<K>, Integer> createPartitionKeys(T unit, int degree) {
 		Map<Tupple<K>, Integer> partitionKeyMap = new HashMap<>();
 		Set<Tupple<K>> partitions = partition(unit, degree);
@@ -55,9 +55,7 @@ public class Relation<K extends Comparable<K>, T extends List<K>, S extends Supp
 	}
 
 	@Override
-	public boolean isElement(Tupple<K> element, T unit) {
-		return false;
-	}
+	abstract public boolean isElement(Tupple<K> element, T unit);
 	
 	public static void main(String...strings) {
 		for(int i=0; i<=128; i++) {

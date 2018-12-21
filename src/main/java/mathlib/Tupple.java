@@ -16,9 +16,9 @@ import mathlib.util.IJson;
 
 /**
  * A Collection of n T instances where n=degree (or order) of the Tupple.<br>
- * Ordering is not important so ("A", "C", "D") is equivalent to ("C", "A", "D")<br>
  * Note that changes in the backing array are reflected in the Tupple,<br>
- * in particular elements are sorted in the constructor, resulting in the backing array and element list being sorted.<br>
+ * in particular elements are sorted in the constructor, or as they are added<br>
+ * resulting in the backing array and element list being sorted.<br>
  * uniqueElements is a SortedSet of the unique elements of the Tupple.
  * 
  * @author don_bacon
@@ -31,6 +31,7 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 	@JsonProperty	private int degree = 1; 	// a scalar
 	@JsonProperty	private List<T> elements = null;
 	@JsonProperty	private SortedSet<T> uniqueElements = new TreeSet<>();
+	@JsonProperty	private Integer key = Integer.MIN_VALUE;
 	@JsonIgnore		private T[] ts;
 	
 	/**
@@ -41,7 +42,7 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 	 */
 	public Tupple(int degree) {
 		this.degree = degree;
-		elements = new ArrayList<T>();
+		elements = new ArrayList<T>(degree);
 	}
 	
 	@SafeVarargs
@@ -130,39 +131,13 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 		return toString(false);
 	}
 	
-	public static void main(String...args) {
-		Tupple<Character> tupple = new Tupple<>('a', 'B', 'x');
-		System.out.println(tupple.toJson(true));
-		System.out.println(tupple.toString());
-		System.out.println(tupple.toString(true));
-		System.out.println(tupple.getUniqueElements());
-		
-		Tupple<Integer> t2 = new Tupple<>(100, 200, 300);
-		System.out.println(t2.toJson(true));
-		System.out.println(t2.toString());
-		System.out.println(tupple.getElements());
-		
-		String[] array = { "Fred", "Cheryl", "Don" };
-		Tupple<String> tupple3 = new Tupple<String>(array);
-		System.out.println(tupple3.toJson(true));
-		array[0] = "Alexander";
-		System.out.println(tupple3.toJson(true));
-		
-		List<Character> clist = new ArrayList<>();
-		clist.add('a');
-		clist.add('C');
-		clist.add('y');
-		Tupple<Character> ctupple = new Tupple<>(clist);
-		System.out.println(ctupple);
-		
-		Tupple<Character> ct2 = new Tupple<>(3);
-		ct2.add('b');
-		ct2.add('D');
-		ct2.add('z');
-		System.out.println(ct2);
-		
-		
+	public int getKey() {
+		if(key.equals(Integer.MIN_VALUE)) {
+			key = toString().hashCode();
+		}
+		return key;
 	}
+	
 
 	@Override
 	public int compareTo(Tupple<T> other) {
