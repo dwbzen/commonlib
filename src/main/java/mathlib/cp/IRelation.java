@@ -41,6 +41,6 @@ public interface IRelation<K extends Comparable<K>, T extends List<K>, S extends
 		return element.toString().hashCode();
 	}
 	
-	Set<Tupple<K>> partition(T unit, int degree);
+	Set<? extends Tupple<K>> partition(T unit, int degree);
 	
 }

@@ -16,7 +16,12 @@
 <Loggers>
 
     <Logger name="mathlib" additivity="false">
-		<level value="INFO"/>
+		<level value="DEBUG"/>
+		<appender-ref ref="STDOUT"/>
+	</Logger>
+	
+	<Logger name="mathlib.cp" additivity="false">
+		<level value="DEBUG"/>
 		<appender-ref ref="STDOUT"/>
 	</Logger>
 
@@ -25,7 +30,7 @@
 		<appender-ref ref="STDOUT"/>
 	</Logger>
 	
-    <Root level="info">
+    <Root level="DEBUG">
       <AppenderRef ref="STDOUT"/>
     </Root>
 </Loggers>

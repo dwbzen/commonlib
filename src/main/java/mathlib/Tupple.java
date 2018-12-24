@@ -15,10 +15,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import mathlib.util.IJson;
 
 /**
- * A Collection of n T instances where n=degree (or order) of the Tupple.<br>
- * Note that changes in the backing array are reflected in the Tupple,<br>
- * in particular elements are sorted in the constructor, or as they are added<br>
- * resulting in the backing array and element list being sorted.<br>
+ * A sorted Collection of n number of T instances where n=degree (or order) of the Tupple.<br>
+ * The Tupple is maintained as a List<T> that is backed by a T[].
+ * Changes in the backing array are reflected in the Tupple.<br>
+ * In particular, elements are sorted in the constructor, or if added one at a time,<br>
+ * when the Tupple is complete resulting in the backing array and element list being sorted.<br>
  * uniqueElements is a SortedSet of the unique elements of the Tupple.
  * 
  * @author don_bacon
@@ -29,10 +30,10 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 
 	private static final long serialVersionUID = 6084450929057511808L;
 	@JsonProperty	private int degree = 1; 	// a scalar
-	@JsonProperty	private List<T> elements = null;
-	@JsonProperty	private SortedSet<T> uniqueElements = new TreeSet<>();
-	@JsonProperty	private Integer key = Integer.MIN_VALUE;
-	@JsonIgnore		private T[] ts;
+	@JsonProperty	protected List<T> elements = null;
+	@JsonProperty	protected SortedSet<T> uniqueElements = new TreeSet<>();
+	@JsonProperty	protected Integer key = Integer.MIN_VALUE;
+	@JsonIgnore		protected T[] ts;
 	
 	/**
 	 * An Empty Tupple where elements are added one at a time.
@@ -138,20 +139,25 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 		return key;
 	}
 	
+	public boolean equals(Tupple<T> other) {
+		return compareTo(other) == 0 ? true : false;
+	}
 
 	@Override
 	public int compareTo(Tupple<T> other) {
 		int temp = 0;
-		int ind = 0;
 		if(size() != other.size() ) {
 			temp = size() - other.size();
 		}
 		else {
-			for(;ind<size(); ind++) {
-				temp += ts[ind].compareTo(other.index(ind));
+			for(int ind = 0;ind<size(); ind++) {
+				temp = ts[ind].compareTo(other.index(ind));
+				if(temp != 0) {
+					break;
+				}
 			}
 		}
-		return (temp < 0) ? -1 : (temp>0) ? 1 : 0;
+		return temp;
 	}
 	
 }
