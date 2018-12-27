@@ -59,7 +59,7 @@ public abstract class OccurranceRelation<K extends Comparable<K>, T extends List
 				do {
 					if((1 & (i>>j)) == 1) {
 						index = len - 1 - j;
-						log.info(i + " " + j + " " + index + " (" + unit.get(index) + ")");
+						log.debug(i + " " + j + " " + index + " (" + unit.get(index) + ")");
 						tupple.add(unit.get(index));
 					}
 				} while(Math.pow(2, j++) <= nSets);
