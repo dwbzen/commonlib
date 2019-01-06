@@ -1,4 +1,4 @@
-package mathlib.cp;
+package mathlib.relation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,20 +26,20 @@ import mathlib.Tupple;
  * @param <T> the containing class that is a List<K>
  * @param <S> a Supplier<T>
  */
-public abstract class OccurranceRelation<K extends Comparable<K>, T extends List<K>, S extends Supplier<T>> 
+public abstract class OccurrenceRelation<K extends Comparable<K>, T extends List<K>, S extends Supplier<T>> 
 		implements IRelation<K,T,S> {
-	protected static final Logger log = LogManager.getLogger(OccurranceRelation.class);
+	protected static final Logger log = LogManager.getLogger(OccurrenceRelation.class);
 	
 	@JsonIgnore	private Collection<Integer> partitionKeys = new ArrayList<>();
 	@JsonProperty	private Map<Tupple<K>, Integer> partitionKeyMap = new HashMap<>();
 	@JsonProperty	private Set<Tupple<K>> partitions = new TreeSet<>();
 	@JsonProperty	private int degree = 1;
 	
-	protected OccurranceRelation() {
+	protected OccurrenceRelation() {
 		
 	}
 	
-	public OccurranceRelation(T unit, int degree) {
+	public OccurrenceRelation(T unit, int degree) {
 		partition(unit, degree);
 	}
 	
@@ -104,7 +104,7 @@ public abstract class OccurranceRelation<K extends Comparable<K>, T extends List
 	
 	public static void main(String...strings) {
 		for(int i=0; i<=128; i++) {
-			System.out.println("i: " + i + " nbits: " + OccurranceRelation.nbits(i));
+			System.out.println("i: " + i + " nbits: " + OccurrenceRelation.nbits(i));
 		}
 	}
 }

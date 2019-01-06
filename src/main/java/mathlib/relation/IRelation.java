@@ -1,4 +1,4 @@
-package mathlib.cp;
+package mathlib.relation;
 
 import java.util.List;
 import java.util.Set;
