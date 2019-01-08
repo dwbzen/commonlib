@@ -10,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import mathlib.OccurrenceProbability;
+
 /**
  * A FrequencyOccurranceMap records the frequency of n instances (called the order)
  * of K occur in a a given Collection of T's. </p>

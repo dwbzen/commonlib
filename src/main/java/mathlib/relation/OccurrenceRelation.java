@@ -19,12 +19,13 @@ import mathlib.Tupple;
 
 /**
  * An OccurranceRelation encapsulates the "occurs together" relationship of objects
- * having a type K in the context of a container of type T.
+ * having a type K in the context of a unit (key) of type T that is the
+ * basis for partitions - subsets (Tupple) of degree cardinality.
  * @author don_bacon
  *
- * @param <K> the base class of elements in the relationship
- * @param <T> the containing class that is a List<K>
- * @param <S> a Supplier<T>
+ * @param <K> the base class of elements in the relationship (Character for example)
+ * @param <T> the containing class that is a List<K>  (Word is a List<Character>)
+ * @param <S> a Supplier<T>	(Sentence supplies Word)
  */
 public abstract class OccurrenceRelation<K extends Comparable<K>, T extends List<K>, S extends Supplier<T>> 
 		implements IRelation<K,T,S> {
@@ -34,12 +35,14 @@ public abstract class OccurrenceRelation<K extends Comparable<K>, T extends List
 	@JsonProperty	private Map<Tupple<K>, Integer> partitionKeyMap = new HashMap<>();
 	@JsonProperty	private Set<Tupple<K>> partitions = new TreeSet<>();
 	@JsonProperty	private int degree = 1;
+	@JsonProperty	protected T unit = null;
 	
 	protected OccurrenceRelation() {
 		
 	}
 	
 	public OccurrenceRelation(T unit, int degree) {
+		this.unit = unit;
 		partition(unit, degree);
 	}
 	
@@ -83,6 +86,15 @@ public abstract class OccurrenceRelation<K extends Comparable<K>, T extends List
 
 	public final Collection<Integer> getPartitionKeys() {
 		return partitionKeys;
+	}
+	
+	public int getDegree() {
+		return degree;
+	}
+	
+
+	public T getUnit() {
+		return unit;
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package mathlib.cp;
+package mathlib;
 
 import java.text.DecimalFormat;
 import java.util.Comparator;

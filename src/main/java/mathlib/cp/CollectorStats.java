@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import mathlib.OccurrenceProbability;
 import mathlib.OrderedPair;
 import mathlib.util.IJson;
 import mathlib.util.INameable;
