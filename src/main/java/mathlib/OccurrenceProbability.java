@@ -41,6 +41,14 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 	public void setOccurrence(int occurrence) {
 		this.occurrence = occurrence;
 	}
+	
+	/**
+	 * Increments the total occurrences count only.
+	 * The range and probability is not modified.
+	 */
+	public void increment() {
+		occurrence++;
+	}
 
 	public double getProbability() {
 		return probability;

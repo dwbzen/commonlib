@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import mathlib.Tupple;
+import mathlib.util.IJson;
 
 /**
  * An OccurranceRelation encapsulates the "occurs together" relationship of objects
@@ -28,7 +29,10 @@ import mathlib.Tupple;
  * @param <S> a Supplier<T>	(Sentence supplies Word)
  */
 public abstract class OccurrenceRelation<K extends Comparable<K>, T extends List<K>, S extends Supplier<T>> 
-		implements IRelation<K,T,S> {
+		implements IRelation<K,T,S>, IJson {
+
+	private static final long serialVersionUID = -7700538447846642790L;
+
 	protected static final Logger log = LogManager.getLogger(OccurrenceRelation.class);
 	
 	@JsonIgnore	private Collection<Integer> partitionKeys = new ArrayList<>();
