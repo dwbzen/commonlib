@@ -29,6 +29,7 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 
 	protected static final Logger log = LogManager.getLogger(OccurrenceRelationBag.class);
 	
+	@JsonProperty	private int totalOccurrences = 0;
 	/**
 	 * The OccurrenceProbability and List of sources of each K-Tupple
 	 */
@@ -60,6 +61,7 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 		}
 		sop.addSource(source);
 		sop.getOccurrenceProbability().increment();
+		totalOccurrences++;
 	}
 	
 	
@@ -87,6 +89,10 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 
 	public boolean isOpen() {
 		return open;
+	}
+
+	public int getTotalOccurrences() {
+		return totalOccurrences;
 	}
 	
 }

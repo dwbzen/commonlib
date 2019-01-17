@@ -31,7 +31,7 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 	private static final long serialVersionUID = 6084450929057511808L;
 	@JsonProperty	private int degree = 1; 	// a scalar
 	@JsonProperty	protected List<T> elements = null;
-	@JsonProperty	protected SortedSet<T> uniqueElements = new TreeSet<>();
+	@JsonIgnore		protected SortedSet<T> uniqueElements = new TreeSet<>();
 	@JsonProperty	protected Integer key = Integer.MIN_VALUE;
 	@JsonIgnore		protected T[] ts;
 	
@@ -95,6 +95,7 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 		return elements;
 	}
 	
+	@JsonIgnore
 	public T[] getElementArray() {
 		return ts;
 	}
@@ -158,6 +159,12 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 			}
 		}
 		return temp;
+	}
+	
+	public static void main(String...strings ) {
+		Tupple<Character> tupple = new Tupple<>('a', 'b');
+		System.out.println(tupple.toString(true));
+		System.out.println(tupple.toJson());
 	}
 	
 }
