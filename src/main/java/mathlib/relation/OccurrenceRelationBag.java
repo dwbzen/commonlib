@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import mathlib.OccurrenceProbability;
 import mathlib.SourceOccurrenceProbability;
 import mathlib.Tupple;
 import mathlib.util.IJson;
@@ -67,9 +67,13 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	}
 	
 	
-	public LinkedHashMap<K, OccurrenceProbability> sortByValue() {
-		// TODO implement me
-		return null;
+	public Map<K, SourceOccurrenceProbability<K, T>> sortByValue() {
+		@SuppressWarnings("unchecked")
+		LinkedHashMap<K, SourceOccurrenceProbability<K, T>> sorted = 
+			(LinkedHashMap<K, SourceOccurrenceProbability<K, T>>)sourceOccurrenceProbabilityMap.entrySet().stream()
+			.sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
+			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		return sorted;
 	}
 	
 	public Map<Tupple<K>, SourceOccurrenceProbability<K, T>> getSourceOccurrenceProbabilityMap() {
