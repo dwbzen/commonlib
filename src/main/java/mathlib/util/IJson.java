@@ -21,6 +21,8 @@ public interface IJson extends Serializable {
 			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		}
 		mapper.configure(SerializationFeature.INDENT_OUTPUT, pretty);
+		mapper.configure(SerializationFeature.WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS, false);
+		mapper.configure(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, true);
 		try {
 			result = pretty ? mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this) :
 							  mapper.writeValueAsString(this);
@@ -33,6 +35,7 @@ public interface IJson extends Serializable {
 	
 	default String toJson() {
 		String result = null;
+		mapper.configure(SerializationFeature.WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS, false);
 		try {
 			result = mapper.writeValueAsString(this);
 		} catch (JsonProcessingException e) {

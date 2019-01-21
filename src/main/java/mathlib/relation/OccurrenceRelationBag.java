@@ -1,5 +1,6 @@
 package mathlib.relation;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import mathlib.OccurrenceProbability;
 import mathlib.SourceOccurrenceProbability;
 import mathlib.Tupple;
 import mathlib.util.IJson;
@@ -65,6 +67,11 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	}
 	
 	
+	public LinkedHashMap<K, OccurrenceProbability> sortByValue() {
+		// TODO implement me
+		return null;
+	}
+	
 	public Map<Tupple<K>, SourceOccurrenceProbability<K, T>> getSourceOccurrenceProbabilityMap() {
 		return sourceOccurrenceProbabilityMap;
 	}
@@ -79,6 +86,7 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	 */
 	public boolean close() {
 		open = false;
+		// TODO adjust final probabilities
 		return open;
 	}
 	
