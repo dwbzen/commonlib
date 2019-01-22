@@ -67,10 +67,9 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	}
 	
 	
-	public Map<K, SourceOccurrenceProbability<K, T>> sortByValue() {
-		@SuppressWarnings("unchecked")
-		LinkedHashMap<K, SourceOccurrenceProbability<K, T>> sorted = 
-			(LinkedHashMap<K, SourceOccurrenceProbability<K, T>>)sourceOccurrenceProbabilityMap.entrySet().stream()
+	public Map<Tupple<K>, SourceOccurrenceProbability<K, T>> sortByValue() {
+		Map<Tupple<K>, SourceOccurrenceProbability<K, T>> sorted = 
+			(LinkedHashMap<Tupple<K>, SourceOccurrenceProbability<K, T>>)sourceOccurrenceProbabilityMap.entrySet().stream()
 			.sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 		return sorted;
@@ -78,6 +77,12 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	
 	public Map<Tupple<K>, SourceOccurrenceProbability<K, T>> getSourceOccurrenceProbabilityMap() {
 		return sourceOccurrenceProbabilityMap;
+	}
+	
+
+	protected void setSourceOccurrenceProbabilityMap(
+			Map<Tupple<K>, SourceOccurrenceProbability<K, T>> sourceOccurrenceProbabilityMap) {
+		this.sourceOccurrenceProbabilityMap = sourceOccurrenceProbabilityMap;
 	}
 
 	public int getDegree() {
@@ -105,6 +110,10 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 
 	public int getTotalOccurrences() {
 		return totalOccurrences;
+	}
+
+	public void setTotalOccurrences(int totalOccurrences) {
+		this.totalOccurrences = totalOccurrences;
 	}
 	
 }
