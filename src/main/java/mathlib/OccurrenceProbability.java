@@ -15,6 +15,10 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 	@JsonProperty("occurrence")	 private int occurrence = 0;
 	@JsonProperty	private double probability = 0.0;
 	@JsonProperty	private int[] range = {0, 0};
+	/**
+	 * The ordinal of this OccurrenceProbability relative to the sorting of the container
+	 */
+	@JsonProperty	private int rank = 0;
 	@JsonIgnore		private Comparator<OccurrenceProbability> comparator = null;
 	public static String formatPattern = null;
 	public static DecimalFormat format = null;
@@ -74,6 +78,14 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 		range[index] = val;
 	}
 	
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
 	public String toString() {
 		return range[0] + "," + range[1] + "\t" + getProbabilityText();
 	}
@@ -110,6 +122,7 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 	
 	public String toJson(String indent) {
 		StringBuilder sb = new StringBuilder(indent + "\"occurrenceProbability\" : {\n");
+		sb.append(indent + "  " + "\"rank\" : " + rank + "\n");
 		sb.append(indent + "  " + "\"probability\" : " +  getProbabilityText() + ",\n");
 		sb.append(indent + "  " + "\"range\" : [" + range[0] + ", " + range[1] + "],\n");
 		sb.append(indent + "  " + "\"occurrence\" : " + occurrence + "\n");

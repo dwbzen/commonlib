@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import mathlib.OccurrenceProbability;
 import mathlib.SourceOccurrenceProbability;
 import mathlib.Tupple;
 import mathlib.util.IJson;
@@ -95,7 +96,24 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	 */
 	public boolean close() {
 		open = false;
-		// TODO adjust final probabilities
+		recomputeProbabilities();
+		return open;
+	}
+	
+	public boolean recomputeProbabilities() {
+		int prevEndRange = -1;
+		int[] range = null;
+		int rank = 1;
+		for(SourceOccurrenceProbability<K,T> sop : sourceOccurrenceProbabilityMap.values()) {
+			OccurrenceProbability occurrenceProb = sop.getOccurrenceProbability();
+			occurrenceProb.setProbability((double)occurrenceProb.getOccurrence() / (double)totalOccurrences);
+			occurrenceProb.setRank(rank++);
+			range = new int[2];
+			range[0] = ++prevEndRange;
+			range[1] = prevEndRange + occurrenceProb.getOccurrence() - 1;
+			prevEndRange = range[1];
+			occurrenceProb.setRange(range);
+		}
 		return open;
 	}
 	
