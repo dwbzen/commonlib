@@ -17,7 +17,7 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 	@JsonProperty	private int[] range = {0, 0};
 	@JsonIgnore		private Comparator<OccurrenceProbability> comparator = null;
 	public static String formatPattern = null;
-	static DecimalFormat format = null;
+	public static DecimalFormat format = null;
 	
 	static {
 		formatPattern = "0.0####";
@@ -100,6 +100,21 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 	@Override
 	public int compareTo(OccurrenceProbability o) {
 		return comparator.compare(this, o);
+	}
+	
+	@Override
+	public String toJson(boolean pretty) {
+		
+		return toJson("");
+	}
+	
+	public String toJson(String indent) {
+		StringBuilder sb = new StringBuilder(indent + "\"occurrenceProbability\" : {\n");
+		sb.append(indent + "  " + "\"probability\" : " +  getProbabilityText() + ",\n");
+		sb.append(indent + "  " + "\"range\" : [" + range[0] + ", " + range[1] + "],\n");
+		sb.append(indent + "  " + "\"occurrence\" : " + occurrence + "\n");
+		sb.append(indent + "}");
+		return sb.toString();
 	}
 }
 
