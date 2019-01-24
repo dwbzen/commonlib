@@ -3,6 +3,7 @@ package mathlib;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.BiFunction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,6 +18,11 @@ public class SourceOccurrenceProbability<K extends Comparable<K>, T extends List
 	@JsonIgnore		private Tupple<K> key = null;
 	@JsonProperty	private OccurrenceProbability occurrenceProbability = null;
 	@JsonProperty	private Set<T> sources = new TreeSet<>();
+	@JsonProperty	private Float averageDistance = 0F;	// average distance between K elements across all sources
+	/**
+	 * Dependency injection to compute distances
+	 */
+	@JsonIgnore		protected BiFunction<Tupple<K>, T, Float> metricFunction = null;
 	
 	public SourceOccurrenceProbability(Tupple<K> key) {
 		this.key = key;

@@ -5,7 +5,6 @@ import java.util.Comparator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import mathlib.util.IJson;
 
@@ -88,15 +87,6 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 
 	public String toString() {
 		return range[0] + "," + range[1] + "\t" + getProbabilityText();
-	}
-	
-	public static void main(String... args) {
-		OccurrenceProbability p = new OccurrenceProbability(10, 0.01176470588);
-		mapper.enable(SerializationFeature.INDENT_OUTPUT);
-		int[] range = {1,10};
-		p.setRange(range);
-		System.out.println(p.toJson());
-		System.out.println(p.toString());
 	}
 	
 	@Override

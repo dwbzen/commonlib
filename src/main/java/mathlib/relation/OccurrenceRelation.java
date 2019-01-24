@@ -118,9 +118,4 @@ public abstract class OccurrenceRelation<K extends Comparable<K>, T extends List
 	@Override
 	abstract public boolean isElement(Tupple<K> element, T unit);
 	
-	public static void main(String...strings) {
-		for(int i=0; i<=128; i++) {
-			System.out.println("i: " + i + " nbits: " + OccurrenceRelation.nbits(i));
-		}
-	}
 }
