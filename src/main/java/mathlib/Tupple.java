@@ -77,14 +77,14 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 		elements = Arrays.asList(ts);
 	}
 
-	public int add(T t) {
+	public Tupple<T> add(T t) {
 		if(elements.size() < degree) {
 			elements.add(t);
 			if(elements.size()==degree) {
 				createTArrayAndList(elements);
 			}
 		}
-		return elements.size();
+		return this;
 	}
 	
 	public int getDegree() {
