@@ -8,6 +8,7 @@ import java.util.function.BiFunction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import mathlib.relation.OccurrenceRelationBag;
 import mathlib.util.IJson;
 
 public class SourceOccurrenceProbability<K extends Comparable<K>, T extends List<K>> 
@@ -20,7 +21,13 @@ public class SourceOccurrenceProbability<K extends Comparable<K>, T extends List
 	@JsonProperty	private Set<T> sources = new TreeSet<>();
 	@JsonProperty	private Double averageDistance = 0D;	// average distance between K elements across all sources
 	/**
-	 * Dependency injection to compute distances
+	 * The containing OccurrenceRelationBag
+	 */
+	@JsonIgnore		private OccurrenceRelationBag<K, T, ?> occurrenceRelationBag = null;
+	@JsonIgnore		private int sourceCount = 0;
+	@JsonIgnore		private Double totalDistance = 0D;
+	/**
+	 * Dependency injection to compute distances - held by containing OccurrenceRelationBag
 	 */
 	@JsonIgnore		protected BiFunction<Tupple<K>, T, Double> metricFunction = null;
 	
@@ -33,7 +40,17 @@ public class SourceOccurrenceProbability<K extends Comparable<K>, T extends List
 		return this.sources;
 	}
 	
+	/**
+	 * Adds a T source, increments sourceCount and updates averageDistance
+	 * @param source
+	 * @return
+	 */
 	public boolean addSource(T source) {
+		if(metricFunction != null) {
+			totalDistance += metricFunction.apply(key, source);
+			sourceCount++;
+			averageDistance = totalDistance / sourceCount;
+		}
 		return sources.add(source);
 	}
 
@@ -63,6 +80,14 @@ public class SourceOccurrenceProbability<K extends Comparable<K>, T extends List
 
 	public Tupple<K> getKey() {
 		return key;
+	}
+
+	public OccurrenceRelationBag<K, T, ?> getOccurrenceRelationBag() {
+		return occurrenceRelationBag;
+	}
+
+	public void setOccurrenceRelationBag(OccurrenceRelationBag<K, T, ?> occurrenceRelationBag) {
+		this.occurrenceRelationBag = occurrenceRelationBag;
 	}
 
 	@Override

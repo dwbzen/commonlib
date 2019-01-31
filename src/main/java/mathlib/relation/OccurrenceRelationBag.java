@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,11 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	@JsonProperty	private int degree = 1;
 	@JsonIgnore		private boolean open = true;
 	
+	/**
+	 * Function to compute distances , injected into each SourceOccurrenceProbability instance.
+	 */
+	@JsonIgnore		protected BiFunction<Tupple<K>, T, Double> metricFunction = null;
+	
 	protected OccurrenceRelationBag(int degree) {
 		this.degree = degree;
 		sourceOccurrenceProbabilityMap = new TreeMap<>();
@@ -61,6 +67,8 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 		else {
 			sop = new SourceOccurrenceProbability<>(tupple);
 			sourceOccurrenceProbabilityMap.put(tupple, sop);
+			sop.setOccurrenceRelationBag(this);
+			sop.setMetricFunction(metricFunction);
 		}
 		sop.addSource(source);
 		sop.getOccurrenceProbability().increment();
@@ -132,6 +140,14 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 
 	public void setTotalOccurrences(int totalOccurrences) {
 		this.totalOccurrences = totalOccurrences;
+	}
+
+	public BiFunction<Tupple<K>, T, Double> getMetricFunction() {
+		return metricFunction;
+	}
+
+	public void setMetricFunction(BiFunction<Tupple<K>, T, Double> metricFunction) {
+		this.metricFunction = metricFunction;
 	}
 	
 }
