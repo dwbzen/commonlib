@@ -44,7 +44,7 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	/**
 	 * Function to compute distances , injected into each SourceOccurrenceProbability instance.
 	 */
-	@JsonIgnore		protected BiFunction<Tupple<K>, T, Double> metricFunction = null;
+	@JsonIgnore		private BiFunction<Tupple<K>, T, Double> metricFunction = null;
 	
 	protected OccurrenceRelationBag(int degree) {
 		this.degree = degree;
@@ -81,6 +81,20 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 			(LinkedHashMap<Tupple<K>, SourceOccurrenceProbability<K, T>>)sourceOccurrenceProbabilityMap.entrySet().stream()
 			.sorted((e1, e2) -> e1.getValue().compareTo(e2.getValue()))
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		return sorted;
+	}
+	
+	public Map<Tupple<K>, SourceOccurrenceProbability<K, T>> sortByValue(boolean reverseSort) {
+		Map<Tupple<K>, SourceOccurrenceProbability<K, T>> sorted = null;
+		if(!reverseSort) {
+			sorted = sortByValue();
+		}
+		else {
+			sorted = 
+				(LinkedHashMap<Tupple<K>, SourceOccurrenceProbability<K, T>>)sourceOccurrenceProbabilityMap.entrySet().stream()
+				.sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		}
 		return sorted;
 	}
 	

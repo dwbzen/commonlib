@@ -65,6 +65,10 @@ public class SourceOccurrenceProbability<K extends Comparable<K>, T extends List
 	public Double getAverageDistance() {
 		return averageDistance;
 	}
+	
+	public String getAverageDistanceText() {
+		return OccurrenceProbability.format.format(averageDistance);
+	}
 
 	public void setAverageDistance(Double averageDistance) {
 		this.averageDistance = averageDistance;
