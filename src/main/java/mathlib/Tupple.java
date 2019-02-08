@@ -100,6 +100,10 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 		return ts;
 	}
 	
+	public T get(int index) {
+		return elements.get(index);
+	}
+	
 	public boolean isElement(T someT) {
 		return elements.contains(someT);
 	}

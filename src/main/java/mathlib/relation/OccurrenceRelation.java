@@ -60,7 +60,7 @@ public abstract class OccurrenceRelation<K extends Comparable<K>, T extends List
 		this.degree = degree;
 		double nSets = Math.pow(2, len);	// Power set cardinality
 		for(int i = 1; i<nSets; i++) {
-			if(nbits(i) == degree) {
+			if(Partition.nbits(i) == degree) {
 				Tupple<K> tupple = new Tupple<>(degree);
 				int j = 0;
 				do {
@@ -99,20 +99,6 @@ public abstract class OccurrenceRelation<K extends Comparable<K>, T extends List
 
 	public T getUnit() {
 		return unit;
-	}
-
-	/**
-	 * Gets the number of set bits in an integer.
-	 * @param n an int to evaluate
-	 * @return number of set bits
-	 */
-	public static int nbits(int n) {
-		int nbits = 0;
-		int i = 0;
-		do {
-			nbits += (1 & (n>>i++));
-		} while(Math.pow(2, i) <= n);
-		return nbits;
 	}
 
 	@Override
