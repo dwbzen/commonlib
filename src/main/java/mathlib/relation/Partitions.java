@@ -11,16 +11,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import mathlib.Tupple;
 import mathlib.util.IJson;
 
-public class Partition<K extends Comparable<K>> implements IJson {
+public class Partitions<K extends Comparable<K>> implements IJson {
 
 	private static final long serialVersionUID = 1L;
-	protected static final Logger log = LogManager.getLogger(Partition.class);
+	protected static final Logger log = LogManager.getLogger(Partitions.class);
 	
 	@JsonProperty	private Set<Tupple<K>> partitions = new TreeSet<>();
 	@JsonProperty	private Tupple<K> source = null;
 	@JsonProperty	private int degree = 1;
 	
-	public Partition(Tupple<K> tupple, int degree) {
+	public Partitions(Tupple<K> tupple, int degree) {
 		this.degree = degree;
 		source = tupple;
 		createPartitions();
@@ -39,7 +39,7 @@ public class Partition<K extends Comparable<K>> implements IJson {
 		int index = 0;
 		double nSets = Math.pow(2, len);	// Power set cardinality
 		for(int i = 1; i<nSets; i++) {
-			if(Partition.nbits(i) == degree) {
+			if(Partitions.nbits(i) == degree) {
 				Tupple<K> tupple = new Tupple<>(degree);
 				int j = 0;
 				do {
@@ -72,7 +72,9 @@ public class Partition<K extends Comparable<K>> implements IJson {
 	
 	public static void main(String...strings ) {
 		Tupple<Character> charTupple = new Tupple<>('d', 'o', 'n', 'a', 'l', 'd');
-		Partition<Character> charPartition = new Partition<>(charTupple, 2);
+		Partitions<Character> charPartition = new Partitions<>(charTupple, 2);
 		System.out.println(charPartition.getPartitions());
+		Partitions<Character> charPartition2 = new Partitions<>(charTupple, 3);
+		System.out.println(charPartition2.getPartitions());
 	}
 }

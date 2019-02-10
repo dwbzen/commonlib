@@ -60,7 +60,7 @@ public abstract class OccurrenceRelation<K extends Comparable<K>, T extends List
 		this.degree = degree;
 		double nSets = Math.pow(2, len);	// Power set cardinality
 		for(int i = 1; i<nSets; i++) {
-			if(Partition.nbits(i) == degree) {
+			if(Partitions.nbits(i) == degree) {
 				Tupple<K> tupple = new Tupple<>(degree);
 				int j = 0;
 				do {
