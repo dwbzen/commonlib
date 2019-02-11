@@ -134,7 +134,7 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 	}
 
 	public String toString() {
-		return toString(false);
+		return toString(true);
 	}
 	
 	public int getKey() {

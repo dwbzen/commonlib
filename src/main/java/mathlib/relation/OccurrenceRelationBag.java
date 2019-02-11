@@ -40,6 +40,7 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	@JsonProperty	protected Map<Tupple<K>, SourceOccurrenceProbability<K, T>> sourceOccurrenceProbabilityMap = null;
 	@JsonProperty	private int degree = 1;
 	@JsonIgnore		private boolean open = true;
+	@JsonIgnore		private boolean supressSourceOutput = false;
 	
 	/**
 	 * Function to compute distances , injected into each SourceOccurrenceProbability instance.
@@ -163,5 +164,13 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	public void setMetricFunction(BiFunction<Tupple<K>, T, Double> metricFunction) {
 		this.metricFunction = metricFunction;
 	}
-	
+
+	public boolean isSupressSourceOutput() {
+		return supressSourceOutput;
+	}
+
+	public void setSupressSourceOutput(boolean supressSourceOutput) {
+		this.supressSourceOutput = supressSourceOutput;
+	}
+
 }
