@@ -1,5 +1,6 @@
 package mathlib;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -8,31 +9,35 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import mathlib.JSONObject;
+import mathlib.JsonObject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 /**
  * 
  * @author dbacon
- * JSON Point3D (MongoDB)
- * { "_id" : { "$oid" : "52e331a8781aae933310ea29"}, "name" : "ifs1", "type" : "point", "Point3D" : [  0.3064109,  0.6935743, -0.39834 ] }
- * { "_id" : ObjectId("52b49229e5bb8c8c26bbc603"), "name" : "locns", "type" : "3Dpoint", "Point3D" : [  0.3064109,  0.6935743, -0.39834 ] }
- * { "_id" : { "$oid" : "52e331a8781aae933310ea29"}, "name" : "ifs1", "type" : "point", "Point3D" : [ 2.687086E-4 , 1.829826E-4, 0.0 ] }
+ * JSON Point3D
+ * { "name" : "ifs1", "type" : "point", "Point3D" : [  0.3064109,  0.6935743, -0.39834 ] }
+ * { "name" : "locns", "type" : "3Dpoint", "Point3D" : [  0.3064109,  0.6935743, -0.39834 ] }
+ * { "name" : "ifs1", "type" : "point", "Point3D" : [ 2.687086E-4 , 1.829826E-4, 0.0 ] }
  * You know we could extend Point2D, but I think that would just make it more complicated.
  * 
  * @param <T>
  */
-public class Point3D<T extends Number> extends JSONObject  implements Serializable, IPoint, Comparable<Point3D<T>> {
+public class Point3D<T extends Number> extends JsonObject  implements Serializable, IPoint, Comparable<Point3D<T>> {
 
 	private static final long serialVersionUID = -3612512155008547069L;
 	protected static final Logger log = LogManager.getLogger(Point3D.class);
 	public static String OBJECT_TYPE = "point3D";
 	
-	private Number x = BigDecimal.ZERO;
-	private Number y = BigDecimal.ZERO;
-	private Number z = BigDecimal.ZERO;
+	@JsonProperty	private Number x = BigDecimal.ZERO;
+	@JsonProperty	private Number y = BigDecimal.ZERO;
+	@JsonProperty	private Number z = BigDecimal.ZERO;
 
 	private static MathContext mathContext = MathContext.DECIMAL32;	// the default
 	public static final Point3D<Double> ORIGIN = new Point3D<Double>(0.0, 0.0, 0.0);
@@ -41,10 +46,8 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 
 	public static void main(String[] args) {
 		if(args.length > 0) {
-			// assumes a JSON point from MongoDB
 			Point3D<Double> point = Point3D.fromJson(args[0]);
 			System.out.println("point: " + point.toJson());
-			
 		}
 
 		String s = "[ 0.9082574,0.07519616, -0.993823 ]";
@@ -81,14 +84,12 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 		this(p.getX().doubleValue(), p.getY().doubleValue(), 0.0);
 	}
 	
-
 	public double mod() {
 		double m = Math.abs(this.getX().doubleValue()) + 
 				   Math.abs(this.getY().doubleValue()) +
 				   Math.abs(this.getZ().doubleValue());
 		return m;
 	}
-
 
 	public double distance(Point3D<Number> point) {
 		double	dist = Math.abs(point.getX().doubleValue() - this.getX().doubleValue()) + 
@@ -106,7 +107,6 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 		return dist;
 	}
 
-	
 	@Override
 	public int compareTo(Point3D<T> other) {
 		Double modMe = mod();
@@ -114,7 +114,6 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 		return modMe.compareTo(modOther);
 	}
 
-	
 	public boolean equals(Point3D<T> other) {
 		return other.getX().equals(this.getX()) && 
 			   other.getY().equals(this.getY()) &&
@@ -123,25 +122,6 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 	
 	public String toString() {
 		return "[ " + x + ", " + y + ", " + z + " ]";
-	}
-	
-	@Override
-	public String toJson() {
-		StringBuffer jsonstr = new StringBuffer("{");
-		String name = getProperty(NAME);
-		String type = getProperty(TYPE);
-		String id = getId();
-		if(id != null) {
-			jsonstr.append(quoteString("_id", id)).append(",");
-		}
-		if(name != null){
-			jsonstr.append(quoteString("name" ,name)).append(",");
-		}
-		if(type != null) {
-			jsonstr.append(quoteString("type", type)).append(",");
-		}
-		jsonstr.append(quoteString("Point3D")).append(": ").append(toString()).append("}");
-		return jsonstr.toString();
 	}
 	
 	public String toJson(String nameLabel, String nameValue, String type) {
@@ -154,20 +134,20 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 		return jsonstr.toString();
 	}
 
+	@SuppressWarnings("unchecked")
 	public static Point3D<Double> fromJson(String jsonstr) {
-		String raw = jsonstr.replaceAll("[\"\\s{}]", "");	// deletes spaces, curly braces and quotes
 		Point3D<Double> point = null;
-		Pattern pat = JSON_REGEX;
-		Matcher m = pat.matcher(raw);
-		boolean b = m.matches();
-		if(b) {
-			log.debug("# groups: " + m.groupCount());
-			point = new Point3D<Double>(m.group(4));
-			for(int i=1; i<=m.groupCount()-1; i++) {
-				log.debug("group: " + i + "= " + m.group(i));
-				Point3D.addFieldValue(point, m.group(i));
-			}
-			log.debug("point: " + point.toJson());
+		try {
+			point = mapper.readValue(jsonstr, Point3D.class);
+		} catch (JsonParseException e) {
+			log.error("JsonParseException (Point3D): " + jsonstr);
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			log.error("JsonMappingException (Point3D): " + jsonstr);
+			e.printStackTrace();
+		} catch (IOException e) {
+			log.error("IOException: " + jsonstr);
+			e.printStackTrace();
 		}
 		return point;
 	}
@@ -190,18 +170,15 @@ public class Point3D<T extends Number> extends JSONObject  implements Serializab
 		}
 	}
 	
-	public static void addFieldValue(Point3D<Double> ps, String valueString) {
+	public void addFieldValue(String valueString) {
 		String[] fv = valueString.split(":");
 		String fname = fv[0];
 		String fval = fv[1];
 		if(fname.equalsIgnoreCase("name")) {
-			ps.setName(fval);
-		}
-		else if(fname.equalsIgnoreCase("_id")) {
-			ps.setId(fval);
+			setName(fval);
 		}
 		else if(fname.equalsIgnoreCase("type")) {
-			ps.setType(fval);
+			setType(fval);
 		}
 	}
 	

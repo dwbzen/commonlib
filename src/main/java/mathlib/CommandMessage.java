@@ -1,7 +1,13 @@
 package mathlib;
 
-import java.util.regex.Matcher;
+import java.io.IOException;
 import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import mathlib.util.INameable;
 
 /**
  * { "name" : "ifs1", "type" : "message", "command" : "SHUTDOWN" }
@@ -9,16 +15,16 @@ import java.util.regex.Pattern;
  * @author don_bacon
  *
  */
-public class CommandMessage extends BaseJSONObject {
+public class CommandMessage extends BaseJsonObject {
 
 	public static final String MESSAGE_TYPE = "message";
 	public static final Pattern commandRegex = Pattern.compile("(name:.+),(type:.+),(command:.+)");
 	private static final long serialVersionUID = -322492144640842630L;
 	
-	private String command;
+	@JsonProperty	private String command = null;
 	
 	public CommandMessage() {
-		super(NAME, MESSAGE_TYPE);
+		super(INameable.DEFAULT_NAME, MESSAGE_TYPE);
 	}
 	public CommandMessage(String name, String command) {
 		super(name, MESSAGE_TYPE);
@@ -33,62 +39,41 @@ public class CommandMessage extends BaseJSONObject {
 	}
 	
 	public static CommandMessage fromJSONString(String jsonstr) {
-		String raw = jsonstr.replaceAll("[\"\\s{}]", "");	// deletes spaces, curly braces and quotes
-		Matcher m = commandRegex.matcher(raw);
-		CommandMessage cm = null;
-		if(m.matches()) {
-			log.debug("# groups: " + m.groupCount());
-			cm = new CommandMessage();
-			for(int i=1; i<=m.groupCount(); i++) {
-				log.debug("group: " + i + "= " + m.group(i));
-				CommandMessage.addFieldValue(cm, m.group(i));
-			}
+		CommandMessage commandMessage = null;
+		try {
+			commandMessage = mapper.readValue(jsonstr, CommandMessage.class);
+		} catch (JsonParseException e) {
+			log.error("JsonParseException (CommandMessage): " + jsonstr);
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			log.error("JsonMappingException (CommandMessage): " + jsonstr);
+			e.printStackTrace();
+		} catch (IOException e) {
+			log.error("IOException: " + jsonstr);
+			e.printStackTrace();
 		}
-		
-		return cm;
+		return commandMessage;
 	}
-	public static void addFieldValue(CommandMessage cm, String valueString) {
+	
+	public void addFieldValue(String valueString) {
 		String[] fv = valueString.split(":");
 		String fname = fv[0];
 
 		String fval = (fv.length == 2) ? fv[1]  : "{" + fv[1] + ":" + fv[2] + "}";
 		if(fname.equalsIgnoreCase("name")) {
-			cm.setName(fval);
-		}
-		else if(fname.equalsIgnoreCase("_id")) {
-			cm.setId(fval);
+			setName(fval);
 		}
 		else if(fname.equalsIgnoreCase("type")) {
-			cm.setType(fval);
+			setType(fval);
 		}
 		else if(fname.equalsIgnoreCase("command")) {
-			cm.setCommand(fval);
+			setCommand(fval);
 		}
 	}
-	
-	@Override
-    public String toJson() {
-        StringBuilder jsonstr = new StringBuilder("{");
-        String name = getProperty(NAME);
-        String type = getProperty(TYPE);
-        String id = getId();
-        if(id != null) {
-            jsonstr.append("\"_id\": " + id + ",");
-        }
-        if(name != null){
-            jsonstr.append("\"name\": \"" + name + "\",");
-        }
-        if(type != null) {
-            jsonstr.append("\"type\": \"" + type + "\",");
-        }
-        jsonstr.append("\"command\": \"" + command + "\" }" );
-        return jsonstr.toString();
-
-    }
 
 	@Override
 	public String toString() {
-		return toJson();
+		return toJson(true);
 	}
 
 }

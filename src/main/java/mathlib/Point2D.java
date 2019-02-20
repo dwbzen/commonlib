@@ -1,5 +1,6 @@
 package mathlib;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
  * 
@@ -22,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  * @param <T>
  */
-public class Point2D<T extends Number> extends JSONObject  implements IPoint, Comparable<Point2D<T>>  {
+public class Point2D<T extends Number> extends JsonObject  implements IPoint, Comparable<Point2D<T>>  {
 
 	private static final long serialVersionUID = 7492212210472351442L;
 	protected static final Logger log = LogManager.getLogger(Point2D.class);
@@ -36,7 +39,7 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 	public static final Pattern JSON_REGEX = Pattern.compile("(name:.+),(type:.+),(Point2D:.+)");
 	
 	protected Point2D() {
-		setProperty("type", ObjectType);
+		setProperty(TYPE, ObjectType);
 	}
 	
 	public Point2D(Double x, Double y) {
@@ -75,11 +78,11 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 		}
 	}
 
-	public static void addFieldValue(Point2D<Number> ps, String valueString) {
+	public void addFieldValue(String valueString) {
 		String[] fv = valueString.split(":");
 		String fname = fv[0];
 		String fval = (fv.length == 2) ? fv[1]  : "{" + fv[1] + ":" + fv[2] + "}";
-		ps.getProperties().put(fname, fval);
+		getProperties().put(fname, fval);
 	}
 
 	public Number getX() {
@@ -104,18 +107,20 @@ public class Point2D<T extends Number> extends JSONObject  implements IPoint, Co
 		return jsonstr.toString();
 	}
 
+	@SuppressWarnings("unchecked")
 	public static Point2D<Number>  fromJson(String jsonstr) {
-		String raw = jsonstr.replaceAll("[\"\\s{}]", "");	// deletes spaces, curly braces and quotes
-		Matcher m = JSON_REGEX.matcher(raw);
 		Point2D<Number> point = null;
-		if(m.matches()) {
-			log.debug("# groups: " + m.groupCount());
-			point = new Point2D<Number>(m.group(3));
-			for(int i=1; i<=m.groupCount()-1; i++) {
-				log.debug("group: " + i + "= " + m.group(i));
-				Point2D.addFieldValue(point, m.group(i));
-			}
-			log.debug("point: " + point.toJson());
+		try {
+			point = mapper.readValue(jsonstr, Point2D.class);
+		} catch (JsonParseException e) {
+			log.error("JsonParseException (Point2D): " + jsonstr);
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			log.error("JsonMappingException (Point2D): " + jsonstr);
+			e.printStackTrace();
+		} catch (IOException e) {
+			log.error("IOException: " + jsonstr);
+			e.printStackTrace();
 		}
 		return point;
 	}

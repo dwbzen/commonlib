@@ -1,86 +1,64 @@
 package mathlib;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
- * Samples:
- * { "LinearFunction": "f1:{ [ 0.5, 0, 0 ], [ 0, 0.5, 0.5 ]},f2:{ [ 0.5, 0, 0.5 ], [ 0, 0.5, 0.5 ]},f3:{ [ 0.5, 0, 0.25 ], [ 0, 0.5, 0 ]}", "name" : "ifs2", "type" : "stats", "n" : 10, "minX" : 0.1251607, "minY" : 0.002710343, "maxX" : 0.8173904, "maxY" : 0.712295, "minPoint" : [  0.1298051,  0.08795198 ], "maxPoint" : [  0.2598582,  0.6771501 ] }
- * { "LinearFunction": "random", "type": "stats", "n": 100, "minX": 0.02218037, "minY": 0.009829026, "maxX": 0.99919, "maxY": 0.9709872, "minPoint":[ 0.09633727, 0.04835826 ], "maxPoint":[ 0.9914837, 0.9709872 ] }
- * 
  * @author dbacon
  *
  * @param <T>
  */
-public class PointSet<T extends Number>  extends JSONObject {
+public class PointSet<T extends Number>  extends JsonObject {
 
 	private static final long serialVersionUID = 7219606678524448973L;
-	public static final Pattern JSON_REGEX = Pattern.compile("(LinearFunction:.+),(name:.+),(type:.+),(n:\\d+),(minX:.+),(minY:.+),(maxX:.+),(maxY:[\\d-\\.]+),(minPoint:.+),(maxPoint:.+)");
 	public static String OBJECT_TYPE = "stats";
 	
-	private List<Point2D<T>> points = new ArrayList<Point2D<T>>();
+	@JsonProperty private List<Point2D<T>> points = new ArrayList<Point2D<T>>();
 	
-	private Double minXValue = Double.MAX_VALUE;
-	private Double maxXValue = Double.MIN_VALUE;
+	@JsonProperty("minX")	private Double minXValue = Double.MAX_VALUE;
+	@JsonProperty("maxX")	private Double maxXValue = Double.MIN_VALUE;
 	
-	private Double minYValue = Double.MAX_VALUE;
-	private Double maxYValue = Double.MIN_VALUE;
+	@JsonProperty("minY")	private Double minYValue = Double.MAX_VALUE;
+	@JsonProperty("maxY")	private Double maxYValue = Double.MIN_VALUE;
 
-	private Point2D<T> minPoint = new Point2D<T>(Double.MAX_VALUE, Double.MAX_VALUE);	// determined by Point2D compare
-	private Point2D<T> maxPoint = new Point2D<T>(Double.MIN_VALUE, Double.MIN_VALUE);	// determined by Point2D compare
-	private int n=0;
-	private String linearFunction = null;
+	@JsonProperty	private Point2D<T> minPoint = new Point2D<T>(Double.MAX_VALUE, Double.MAX_VALUE);	// determined by Point2D compare
+	@JsonProperty	private Point2D<T> maxPoint = new Point2D<T>(Double.MIN_VALUE, Double.MIN_VALUE);	// determined by Point2D compare
+	@JsonProperty	private int n=0;
+	@JsonProperty	private String linearFunction = null;
 	
 	public PointSet() {
 		setProperty(TYPE, OBJECT_TYPE);
 	}
 	
 	public static void main(String args[]) {
-		// sample is JSON stats record from MongoDB
-		String sample = "{\"LinearFunction\": \"f1:{ [ 0.5, 0, 0 ], [ 0, 0.5, 0.5 ]},f2:{ [ 0.5, 0, 0.5 ], [ 0, 0.5, 0.5 ]},f3:{ [ 0.5, 0, 0.25 ], [ 0, 0.5, 0 ]}\",\"name\": \"sierpinski3\",\"type\": \"stats\", \"n\": 10000,\"minX\": 9.303232E-4,\"minY\": 0.004114622,\"maxX\": 0.9985086,\"maxY\": 0.9999987,\"minPoint\":[ 0.5002074, 0.0009303232 ],\"maxPoint\":[ 0.9968433, 0.9997311 ] }";
 
-		String raw = sample.replaceAll("[\"\\s{}]", "");	// deletes spaces, curly braces and quotes
-		System.out.println("raw: " + raw);
-		
-		Pattern pat = JSON_REGEX;
-		Matcher m = pat.matcher(raw);
-		boolean b = m.matches();
-		if(b) {
-			PointSet<Number> ps = new PointSet<Number>();
-			System.out.println("# groups: " + m.groupCount());
-			for(int i=1; i<=m.groupCount(); i++) {
-				System.out.println("group: " + i + "= " + m.group(i));
-				PointSet.addFieldValue(ps, m.group(i));
-			}
-			System.out.println(ps);
-		}
-		PointSet<Number> ps2 = PointSet.fromJSONString(sample);
-		System.out.println("\nsample:\n " + sample + "\nfromJSONString:\n " + ps2);
 	}
 	
 	public List<Point2D<T>> getPoints() {
 		return points;
 	}
 	
-	public static PointSet<Number> fromJSONString(String jsonstr) {
+	@SuppressWarnings("unchecked")
+	public static PointSet<Number> fromJson(String jsonstr) {
 		PointSet<Number> pointSet = null;
-		String raw = jsonstr.replaceAll("[\"\\s{}]", "");
-		Matcher m = JSON_REGEX.matcher(raw);
-		if( m.matches()) {
-			pointSet = new PointSet<Number>();
-			for(int i=1; i<=m.groupCount(); i++) {
-				PointSet.addFieldValue(pointSet, m.group(i));
-			}
+		try {
+			pointSet = mapper.readValue(jsonstr, PointSet.class);
+		} catch (JsonParseException e) {
+			log.error("JsonParseException (PointSet): " + jsonstr);
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			log.error("JsonMappingException (PointSet): " + jsonstr);
+			e.printStackTrace();
+		} catch (IOException e) {
+			log.error("IOException: " + jsonstr);
+			e.printStackTrace();
 		}
 		return pointSet;
-	}
-	
-	public boolean isPointSetJSON(String jsonstr) {
-		String raw = jsonstr.replaceAll("[\"\\s{}]", "");
-		Matcher m = JSON_REGEX.matcher(raw);
-		return m.matches();
 	}
 	
 	public int size() {
@@ -96,42 +74,39 @@ public class PointSet<T extends Number>  extends JSONObject {
 	 * 
 	 * @param valueString
 	 */
-	public static void addFieldValue(PointSet<Number> ps, String valueString) {
+	public void addFieldValue(String valueString) {
 		String[] fv = valueString.split(":");
 		String fname = fv[0];
 		String fval = (fv.length == 2) ? fv[1]  : "{" + fv[1] + ":" + fv[2] + "}";
 		if(fname.equalsIgnoreCase("name")) {
-			ps.setName(fval);
-		}
-		else if(fname.equalsIgnoreCase("_id")) {
-			ps.setId(fval);
+			setName(fval);
 		}
 		else if(fname.equals("LinearFunction")) {
-			ps.setLinearFunction(valueString.substring(valueString.indexOf(":") + 1));
+			setLinearFunction(valueString.substring(valueString.indexOf(":") + 1));
 		}
 		else if(fname.equalsIgnoreCase("type")) {
-			ps.setType(fval);
+			setType(fval);
 		}
 		else if(fname.equalsIgnoreCase("n")) {
-			ps.setN(Integer.parseInt(fval));
+			setN(Integer.parseInt(fval));
 		}
 		else if(fname.equalsIgnoreCase("minX")) {
-			ps.minXValue = Double.parseDouble(fval);
+			minXValue = Double.parseDouble(fval);
 		}
 		else if(fname.equalsIgnoreCase("minY")) {
-			ps.minYValue = Double.parseDouble(fval);
+			minYValue = Double.parseDouble(fval);
 		}
 		else if(fname.equalsIgnoreCase("maxX")) {
-			ps.maxXValue = Double.parseDouble(fval);
+			maxXValue = Double.parseDouble(fval);
 		}
 		else if(fname.equalsIgnoreCase("maxY")) {
-			ps.maxYValue = Double.parseDouble(fval);
+			maxYValue = Double.parseDouble(fval);
 		}
 		else if(fname.equalsIgnoreCase("maxPoint")) {
-			ps.setMaxPoint(new Point2D<Number>(fval));
+			setMaxPoint(new Point2D<T>(fval));
 		}
 		else if(fname.equalsIgnoreCase("minPoint")) {
-			ps.setMinPoint(new Point2D<Number>(fval));
+			setMinPoint(new Point2D<T>(fval));
 		}
 	}
 	
@@ -228,31 +203,10 @@ public class PointSet<T extends Number>  extends JSONObject {
 	public void setLinearFunction(String linearFunction) {
 		this.linearFunction = linearFunction;
 	}
-
-	@Override
-	public String toJson() {
-		StringBuffer jsonstr = new StringBuffer("{ ");
-		if(linearFunction != null) {
-			jsonstr.append(quoteString("LinearFunction", linearFunction)).append(", ");
-		}
-		jsonstr.append(getJsonProperties()  + ", ");
-		if(getId() != null) {
-			jsonstr.append( quoteString("_id:", getId())).append(", ");
-		}
-		
-		jsonstr.append(quoteString("n", n)).append(", ");
-		jsonstr.append(quoteString("minX", minXValue)).append(", ");
-		jsonstr.append(quoteString("minY", minYValue)).append(", ");
-		jsonstr.append(quoteString("maxX", maxXValue )).append(", ");
-		jsonstr.append(quoteString("maxY", maxYValue)).append(", ");
-		jsonstr.append(quoteString("minPoint")).append(":").append(minPoint.toString()).append("," );
-		jsonstr.append(quoteString("maxPoint")).append(":").append(maxPoint.toString()).append(" }" );
-		return jsonstr.toString();
-	}
 	
 	@Override
 	public String toString() {
-		return toJson();
+		return toJson(true);
 	}
 	
 }

@@ -1,7 +1,7 @@
 package junit;
 
 import junit.framework.TestCase;
-import mathlib.BaseJSONObject;
+import mathlib.BaseJsonObject;
 import mathlib.CommandMessage;
 
 public class CommandMessageTest   extends TestCase {
@@ -28,7 +28,7 @@ public class CommandMessageTest   extends TestCase {
 	
 	public void testBsonObject() {
 		String sample = " { \"_id\" : \"52b30e7eba2912447205bd4e\", \"name\" : \"ifs2\", \"type\" : \"unknown\" }";
-		BaseJSONObject cm = BaseJSONObject.fromJSONString(sample);
+		BaseJsonObject cm = BaseJsonObject.fromJson(sample);
 		String expected = "{_id:52b30e7eba2912447205bd4e,name:\"ifs2\",type:\"unknown\" }";
 		assertEquals(expected, cm.toJson());
 	}

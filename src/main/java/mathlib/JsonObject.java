@@ -8,10 +8,10 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import mathlib.util.IJson;
+import mathlib.util.INameable;
 
 /**
  * NOTE - dropped MongoDB support for now. Need to update queries to NOT return the _id
@@ -19,21 +19,26 @@ import mathlib.util.IJson;
  * @author don_bacon
  *
  */
-public abstract class JSONObject implements IJson  {
+public class JsonObject implements IJson, INameable  {
 
-	public static final Pattern baseJsonRegex = Pattern.compile("(_id:.+),(name:.+),(type:.+)");
-	public final static String UNKNOWN = "unknown";
-	public static final String NAME = "name";	// Property
-	public static final String TYPE = "type";	// Property
+	public static final Pattern baseJsonRegex = Pattern.compile("(name:.+),(type:.+)");
+	public static final String UNKNOWN = "unknown";
 	public static final String QUOTE = "\"";
+	public static final String TYPE = "type";
 	protected static final Logger log = LogManager.getLogger(IJson.class);
 
 	private static final long serialVersionUID = 347831929602095478L;
 	
-	@JsonIgnore	private String id;		// optional ID
+	@JsonProperty	private String name = null;
+	@JsonProperty	private String type = null;
 	@JsonProperty	private Map<String, String> properties = new HashMap<>();
 	
-	public abstract String toString();
+	/**
+	 * Derived classes will want to overload
+	 */
+	public String toString() {
+		return "name: " + (name==null ? "n/a" : name) + (type==null ? "n/a" : type) + (properties.size()>0 ? properties.toString() : "");
+	}
 	
 	/**
 	 * Returns the type:<typestring> type string
@@ -61,9 +66,9 @@ public abstract class JSONObject implements IJson  {
 		return ts.length==2 ? ts[1] : UNKNOWN;
 	}
 
-    public static JSONObject analyzeMessage(String messageText) {
-        String type = JSONObject.getType(messageText);
-        JSONObject obj = null;
+    public static JsonObject analyzeMessage(String messageText) {
+        String type = JsonObject.getType(messageText);
+        JsonObject obj = null;
           log.trace("process :" + messageText + "\n " + type);
           if(type.equals("message")) {
               obj = CommandMessage.fromJSONString(messageText);
@@ -72,11 +77,11 @@ public abstract class JSONObject implements IJson  {
               obj = Point2D.fromJson(messageText);
           }
           else if(type.equals("stats")) {
-              obj = PointSet.fromJSONString(messageText);
+              obj = PointSet.fromJson(messageText);
           }
-          else if(type.equalsIgnoreCase(JSONObject.UNKNOWN)) {
+          else if(type.equalsIgnoreCase(JsonObject.UNKNOWN)) {
               log.error("JSONObject: Unknown message type: " + messageText);
-              obj = BaseJSONObject.fromJSONString(messageText);
+              obj = BaseJsonObject.fromJson(messageText);
           }
           return obj;
    }
@@ -93,28 +98,19 @@ public abstract class JSONObject implements IJson  {
 		properties.entrySet().forEach(s-> builder.append(quoteString(s.getValue())).append(","));
 		return builder.deleteCharAt(builder.length()-1).toString();
 	}
-	
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getName() {
-		return properties.get(NAME);
+		return name;
 	}
 	public void setName(String name) {
-		properties.put(NAME, name);
+		this.name = name;
 	}
 	public String getType() {
-		return  properties.get(TYPE);
+		return  type;
 	}
 	
-	protected void setType(String type) {
-		properties.put(TYPE, type);
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getProperty(String arg0) {
@@ -125,7 +121,7 @@ public abstract class JSONObject implements IJson  {
 		properties.put(key, value);
 	}
 	
-	protected Map<String, String> getProperties() {
+	public Map<String, String> getProperties() {
 		return properties;
 	}
 	

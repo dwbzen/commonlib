@@ -15,12 +15,18 @@ import mathlib.util.IJson;
 
 /**
  * A LinearFunction F is defined as a map R<sup>2</sup> -> R<sup>2</sup>:</p>
-  * <b>F<sub>i</sub>(x, y) = V<sub>i</sub>(a<sub>i</sub> x + b<sub>i</sub> y + c<sub>i</sub>, d<sub>i</sub> x + e<sub>i</sub> y + f<sub>i</sub>)</b></p>
+ * <b>F<sub>i</sub>(x, y) = V<sub>i</sub>(a<sub>i</sub> x + b<sub>i</sub> y + c<sub>i</sub>, d<sub>i</sub> x + e<sub>i</sub> y + f<sub>i</sub>)</b></p>
  * and is represented internally as a 2 x 3 Matrix:</p>
  * &#9474; a&emsp;b&emsp;c &#9474;<br>
  * &#9474; d&emsp;e&emsp;f&ensp;&#9474;</p>
  * 
- * @author don_bacon
+ *
+ * JSON representation of this LinearFunction example:<br>
+ * 
+ * { "className" : "math.ifs.LinearFunction" , "weight" : 0.0 , "name" : "f1", 
+ *   "function": { "className" : "math.Matrix" , "rows" : 2 , "cols" : 3 , 
+ *   "array" : [ [ 0.5 , 0 , 0] , [ 0 , 0.5 , 0.5]] , "rank" : 2 , "name" : "f1"} }
+ *
  *
  */
 public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Point2D<BigDecimal>> {
@@ -112,19 +118,6 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 	public LinearFunction addVariation(Variation v) {
 		variations.add(v);
 		return this;
-	}
-
-	/**
-	 * JSON representation of this LinearFunction.
-	 * example:
-	 * { "className" : "math.ifs.LinearFunction" , "weight" : 0.0 , "name" : "f1", 
-	 *   "function": { "className" : "math.Matrix" , "rows" : 2 , "cols" : 3 , 
-	 *   "array" : [ [ 0.5 , 0 , 0] , [ 0 , 0.5 , 0.5]] , "rank" : 2 , "name" : "f1"} }
-	 *
-	 * @return JSON String
-	 */
-	public String toJson() {
-		return toJson();
 	}
 	
 	public Point2D<BigDecimal> evaluateAt(Point2D<BigDecimal> point) {
