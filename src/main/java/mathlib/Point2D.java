@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -29,17 +29,17 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 
 	private static final long serialVersionUID = 7492212210472351442L;
 	protected static final Logger log = LogManager.getLogger(Point2D.class);
-	public static final String ObjectType = "point";
+	public static final String ObjectType = "Point2D";
 			
-	@JsonProperty("x")	private Number x = BigDecimal.ZERO;
-	@JsonProperty("y")	private Number y = BigDecimal.ZERO;
+	@JsonIgnore	private Number x = BigDecimal.ZERO;
+	@JsonIgnore	private Number y = BigDecimal.ZERO;
 	
 	public static final Point2D<Double> ORIGIN = new Point2D<>(0.0, 0.0);
 	public static final Pattern DECIMAL_REGEX = Pattern.compile("\\[\\s*(.+),\\s*(.+)\\s*\\]");
 	public static final Pattern JSON_REGEX = Pattern.compile("(name:.+),(type:.+),(Point2D:.+)");
 	
 	protected Point2D() {
-		setProperty(TYPE, ObjectType);
+		setType(ObjectType);
 	}
 	
 	public Point2D(Double x, Double y) {
@@ -58,11 +58,12 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 		this.y = BigDecimal.valueOf(y);
 	}
 	public Point2D(Point2D<BigDecimal> p) {
+		this();
 		x = p.x;
 		y = p.y;
 	}
 	/**
-	 * Format:  [ 0.9082574, 0.07519616 ]
+	 * Format:  [ 0.9082574, 0.07519616 ] or coordinates : [ 0.9082574, 0.07519616 ] 
 	 * @param s
 	 */
 	public Point2D(String s) {
@@ -78,13 +79,6 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 		}
 	}
 
-	public void addFieldValue(String valueString) {
-		String[] fv = valueString.split(":");
-		String fname = fv[0];
-		String fval = (fv.length == 2) ? fv[1]  : "{" + fv[1] + ":" + fv[2] + "}";
-		getProperties().put(fname, fval);
-	}
-
 	public Number getX() {
 		return x;
 	}
@@ -95,16 +89,6 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 	
 	public String toString() {
 		return "[ " + x + ", " + y + " ]";
-	}
-	
-	public String toJSON(String nameLabel, String nameValue, String type) {
-		StringBuilder jsonstr = new StringBuilder("{");
-		jsonstr.append( quoteString(nameLabel, nameValue));
-		if(type != null && type.length()>0) {
-			jsonstr.append(", ").append(quoteString("type", type));
-		}
-		jsonstr.append(", ").append(quoteString("Point2D")).append(": ").append(toString()).append("}");
-		return jsonstr.toString();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -123,6 +107,16 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 			e.printStackTrace();
 		}
 		return point;
+	}
+	
+	public String toJsonString(String nameLabel, String nameValue, String type) {
+		StringBuilder jsonstr = new StringBuilder("{");
+		jsonstr.append( quoteString(nameLabel, nameValue));
+		if(type != null && type.length()>0) {
+			jsonstr.append(", ").append(quoteString("type", type));
+		}
+		jsonstr.append(", ").append(quoteString("Point2D")).append(": ").append(toString()).append("}");
+		return jsonstr.toString();
 	}
 	
 	/**
@@ -184,5 +178,16 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 		coordinates.add(x);
 		coordinates.add(y);
 		return coordinates;
+	}
+	
+	public static void main(String[] args) {
+		Point2D<Double> p2d = new Point2D<Double>(.99201, -4.333);
+		System.out.println(p2d.toJson());
+		System.out.println(p2d.toJson(true));
+		
+		if(args.length > 0) {
+			Point2D<Number> point = Point2D.fromJson(args[0]);
+			System.out.println("point: " + point.toJson());
+		}
 	}
 }

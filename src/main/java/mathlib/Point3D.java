@@ -49,20 +49,6 @@ public class Point3D<T extends Number> extends JsonObject  implements Serializab
 			Point3D<Double> point = Point3D.fromJson(args[0]);
 			System.out.println("point: " + point.toJson());
 		}
-
-		String s = "[ 0.9082574,0.07519616, -0.993823 ]";
-		Matcher m = DECIMAL_REGEX.matcher(s);
-		boolean b = m.matches();
-		int ng = m.groupCount();
-		if(ng == 3) {
-			String n1 = m.group(1);
-			String n2 = m.group(2);
-			String n3 = m.group(3);
-			System.out.println("matches: " + b + " group count: " + ng);
-			System.out.println("n1="+ n1 + " n2=" + n2 + " n3=" + n3);
-			Point3D<Double> p3d = new Point3D<Double>(s);
-			System.out.println(p3d.toString());
-		}
 	}
 
 	protected Point3D() {

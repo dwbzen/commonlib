@@ -137,7 +137,7 @@ public class ChaosGame implements IPointProducer {
 	 *  2. mongoimport --type json --collection sierpinski3 --db music --file sierpinski3.json
 	 *   
 	 * Sample query:
-	 * db.points.find({name:"ifs1", type:"point"},{_id:0,Point2D:1})
+	 * db.points.find({name:"ifs1", type:"Point2D"})
 	 * 
 	 * @param args
 	 */
@@ -161,6 +161,7 @@ public class ChaosGame implements IPointProducer {
 			}			
 			if(args[i].equalsIgnoreCase("-name")) {
 				dataSetName = args[++i];
+				ifsname = dataSetName;
 			}
 			if(args[i].equalsIgnoreCase("-trailing")) {
 				/*
@@ -190,6 +191,7 @@ public class ChaosGame implements IPointProducer {
 			}
 			else if(args[i].equalsIgnoreCase("-flame")) {
 				flameName = args[++i];
+				ifsname = flameName;
 			}
 		}
 		
@@ -237,7 +239,7 @@ public class ChaosGame implements IPointProducer {
 				sb.append(",");
 			}
 		}
-		points.setProperty("LinearFunction", sb.toString());
+		points.setLinearFunction(sb.toString());
 		CommandMessage cmstart = null;
 		CommandMessage cmtrailing = null;
 		
@@ -250,10 +252,11 @@ public class ChaosGame implements IPointProducer {
 		if(startMessage != null) {
 			System.out.println(cmstart.toJson());
 		}
-		System.out.println(points.toJson());
+		System.out.println(ifs.toJson());
 				
 		for(Point2D<Number> point : points.getPoints()) {
-			 System.out.println(point.toJSON("name", dataSetName, "point"));
+			point.setName(ifs.getName());
+			System.out.println(point.toJson());
 		}
 		if(trailingMessage != null) {
 			System.out.println(cmtrailing.toJson());

@@ -13,8 +13,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Matrix<T extends Number> extends AbstractArray<Number> implements Serializable  {
 
 	private static final long serialVersionUID = -212209984266289457L;
-	@JsonProperty("rows")	private int rows = 0;
-	@JsonProperty("cols")	private int columns = 0;
+	@JsonIgnore				private int rows = 0;
+	@JsonIgnore				private int columns = 0;
 	@JsonProperty("array")	private List<List<Number>> array = null;
 	
 	@JsonIgnore	private MathContext mathContext = MathContext.DECIMAL32;	// the default

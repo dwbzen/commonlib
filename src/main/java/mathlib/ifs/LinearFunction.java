@@ -29,16 +29,16 @@ import mathlib.util.IJson;
  *
  *
  */
-public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Point2D<BigDecimal>> {
+public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Point2D<BigDecimal>>  {
 	
 	private static final long serialVersionUID = -4451686768008927428L;
+	public static final String ObjectType = "LinearFunction";
 	
-	/**
-	 * the function Matrix must be 2 x 3
-	 */
-	@JsonIgnore				private  Matrix<BigDecimal> function = null;
-	@JsonProperty("weight")		private double weight = 0;
-	@JsonProperty("name")		private String name;
+	@JsonProperty("type")	private String type = ObjectType;
+	//  the function Matrix must be 2 x 3
+	@JsonProperty			private  Matrix<BigDecimal> function = null;
+	@JsonProperty("weight")	private double weight = 0;
+	@JsonIgnore				private String name;
 	@JsonIgnore	private List<Variation>	variations = new ArrayList<Variation>();
 
 	public static void main(String[] args) {
@@ -120,6 +120,10 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 		return this;
 	}
 	
+	public String getType() {
+		return type;
+	}
+
 	public Point2D<BigDecimal> evaluateAt(Point2D<BigDecimal> point) {
 		double x =	a()*point.getX().doubleValue() +
 					b()*point.getY().doubleValue() +

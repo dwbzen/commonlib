@@ -1,7 +1,5 @@
 package mathlib;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,20 +22,19 @@ public class JsonObject implements IJson, INameable  {
 	public static final Pattern baseJsonRegex = Pattern.compile("(name:.+),(type:.+)");
 	public static final String UNKNOWN = "unknown";
 	public static final String QUOTE = "\"";
-	public static final String TYPE = "type";
+	public static final String TYPE = UNKNOWN;
 	protected static final Logger log = LogManager.getLogger(IJson.class);
 
 	private static final long serialVersionUID = 347831929602095478L;
 	
-	@JsonProperty	private String name = null;
-	@JsonProperty	private String type = null;
-	@JsonProperty	private Map<String, String> properties = new HashMap<>();
+	@JsonProperty	private String name = UNKNOWN;
+	@JsonProperty	private String type = TYPE;
 	
 	/**
 	 * Derived classes will want to overload
 	 */
 	public String toString() {
-		return "name: " + (name==null ? "n/a" : name) + (type==null ? "n/a" : type) + (properties.size()>0 ? properties.toString() : "");
+		return "name: " + (name==null ? "n/a" : name) + (type==null ? "n/a" : type) ;
 	}
 	
 	/**
@@ -86,19 +83,6 @@ public class JsonObject implements IJson, INameable  {
           return obj;
    }
 
-	/**
-	 * Represents properties as JSON string.
-	 * Key names are quoted as are key values.
-	 * Key value pairs separated by comma as in: "key1": "val1", "key2": "val2" etc.
-	 * No comma appended to the last element.
-	 * @return JSON String
-	 */
-	public String getJsonProperties() {
-		StringBuilder builder = new StringBuilder();
-		properties.entrySet().forEach(s-> builder.append(quoteString(s.getValue())).append(","));
-		return builder.deleteCharAt(builder.length()-1).toString();
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -111,18 +95,6 @@ public class JsonObject implements IJson, INameable  {
 	
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public String getProperty(String arg0) {
-		return properties.get(arg0);
-	}
-	
-	public void setProperty(String key, String value) {
-		properties.put(key, value);
-	}
-	
-	public Map<String, String> getProperties() {
-		return properties;
 	}
 	
 }

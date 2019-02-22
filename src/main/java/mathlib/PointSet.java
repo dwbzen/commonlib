@@ -16,23 +16,15 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 public class PointSet<T extends Number>  extends JsonObject {
 
 	private static final long serialVersionUID = 7219606678524448973L;
-	public static String OBJECT_TYPE = "stats";
+	public static String OBJECT_TYPE = "PointSet";
 	
 	@JsonProperty private List<Point2D<T>> points = new ArrayList<Point2D<T>>();
-	
-	@JsonProperty("minX")	private Double minXValue = Double.MAX_VALUE;
-	@JsonProperty("maxX")	private Double maxXValue = Double.MIN_VALUE;
-	
-	@JsonProperty("minY")	private Double minYValue = Double.MAX_VALUE;
-	@JsonProperty("maxY")	private Double maxYValue = Double.MIN_VALUE;
+	@JsonProperty private PointSetStats<T> stats = new PointSetStats<>();
 
-	@JsonProperty	private Point2D<T> minPoint = new Point2D<T>(Double.MAX_VALUE, Double.MAX_VALUE);	// determined by Point2D compare
-	@JsonProperty	private Point2D<T> maxPoint = new Point2D<T>(Double.MIN_VALUE, Double.MIN_VALUE);	// determined by Point2D compare
 	@JsonProperty	private int n=0;
 	@JsonProperty	private String linearFunction = null;
 	
 	public PointSet() {
-		setProperty(TYPE, OBJECT_TYPE);
 	}
 	
 	public static void main(String args[]) {
@@ -91,16 +83,16 @@ public class PointSet<T extends Number>  extends JsonObject {
 			setN(Integer.parseInt(fval));
 		}
 		else if(fname.equalsIgnoreCase("minX")) {
-			minXValue = Double.parseDouble(fval);
+			stats.setMinXValue(Double.parseDouble(fval));
 		}
 		else if(fname.equalsIgnoreCase("minY")) {
-			minYValue = Double.parseDouble(fval);
+			stats.setMinYValue(Double.parseDouble(fval));
 		}
 		else if(fname.equalsIgnoreCase("maxX")) {
-			maxXValue = Double.parseDouble(fval);
+			stats.setMaxXValue(Double.parseDouble(fval));
 		}
 		else if(fname.equalsIgnoreCase("maxY")) {
-			maxYValue = Double.parseDouble(fval);
+			stats.setMaxYValue(Double.parseDouble(fval));
 		}
 		else if(fname.equalsIgnoreCase("maxPoint")) {
 			setMaxPoint(new Point2D<T>(fval));
@@ -118,66 +110,66 @@ public class PointSet<T extends Number>  extends JsonObject {
 	public boolean add(Point2D<T> point) {
 		double x = point.getX().doubleValue();
 		double y = point.getY().doubleValue();
-		if(x < minXValue) {
-			minXValue = x;
+		if(x < stats.maxXValue) {
+			stats.maxXValue = x;
 		}
-		if(y < minYValue) {
-			minYValue = y;
+		if(y < stats.minYValue) {
+			stats.minYValue = y;
 		}
-		if(x > maxXValue) {
-			maxXValue = x;
+		if(x > stats.maxXValue) {
+			stats.maxXValue = x;
 		}
-		if(y > maxYValue) {
-			maxYValue = y;
+		if(y > stats.maxYValue) {
+			stats.maxYValue = y;
 		}
-		if(point.compareTo(minPoint) < 0 ) {
-			minPoint = point;
+		if(point.compareTo(stats.minPoint) < 0 ) {
+			stats.minPoint = point;
 		}
-		if(point.compareTo(maxPoint) >0 ) {
-			maxPoint = point;
+		if(point.compareTo(stats.maxPoint) >0 ) {
+			stats.maxPoint = point;
 		}
 		n++;
 		return points.add(point);
 	}
 	
 	public Double getMinXValue() {
-		return minXValue;
+		return stats.getMinXValue();
 	}
 
 	public Double getMaxXValue() {
-		return maxXValue;
+		return stats.getMaxXValue();
 	}
 
 	public Double getMinYValue() {
-		return minYValue;
+		return stats.getMinYValue();
 	}
 
 	public Double getMaxYValue() {
-		return maxYValue;
+		return stats.getMaxXValue();
 	}
 
 	public Point2D<T> getMinPoint() {
-		return minPoint;
+		return stats.getMinPoint();
 	}
 
 	public Point2D<T> getMaxPoint() {
-		return maxPoint;
+		return stats.getMaxPoint();
 	}
 
 	public void setMinXValue(Double minXValue) {
-		this.minXValue = minXValue;
+		stats.setMinXValue(minXValue);
 	}
 
 	public void setMaxXValue(Double maxXValue) {
-		this.maxXValue = maxXValue;
+		stats.setMaxXValue(maxXValue);
 	}
 
 	public void setMinYValue(Double minYValue) {
-		this.minYValue = minYValue;
+		stats.setMinYValue(minYValue);;
 	}
 
 	public void setMaxYValue(Double maxYValue) {
-		this.maxYValue = maxYValue;
+		stats.setMaxYValue(maxYValue);;
 	}
 
 	public int getN() {
@@ -189,11 +181,11 @@ public class PointSet<T extends Number>  extends JsonObject {
 	}
 
 	public void setMinPoint(Point2D<T> minPoint) {
-		this.minPoint = minPoint;
+		stats.setMinPoint(minPoint);
 	}
 
 	public void setMaxPoint(Point2D<T> maxPoint) {
-		this.maxPoint = maxPoint;
+		stats.setMaxPoint(maxPoint);
 	}
 
 	public String getLinearFunction() {

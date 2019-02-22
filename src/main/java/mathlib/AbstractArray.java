@@ -1,8 +1,7 @@
 package mathlib;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import mathlib.Matrix;
 import mathlib.util.IJson;
 
 public abstract class AbstractArray<T extends Number> implements IJson {
@@ -12,8 +11,8 @@ public abstract class AbstractArray<T extends Number> implements IJson {
 	public AbstractArray() {
 	}
 	
-	@JsonProperty	protected int rank = 2;
-	@JsonProperty	private String name;		// optional name used for display, maps etc.
+	@JsonIgnore		protected int rank = 2;
+	@JsonIgnore	private String name;		// optional name used for display, maps etc.
 	
 	public String getName() {
 		return name;

@@ -20,8 +20,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import mathlib.Matrix;
 import mathlib.Point2D;
+import mathlib.util.IJson;
+import mathlib.util.INameable;
 
 /**
  * Represents a general 2-dimensional IFS
@@ -38,22 +43,29 @@ import mathlib.Point2D;
  * @author don_bacon
  *
  */
-public class IteratedFunctionSystem {
+public class IteratedFunctionSystem implements INameable, IJson {
+
+	private static final long serialVersionUID = 1L;
 	protected static final Logger log = LogManager.getLogger(IteratedFunctionSystem.class);
 	static MathContext context = MathContext.DECIMAL32;	// precision is 7 decimal places
 	
 	/**
 	 * the function system each Matrix must be 2 x 3
 	 */
-	private List<LinearFunction> functions = new ArrayList<LinearFunction>();
-	private ThreadLocalRandom random = ThreadLocalRandom.current();
-	private double range = 2.0;
-	private double low = -1.0;	// [ LOW, LOW + RANGE ]
-	private double totalWeight = 0.0;
-	private String flame = null;
-	private Document doc;
+	@JsonProperty	private String name = null;		// the Flame or IFS name
+	@JsonProperty	private List<LinearFunction> functions = new ArrayList<LinearFunction>();
+	@JsonProperty	private double range = 2.0;
+	@JsonProperty	private double low = -1.0;	// [ LOW, LOW + RANGE ]
+	
+	@JsonIgnore		private double totalWeight = 0.0;
+	@JsonIgnore		private Document doc;
+	@JsonIgnore		private ThreadLocalRandom random = ThreadLocalRandom.current();
 
-	public IteratedFunctionSystem() {
+	protected IteratedFunctionSystem() {
+	}
+	
+	public IteratedFunctionSystem(String ifsName) {
+		this.name = ifsName;
 	}
 	
 	/**
@@ -80,8 +92,8 @@ public class IteratedFunctionSystem {
 	 * @param flameName
 	 */
 	public IteratedFunctionSystem(String flameFile, String flameName) throws Exception {
+		this(flameName);
 		File xmlFile = new File(flameFile);
-		this.flame = flameName;
 		parseXMLFile(xmlFile);
 	}
 	
@@ -101,19 +113,20 @@ public class IteratedFunctionSystem {
 		NodeList flameNList =  doc.getElementsByTagName("flame");
 		Element flameElement = null;
 		boolean found = false;
+		String flameName = null;
 		for(int i=0; i<flameNList.getLength(); i++) {
 			Node node = flameNList.item(i);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				flameElement = (Element) node;
-				String fname = flameElement.getAttribute("name");
-				if(fname.equalsIgnoreCase(flame)) {
+				flameName = flameElement.getAttribute("name");
+				if(flameName.equalsIgnoreCase(this.name)) {
 					found = true;
 					break;
 				}
 			}
 		}
 		if(!found) {
-			throw new IllegalArgumentException("The named flame: '" + flame + "' not found in this flame file");
+			throw new IllegalArgumentException("The named flame: '" + name + "' not found in this flame file");
 		}
 		/*
 		 * Get coefs and weights from this <flame> element
@@ -233,6 +246,7 @@ public class IteratedFunctionSystem {
 	 * Gets a random point in the range x,y :: [-1, +1]
 	 * @return
 	 */
+	@JsonIgnore
 	public Point2D<BigDecimal> getRandomPoint() {
 		double x = (random.nextDouble()*range) + low;
 		double y = (random.nextDouble()*range) + low;
@@ -265,7 +279,7 @@ public class IteratedFunctionSystem {
 	 * @return IteratedFunctionSystem
 	 */
 	public static IteratedFunctionSystem Sierpinski() {
-		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem("Sierpinski");
 		
 		double[][] dm1 = { {.5, 0, 0}, {0, .5, 0} };
 		double[][] dm2 = { {.5, 0, .5}, {0, .5, 0} };
@@ -301,7 +315,7 @@ public class IteratedFunctionSystem {
 	 * @return IteratedFunctionSystem
 	 */
 	public static IteratedFunctionSystem Sierpinski1() {
-		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem("Sierpinski1");
 		
 		double[][] dm1 = { {0.51, -0.2, 0.53}, {-0.1, 0.52, -0.54} };
 		double[][] dm2 = { {.5, 0, .5}, {0, .5, 0} };
@@ -329,7 +343,7 @@ public class IteratedFunctionSystem {
 	 * @return
 	 */
 	public static IteratedFunctionSystem Sierpinski2() {
-		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem("Sierpinski2");
 		
 		double[][] dm1 = { {.5, 0, .5}, {0, .5, .5} };
 		double[][] dm2 = { {.5, 0, .5}, {0, .5, 0} };
@@ -355,7 +369,7 @@ public class IteratedFunctionSystem {
 	 * @return
 	 */
 	public static IteratedFunctionSystem Sierpinski3() {
-		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem("Sierpinski3");
 
 		double[][] dm1 = { {.5, 0, 0}, {0, .5, .5} };
 		double[][] dm2 = { {.5, 0, .5}, {0, .5, .5} };
@@ -381,7 +395,7 @@ public class IteratedFunctionSystem {
 	 * @return
 	 */
 	public static IteratedFunctionSystem Sierpinski3Variations() {
-		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem("Sierpinski3Variations");
 
 		double[][] dm1 = { {.5, 0, 0}, {0, .5, .5} };
 		double[][] dm2 = { {.5, 0, .5}, {0, .5, .5} };
@@ -414,7 +428,7 @@ public class IteratedFunctionSystem {
 	 * @return
 	 */
 	public static IteratedFunctionSystem Flame1() {
-		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem("Flame1");
 		double[][] dm1 = { {.5, 0, .25}, {0, .5, .5} };
 		double[][] dm2 = { {.5, 0, .5}, {0, .5, 0} };
 		double[][] dm3 = { {.5, 0, 0}, {0, .5, 0} };
@@ -443,7 +457,7 @@ public class IteratedFunctionSystem {
 	 * @return
 	 */
 	public static IteratedFunctionSystem IFS2() {
-		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem("IFS2");
 		double[][] dm1 = { {0.0, 0.65, 0.85}, {0.646604, 0.009, 0.54} };
 		double[][] dm2 = { {0.576, 0.0, 0.78}, {0.297797, 0.0, 0.244441} };
 		double[][] dm3 = { {.5, 0, 0}, {0, .5, .1} };
@@ -492,7 +506,7 @@ public class IteratedFunctionSystem {
 	 * @return IteratedFunctionSystem
 	 */
 	public static IteratedFunctionSystem IFS3() {
-		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem("IFS3");
 		double[][] dm1 = { {0.0, 0.65, 0.85}, {0.646604, 0.009, 0.54} };
 		double[][] dm2 = { {0.576, 0.0, 0.78}, {0.297797, 0.0, 0.244441} };
 		double[][] dm3 = { {.5, 0, 0}, {0, .5, .1} };
@@ -514,7 +528,7 @@ public class IteratedFunctionSystem {
 	 * @return
 	 */
 	public static IteratedFunctionSystem Sample3() {
-		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem("Sample3");
 		double[][] dm1 = { {0.25, 0.5, 0.1}, {0.1, 0.5, 0.4} };
 		double[][] dm2 = { {0.0, 0.24, 0.5}, {0.5, 0.25, 0.0} };
 		LinearFunction f1 = new LinearFunction(dm1);
@@ -544,20 +558,22 @@ public class IteratedFunctionSystem {
 		this.low = low;
 	}
 
-	public String getFlame() {
-		return flame;
-	}
-
-	public void setFlame(String flame) {
-		this.flame = flame;
-	}
-
 	public Document getDoc() {
 		return doc;
 	}
 
 	public double getTotalWeight() {
 		return totalWeight;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 	
 }
