@@ -30,7 +30,6 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 	private static final long serialVersionUID = 7492212210472351442L;
 	protected static final Logger log = LogManager.getLogger(Point2D.class);
 	public static final String ObjectType = "Point2D";
-	static Point2D<Double> zeroPoint = new Point2D<Double>();
 			
 	@JsonProperty	private Double x = BigDecimal.ZERO.doubleValue();
 	@JsonProperty	private Double y = BigDecimal.ZERO.doubleValue();
@@ -95,7 +94,7 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 	public static Point2D<Double>  fromJson(String jsonstr) {
 		Point2D<Double> point = null;
 		try {
-			ObjectReader reader = mapper.readerFor(zeroPoint.getClass());
+			ObjectReader reader = mapper.readerFor(ORIGIN.getClass());
 			point = reader.readValue(jsonstr);
 		} catch (JsonParseException e) {
 			log.error("JsonParseException (Point2D): " + jsonstr);

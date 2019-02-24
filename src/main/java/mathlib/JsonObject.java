@@ -29,10 +29,10 @@ public class JsonObject implements IJson, INameable  {
 	protected static final Logger log = LogManager.getLogger(IJson.class);
 	protected static final List<String> typeList = new ArrayList<>();
 	static {
+		typeList.add("\"stats\"");
 		typeList.add("\"message\"");
 		typeList.add("\"Point2D\"");
 		typeList.add("\"IFS\"");
-		typeList.add("\"stats\"");
 	}
 	
 	@JsonProperty	protected String name = UNKNOWN;

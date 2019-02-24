@@ -58,7 +58,7 @@ public class ChaosGame implements IPointProducer {
 	 * 
 	 * @return
 	 */
-	public Point2D<Number> next() {
+	public Point2D<Double> next() {
 		Point2D<BigDecimal> point = ifs.getRandomPoint();
 		if(debug) {	System.out.println("start: " + point); }
 		for(int i=0; i<functionIterations; i++) {
@@ -69,15 +69,15 @@ public class ChaosGame implements IPointProducer {
 			}
 		}
 		count++;
-		return new Point2D<Number>(point);
+		return new Point2D<Double>(point);
 	}
 	
-	public PointSet<Number>  run() {
-		PointSet<Number> points = new PointSet<Number>();
+	public PointSet<Double>  run() {
+		PointSet<Double> points = new PointSet<Double>();
 		for(int i=0; i<repeats; i++) {
 			start();
 			while(!isComplete()) {
-				 Point2D<Number> point = next();
+				 Point2D<Double> point = next();
 				 points.add(point);
 			}
 		}
@@ -233,7 +233,7 @@ public class ChaosGame implements IPointProducer {
 		/*
 		 * Run the chaos game to generate points
 		 */
-		PointSet<Number> points = game.run();
+		PointSet<Double> points = game.run();
 		points.setName(dataSetName);
 		points.setN(niterations);
 		StringBuffer sb = new StringBuffer();
@@ -246,6 +246,7 @@ public class ChaosGame implements IPointProducer {
 			}
 		}
 		points.setIteratedFunctionSystem(ifs);
+		points.setName(dataSetName);
 		CommandMessage cmstart = null;
 		CommandMessage cmtrailing = null;
 		
@@ -259,8 +260,9 @@ public class ChaosGame implements IPointProducer {
 			System.out.println(cmstart.toJson());
 		}
 		System.out.println(ifs.toJson());
+		System.out.println(points.getStats().toJson());
 				
-		for(Point2D<Number> point : points.getPoints()) {
+		for(Point2D<Double> point : points.getPoints()) {
 			point.setName(ifs.getName());
 			System.out.println(point.toJson());
 		}

@@ -5,6 +5,6 @@ public interface IPointProducer {
 
 	public void start();
 	public boolean isComplete();
-	public Point2D<Number> next();
+	public Point2D<Double> next();
 	
 }

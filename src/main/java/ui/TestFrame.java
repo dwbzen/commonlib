@@ -1301,15 +1301,15 @@ public class TestFrame extends javax.swing.JFrame implements IBroadcastClient {
 		
 		ChaosGame game = new ChaosGame(ifs, npoints, repeats);
 		game.setMaxIterations(npoints);
-		PointSet<Number> pointSet = game.run();
-		List<Point2D<Number>> points = pointSet.getPoints();
+		PointSet<Double> pointSet = game.run();
+		List<Point2D<Double>> points = pointSet.getPoints();
 		double maxX = pointSet.getMaxXValue().doubleValue();
 		double minX = pointSet.getMinXValue().doubleValue();
 		double maxY = pointSet.getMaxYValue().doubleValue();
 		double minY = pointSet.getMinYValue().doubleValue();
 		double rangeX = maxX - minX;
 		double rangeY = maxY - minY;
-		for(Point2D<Number> point : points) {
+		for(Point2D<Double> point : points) {
 			//x = (int) (point.getX().doubleValue() * width);
 			//y = (int) (point.getY().doubleValue() * height);
 			double xprime = (point.getX().doubleValue() - minX)/rangeX;

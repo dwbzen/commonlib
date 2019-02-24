@@ -22,8 +22,8 @@ public class PointSet<T extends Number>  extends JsonObject {
 	public static final String objectType = "PointSet";
 	public static enum DataSource {IFS, RANDOM, UNKNOWN};
 	
-	@JsonProperty private List<Point2D<T>> points = new ArrayList<Point2D<T>>();
-	@JsonProperty private PointSetStats<T> stats = new PointSetStats<>();
+	@JsonProperty private List<Point2D<Double>> points = new ArrayList<Point2D<Double>>();
+	@JsonProperty private PointSetStats<Double> stats = new PointSetStats<>();
 
 	@JsonProperty			private int n=0;
 	@JsonProperty("ifs")	private IteratedFunctionSystem iteratedFunctionSystem = null;
@@ -32,7 +32,7 @@ public class PointSet<T extends Number>  extends JsonObject {
 	public PointSet() {
 	}
 	
-	public List<Point2D<T>> getPoints() {
+	public List<Point2D<Double>> getPoints() {
 		return points;
 	}
 	
@@ -93,10 +93,10 @@ public class PointSet<T extends Number>  extends JsonObject {
 			stats.setMaxYValue(Double.parseDouble(fval));
 		}
 		else if(fname.equalsIgnoreCase("maxPoint")) {
-			setMaxPoint(new Point2D<T>(fval));
+			setMaxPoint(new Point2D<Double>(fval));
 		}
 		else if(fname.equalsIgnoreCase("minPoint")) {
-			setMinPoint(new Point2D<T>(fval));
+			setMinPoint(new Point2D<Double>(fval));
 		}
 	}
 	
@@ -105,7 +105,7 @@ public class PointSet<T extends Number>  extends JsonObject {
 	 * @param val
 	 * @return 
 	 */
-	public boolean add(Point2D<T> point) {
+	public boolean add(Point2D<Double> point) {
 		double x = point.getX().doubleValue();
 		double y = point.getY().doubleValue();
 		if(x < stats.maxXValue) {
@@ -152,14 +152,14 @@ public class PointSet<T extends Number>  extends JsonObject {
 	}
 
 	public Double getMaxYValue() {
-		return stats.getMaxXValue();
+		return stats.getMaxYValue();
 	}
 
-	public Point2D<T> getMinPoint() {
+	public Point2D<Double> getMinPoint() {
 		return stats.getMinPoint();
 	}
 
-	public Point2D<T> getMaxPoint() {
+	public Point2D<Double> getMaxPoint() {
 		return stats.getMaxPoint();
 	}
 
@@ -187,19 +187,19 @@ public class PointSet<T extends Number>  extends JsonObject {
 		this.n = n;
 	}
 
-	public void setMinPoint(Point2D<T> minPoint) {
+	public void setMinPoint(Point2D<Double> minPoint) {
 		stats.setMinPoint(minPoint);
 	}
 
-	public void setMaxPoint(Point2D<T> maxPoint) {
+	public void setMaxPoint(Point2D<Double> maxPoint) {
 		stats.setMaxPoint(maxPoint);
 	}
 	
-	public PointSetStats<T> getStats() {
+	public PointSetStats<Double> getStats() {
 		return stats;
 	}
 
-	public void setStats(PointSetStats<T> stats) {
+	public void setStats(PointSetStats<Double> stats) {
 		this.stats = stats;
 	}
 

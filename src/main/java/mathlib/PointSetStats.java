@@ -17,13 +17,13 @@ public class PointSetStats<T extends Number> extends JsonObject {
 	@JsonProperty("maxX")	public Double maxXValue = Double.MIN_VALUE;
 	@JsonProperty("maxY")	public Double maxYValue = Double.MIN_VALUE;
 
-	@JsonProperty	public Point2D<T> minPoint = new Point2D<T>(Double.MAX_VALUE, Double.MAX_VALUE);	// determined by Point2D compare
-	@JsonProperty	public Point2D<T> maxPoint = new Point2D<T>(Double.MIN_VALUE, Double.MIN_VALUE);	// determined by Point2D compare
+	@JsonProperty	public Point2D<Double> minPoint = new Point2D<Double>(Double.MAX_VALUE, Double.MAX_VALUE);	// determined by Point2D compare
+	@JsonProperty	public Point2D<Double> maxPoint = new Point2D<Double>(Double.MIN_VALUE, Double.MIN_VALUE);	// determined by Point2D compare
 	
 	public PointSetStats() {
 		setType(objectType);
 	}
-	public PointSetStats(Double minX, Double maxX, Double minY, Double maxY, Point2D<T> minPoint, Point2D<T> maxPoint) {
+	public PointSetStats(Double minX, Double maxX, Double minY, Double maxY, Point2D<Double> minPoint, Point2D<Double> maxPoint) {
 		setType(objectType);
 		minXValue = minX;
 		maxXValue = maxX;
@@ -75,16 +75,16 @@ public class PointSetStats<T extends Number> extends JsonObject {
 	public void setMaxYValue(Double maxYValue) {
 		this.maxYValue = maxYValue;
 	}
-	public Point2D<T> getMinPoint() {
+	public Point2D<Double> getMinPoint() {
 		return minPoint;
 	}
-	public void setMinPoint(Point2D<T> minPoint) {
+	public void setMinPoint(Point2D<Double> minPoint) {
 		this.minPoint = minPoint;
 	}
-	public Point2D<T> getMaxPoint() {
+	public Point2D<Double> getMaxPoint() {
 		return maxPoint;
 	}
-	public void setMaxPoint(Point2D<T> maxPoint) {
+	public void setMaxPoint(Point2D<Double> maxPoint) {
 		this.maxPoint = maxPoint;
 	}
 	
