@@ -22,11 +22,12 @@ import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
+import mathlib.JsonObject;
 import mathlib.Matrix;
 import mathlib.Point2D;
-import mathlib.util.IJson;
-import mathlib.util.INameable;
 
 /**
  * Represents a general 2-dimensional IFS
@@ -43,16 +44,13 @@ import mathlib.util.INameable;
  * @author don_bacon
  *
  */
-public class IteratedFunctionSystem implements INameable, IJson {
+public class IteratedFunctionSystem extends JsonObject {
 
 	private static final long serialVersionUID = 1L;
 	protected static final Logger log = LogManager.getLogger(IteratedFunctionSystem.class);
 	static MathContext context = MathContext.DECIMAL32;	// precision is 7 decimal places
+	public static final String objectType = "IFS";
 	
-	/**
-	 * the function system each Matrix must be 2 x 3
-	 */
-	@JsonProperty	private String name = null;		// the Flame or IFS name
 	@JsonProperty	private List<LinearFunction> functions = new ArrayList<LinearFunction>();
 	@JsonProperty	private double range = 2.0;
 	@JsonProperty	private double low = -1.0;	// [ LOW, LOW + RANGE ]
@@ -62,9 +60,11 @@ public class IteratedFunctionSystem implements INameable, IJson {
 	@JsonIgnore		private ThreadLocalRandom random = ThreadLocalRandom.current();
 
 	protected IteratedFunctionSystem() {
+		this.type = objectType;
 	}
 	
 	public IteratedFunctionSystem(String ifsName) {
+		this.type = objectType;
 		this.name = ifsName;
 	}
 	
@@ -95,6 +95,23 @@ public class IteratedFunctionSystem implements INameable, IJson {
 		this(flameName);
 		File xmlFile = new File(flameFile);
 		parseXMLFile(xmlFile);
+	}
+	
+	public static IteratedFunctionSystem fromJson(String jsonstr) {
+		IteratedFunctionSystem ifs = null;
+		try {
+			ifs = mapper.readValue(jsonstr, IteratedFunctionSystem.class);
+		} catch (JsonParseException e) {
+			log.error("JsonParseException (Point2D): " + jsonstr);
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			log.error("JsonMappingException (Point2D): " + jsonstr);
+			e.printStackTrace();
+		} catch (IOException e) {
+			log.error("IOException: " + jsonstr);
+			e.printStackTrace();
+		}
+		return ifs;
 	}
 	
 	/**
@@ -564,16 +581,6 @@ public class IteratedFunctionSystem implements INameable, IJson {
 
 	public double getTotalWeight() {
 		return totalWeight;
-	}
-
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String getName() {
-		return name;
 	}
 	
 }

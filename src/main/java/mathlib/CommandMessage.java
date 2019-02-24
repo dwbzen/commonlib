@@ -18,6 +18,7 @@ import mathlib.util.INameable;
 public class CommandMessage extends BaseJsonObject {
 
 	public static final String MESSAGE_TYPE = "message";
+	public static final String objectType = MESSAGE_TYPE;
 	public static final Pattern commandRegex = Pattern.compile("(name:.+),(type:.+),(command:.+)");
 	private static final long serialVersionUID = -322492144640842630L;
 	

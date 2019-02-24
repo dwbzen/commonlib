@@ -1,6 +1,7 @@
 package mathlib;
 
-import java.util.regex.Matcher;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import mathlib.ifs.IteratedFunctionSystem;
 import mathlib.util.IJson;
 import mathlib.util.INameable;
 
@@ -19,16 +21,22 @@ import mathlib.util.INameable;
  */
 public class JsonObject implements IJson, INameable  {
 
+	private static final long serialVersionUID = 347831929602095478L;
 	public static final Pattern baseJsonRegex = Pattern.compile("(name:.+),(type:.+)");
 	public static final String UNKNOWN = "unknown";
 	public static final String QUOTE = "\"";
 	public static final String TYPE = UNKNOWN;
 	protected static final Logger log = LogManager.getLogger(IJson.class);
-
-	private static final long serialVersionUID = 347831929602095478L;
+	protected static final List<String> typeList = new ArrayList<>();
+	static {
+		typeList.add("\"message\"");
+		typeList.add("\"Point2D\"");
+		typeList.add("\"IFS\"");
+		typeList.add("\"stats\"");
+	}
 	
-	@JsonProperty	private String name = UNKNOWN;
-	@JsonProperty	private String type = TYPE;
+	@JsonProperty	protected String name = UNKNOWN;
+	@JsonProperty	protected String type = TYPE;
 	
 	/**
 	 * Derived classes will want to overload
@@ -38,29 +46,20 @@ public class JsonObject implements IJson, INameable  {
 	}
 	
 	/**
-	 * Returns the type:<typestring> type string
-	 * 
+	 * Returns the type:<typestring> type string</br>
+	 * There are 4 types: message, IFS, Point2D, and stats
 	 * @param jsonstr
-	 * @return
+	 * @return 
 	 */
 	public static String getType(String jsonstr) {
-		String type = null;
-		String raw = jsonstr.replaceAll("[\"\\s{}]", "");	// deletes spaces, curly braces and quotes
-		int n = raw.indexOf("name");
-		int index = (n<=0) ? 0 : n;
-		Matcher m = baseJsonRegex.matcher(raw.substring(index));
-		int ind = 0;
-		if(m.matches()) {
-			type = m.group(2);
-			if( (ind=type.indexOf(',')) > 0) {
-				type = type.substring(0, ind);
+		String type = UNKNOWN;
+		for(String ts : typeList) {
+			if(jsonstr.contains(ts)) {
+				type = ts.replaceAll("\"", "");
+				break;
 			}
 		}
-		else {
-			type = "type:" + UNKNOWN;
-		}
-		String[] ts = type.split(":");
-		return ts.length==2 ? ts[1] : UNKNOWN;
+		return type;
 	}
 
     public static JsonObject analyzeMessage(String messageText) {
@@ -70,13 +69,16 @@ public class JsonObject implements IJson, INameable  {
           if(type.equals("message")) {
               obj = CommandMessage.fromJSONString(messageText);
           }
-          else if(type.equals("point")) {
+          else if(type.equals("Point2D")) {
               obj = Point2D.fromJson(messageText);
           }
           else if(type.equals("stats")) {
-              obj = PointSet.fromJson(messageText);
+              obj = PointSetStats.fromJson(messageText);
           }
-          else if(type.equalsIgnoreCase(JsonObject.UNKNOWN)) {
+          else if(type.equals("IFS")) {
+        	  obj = IteratedFunctionSystem.fromJson(messageText);
+          }
+          else {
               log.error("JSONObject: Unknown message type: " + messageText);
               obj = BaseJsonObject.fromJson(messageText);
           }

@@ -11,16 +11,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectReader;
 
 /**
  * 
  * @author dbacon
  * JSON Point2D
- * { "name" : "ifs1", "type" : "point", "Point2D" : [  0.3064109,  0.6935743 ] }
- * { "name" : "ifs1", "type" : "point", "Point2D" : [  0.3064109,  0.6935743 ] }
- * { "name" : "ifs1", "type" : "point", "Point2D" : [ 2.687086E-4 , 1.829826E-4] }
+ * {"name":"unknown","type":"Point2D","coordinates":[0.99201,-4.333]}
  * 
  * 
  * @param <T>
@@ -30,9 +30,10 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 	private static final long serialVersionUID = 7492212210472351442L;
 	protected static final Logger log = LogManager.getLogger(Point2D.class);
 	public static final String ObjectType = "Point2D";
+	static Point2D<Double> zeroPoint = new Point2D<Double>();
 			
-	@JsonIgnore	private Number x = BigDecimal.ZERO;
-	@JsonIgnore	private Number y = BigDecimal.ZERO;
+	@JsonProperty	private Double x = BigDecimal.ZERO.doubleValue();
+	@JsonProperty	private Double y = BigDecimal.ZERO.doubleValue();
 	
 	public static final Point2D<Double> ORIGIN = new Point2D<>(0.0, 0.0);
 	public static final Pattern DECIMAL_REGEX = Pattern.compile("\\[\\s*(.+),\\s*(.+)\\s*\\]");
@@ -49,13 +50,13 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 	}
 	public Point2D(double x, double y) {
 		this();
-		this.x = BigDecimal.valueOf(x);
-		this.y = BigDecimal.valueOf(y);
+		this.x = x;
+		this.y = y;
 	}
 	public Point2D(int x, int y) {
 		this();
-		this.x = BigDecimal.valueOf(x);
-		this.y = BigDecimal.valueOf(y);
+		this.x = Double.valueOf(x);
+		this.y = Double.valueOf(y);
 	}
 	public Point2D(Point2D<BigDecimal> p) {
 		this();
@@ -79,11 +80,11 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 		}
 	}
 
-	public Number getX() {
+	public Double getX() {
 		return x;
 	}
 
-	public Number getY() {
+	public Double getY() {
 		return y;
 	}
 	
@@ -91,11 +92,11 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 		return "[ " + x + ", " + y + " ]";
 	}
 
-	@SuppressWarnings("unchecked")
-	public static Point2D<Number>  fromJson(String jsonstr) {
-		Point2D<Number> point = null;
+	public static Point2D<Double>  fromJson(String jsonstr) {
+		Point2D<Double> point = null;
 		try {
-			point = mapper.readValue(jsonstr, Point2D.class);
+			ObjectReader reader = mapper.readerFor(zeroPoint.getClass());
+			point = reader.readValue(jsonstr);
 		} catch (JsonParseException e) {
 			log.error("JsonParseException (Point2D): " + jsonstr);
 			e.printStackTrace();
@@ -173,6 +174,7 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 	  }
 
 	@Override
+	@JsonIgnore
 	public List<Number> getCoordinates() {
 		List<Number> coordinates = new ArrayList<Number>();
 		coordinates.add(x);
@@ -182,12 +184,16 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 	
 	public static void main(String[] args) {
 		Point2D<Double> p2d = new Point2D<Double>(.99201, -4.333);
-		System.out.println(p2d.toJson());
+		String jsonstr = p2d.toJson();
+		System.out.println(jsonstr);
 		System.out.println(p2d.toJson(true));
 		
+		Point2D<Double> point = Point2D.fromJson(jsonstr);
+		System.out.println(point.toString());
+		
 		if(args.length > 0) {
-			Point2D<Number> point = Point2D.fromJson(args[0]);
-			System.out.println("point: " + point.toJson());
+			Point2D<Double> point2 = Point2D.fromJson(args[0]);
+			System.out.println("point: " + point2.toJson());
 		}
 	}
 }

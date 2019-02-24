@@ -221,6 +221,12 @@ public class ChaosGame implements IPointProducer {
 			else if(ifsname.equalsIgnoreCase("ifs2")) {
 				ifs = IteratedFunctionSystem.IFS2();
 			}
+			else if(ifsname.equalsIgnoreCase("ifs3")) {
+				ifs = IteratedFunctionSystem.IFS3();
+			}
+			else if(ifsname.equalsIgnoreCase("Sierpinski3Variations")) {
+				ifs = IteratedFunctionSystem.Sierpinski3Variations();
+			}
 
 		}
 		ChaosGame game = new ChaosGame(ifs, niterations, nrepeats);
@@ -239,7 +245,7 @@ public class ChaosGame implements IPointProducer {
 				sb.append(",");
 			}
 		}
-		points.setLinearFunction(sb.toString());
+		points.setIteratedFunctionSystem(ifs);
 		CommandMessage cmstart = null;
 		CommandMessage cmtrailing = null;
 		

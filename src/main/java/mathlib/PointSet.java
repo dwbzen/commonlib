@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+
+import mathlib.ifs.IteratedFunctionSystem;
 
 /**
  * @author dbacon
@@ -16,19 +19,17 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 public class PointSet<T extends Number>  extends JsonObject {
 
 	private static final long serialVersionUID = 7219606678524448973L;
-	public static String OBJECT_TYPE = "PointSet";
+	public static final String objectType = "PointSet";
+	public static enum DataSource {IFS, RANDOM, UNKNOWN};
 	
 	@JsonProperty private List<Point2D<T>> points = new ArrayList<Point2D<T>>();
 	@JsonProperty private PointSetStats<T> stats = new PointSetStats<>();
 
-	@JsonProperty	private int n=0;
-	@JsonProperty	private String linearFunction = null;
+	@JsonProperty			private int n=0;
+	@JsonProperty("ifs")	private IteratedFunctionSystem iteratedFunctionSystem = null;
+	@JsonIgnore				private DataSource dataSource = DataSource.UNKNOWN;	
 	
 	public PointSet() {
-	}
-	
-	public static void main(String args[]) {
-
 	}
 	
 	public List<Point2D<T>> getPoints() {
@@ -72,9 +73,6 @@ public class PointSet<T extends Number>  extends JsonObject {
 		String fval = (fv.length == 2) ? fv[1]  : "{" + fv[1] + ":" + fv[2] + "}";
 		if(fname.equalsIgnoreCase("name")) {
 			setName(fval);
-		}
-		else if(fname.equals("LinearFunction")) {
-			setLinearFunction(valueString.substring(valueString.indexOf(":") + 1));
 		}
 		else if(fname.equalsIgnoreCase("type")) {
 			setType(fval);
@@ -132,6 +130,15 @@ public class PointSet<T extends Number>  extends JsonObject {
 		return points.add(point);
 	}
 	
+	public IteratedFunctionSystem getIteratedFunctionSystem() {
+		return iteratedFunctionSystem;
+	}
+
+	public void setIteratedFunctionSystem(IteratedFunctionSystem iteratedFunctionSystem) {
+		this.iteratedFunctionSystem = iteratedFunctionSystem;
+		dataSource = DataSource.IFS;
+	}
+
 	public Double getMinXValue() {
 		return stats.getMinXValue();
 	}
@@ -187,15 +194,23 @@ public class PointSet<T extends Number>  extends JsonObject {
 	public void setMaxPoint(Point2D<T> maxPoint) {
 		stats.setMaxPoint(maxPoint);
 	}
-
-	public String getLinearFunction() {
-		return linearFunction;
-	}
-
-	public void setLinearFunction(String linearFunction) {
-		this.linearFunction = linearFunction;
-	}
 	
+	public PointSetStats<T> getStats() {
+		return stats;
+	}
+
+	public void setStats(PointSetStats<T> stats) {
+		this.stats = stats;
+	}
+
+	public DataSource getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
 	@Override
 	public String toString() {
 		return toJson(true);

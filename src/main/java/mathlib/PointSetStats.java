@@ -1,14 +1,17 @@
 package mathlib;
 
+import java.io.IOException;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
-import mathlib.util.IJson;
-
-public class PointSetStats<T extends Number> implements IJson {
+public class PointSetStats<T extends Number> extends JsonObject {
 	
 	private static final long serialVersionUID = 1L;
+	public static final String objectType = "stats";
 	
-	@JsonProperty	private String type = "stats";
 	@JsonProperty("minX")	public Double minXValue = Double.MAX_VALUE;
 	@JsonProperty("minY")	public Double minYValue = Double.MAX_VALUE;
 	@JsonProperty("maxX")	public Double maxXValue = Double.MIN_VALUE;
@@ -18,9 +21,10 @@ public class PointSetStats<T extends Number> implements IJson {
 	@JsonProperty	public Point2D<T> maxPoint = new Point2D<T>(Double.MIN_VALUE, Double.MIN_VALUE);	// determined by Point2D compare
 	
 	public PointSetStats() {
-		
+		setType(objectType);
 	}
 	public PointSetStats(Double minX, Double maxX, Double minY, Double maxY, Point2D<T> minPoint, Point2D<T> maxPoint) {
+		setType(objectType);
 		minXValue = minX;
 		maxXValue = maxX;
 		minYValue = minY;
@@ -28,6 +32,25 @@ public class PointSetStats<T extends Number> implements IJson {
 		this.minPoint = minPoint;
 		this.maxPoint = maxPoint;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static PointSetStats<Double> fromJson(String jsonstr) {
+		 PointSetStats<Double> stats = null;
+			try {
+				stats = mapper.readValue(jsonstr, PointSetStats.class);
+			} catch (JsonParseException e) {
+				System.err.println("JsonParseException (PointSetStats): " + jsonstr);
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				System.err.println("JsonMappingException (PointSetStats): " + jsonstr);
+				e.printStackTrace();
+			} catch (IOException e) {
+				System.err.println("IOException: " + jsonstr);
+				e.printStackTrace();
+			}
+			return stats;
+	}
+	
 	public Double getMinXValue() {
 		return minXValue;
 	}
@@ -64,8 +87,11 @@ public class PointSetStats<T extends Number> implements IJson {
 	public void setMaxPoint(Point2D<T> maxPoint) {
 		this.maxPoint = maxPoint;
 	}
-	public String getType() {
-		return type;
+	
+	@Override
+	@JsonIgnore
+	public String getName() {
+		return super.getName();
 	}
 	
 }
