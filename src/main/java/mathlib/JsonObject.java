@@ -27,7 +27,7 @@ public class JsonObject implements IJson, INameable  {
 	public static final String QUOTE = "\"";
 	public static final String TYPE = UNKNOWN;
 	protected static final Logger log = LogManager.getLogger(IJson.class);
-	protected static final List<String> typeList = new ArrayList<>();
+	public static final List<String> typeList = new ArrayList<>();
 	static {
 		typeList.add("\"stats\"");
 		typeList.add("\"message\"");
@@ -47,7 +47,7 @@ public class JsonObject implements IJson, INameable  {
 	
 	/**
 	 * Returns the type:<typestring> type string</br>
-	 * There are 4 types: message, IFS, Point2D, and stats
+	 * There are 4 recognized types: message, IFS, Point2D, and stats
 	 * @param jsonstr
 	 * @return 
 	 */

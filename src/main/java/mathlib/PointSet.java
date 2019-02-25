@@ -108,8 +108,8 @@ public class PointSet<T extends Number>  extends JsonObject {
 	public boolean add(Point2D<Double> point) {
 		double x = point.getX().doubleValue();
 		double y = point.getY().doubleValue();
-		if(x < stats.maxXValue) {
-			stats.maxXValue = x;
+		if(x < stats.minXValue) {
+			stats.minXValue = x;
 		}
 		if(y < stats.minYValue) {
 			stats.minYValue = y;
