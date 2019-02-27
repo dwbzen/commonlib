@@ -1,7 +1,10 @@
 package mathlib.ifs;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,9 +29,11 @@ public class ChaosGame implements IPointProducer {
 	private int count;
 	private int repeats = 1;
 	private boolean debug = false;
+	private Map<Function<Point2D<BigDecimal>, Point2D<BigDecimal>>, Integer> linearFunctionCounts = new HashMap<>();
 	
-	public ChaosGame() {
+	protected ChaosGame() {
 	}
+	
 	public ChaosGame(IteratedFunctionSystem ifs) {
 		this.ifs = ifs;
 	}
@@ -46,29 +51,33 @@ public class ChaosGame implements IPointProducer {
 	
 	public void start() {
 		count = 0;
+		ifs.getFunctions().forEach(f -> linearFunctionCounts.put(f, 0));
 	}
+	
 	public boolean isComplete() {
 		return count >= maxIterations;
 	}
 	/**
 	 * Pick a random point in (x,y) in [-1, +1]
 	 * Pick a LinearFunction (random - based on weight)
-	 * Iteratively evaluate for functionIterations times, starting at point
+	 * Iteratively evaluate for functionIterations (20) times, starting at point
 	 * Return the result at the end
 	 * 
 	 * @return
 	 */
 	public Point2D<Double> next() {
 		Point2D<BigDecimal> point = ifs.getRandomPoint();
+		LinearFunction f = ifs.pickFunction();
 		if(debug) {	System.out.println("start: " + point); }
 		for(int i=0; i<functionIterations; i++) {
-			LinearFunction f = ifs.pickFunction();
-			point = f.evaluateAt(point);
+			point = f.apply(point);
 			if(debug) {	
 				System.out.println("picked " + f.getName() + " " + point.toString()); 
 			}
 		}
 		count++;
+		int count = getFunctionCount(f) + 1;
+		linearFunctionCounts.put(f, count);
 		return new Point2D<Double>(point);
 	}
 	
@@ -109,6 +118,15 @@ public class ChaosGame implements IPointProducer {
 	public void setRepeats(int repeats) {
 		this.repeats = repeats;
 	}
+	
+	public int getFunctionCount(LinearFunction f) {
+		return linearFunctionCounts.get(f).intValue();
+	}
+	
+	public Map<Function<Point2D<BigDecimal>, Point2D<BigDecimal>>, Integer> getLinearFunctionCounts() {
+		return linearFunctionCounts;
+	}
+
 	/**
 	 * Usage: ChaosGame [-n num] [-name datasetname] [-ifs ifsname] [-start text] [-trailing text] > filename.json
 	 * where num is #iterations (defaults to 10000)
