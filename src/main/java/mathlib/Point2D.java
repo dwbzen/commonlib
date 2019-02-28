@@ -33,6 +33,7 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 			
 	@JsonProperty	private Double x = BigDecimal.ZERO.doubleValue();
 	@JsonProperty	private Double y = BigDecimal.ZERO.doubleValue();
+	@JsonProperty	private int	count = 1;		// #times this point is accessed in a given context
 	
 	public static final Point2D<Double> ORIGIN = new Point2D<>(0.0, 0.0);
 	public static final Pattern DECIMAL_REGEX = Pattern.compile("\\[\\s*(.+),\\s*(.+)\\s*\\]");
@@ -61,7 +62,15 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 		this();
 		x = p.x;
 		y = p.y;
+		count = p.count;
 	}
+	
+	public Point2D(BigDecimal xbd, BigDecimal ybd) {
+		this();
+		x = xbd.doubleValue();
+		y = ybd.doubleValue();
+	}
+	
 	/**
 	 * Format:  [ 0.9082574, 0.07519616 ] or coordinates : [ 0.9082574, 0.07519616 ] 
 	 * @param s
@@ -82,11 +91,27 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 	public Double getX() {
 		return x;
 	}
-
+	
+	public BigDecimal toBigDecimalX() {
+		return new BigDecimal(x);
+	}
+	
 	public Double getY() {
 		return y;
 	}
 	
+	public BigDecimal toBigDecimalY() {
+		return new BigDecimal(y);
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
 	public String toString() {
 		return "[ " + x + ", " + y + " ]";
 	}

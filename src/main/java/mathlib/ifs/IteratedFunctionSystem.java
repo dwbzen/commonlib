@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -48,7 +49,7 @@ public class IteratedFunctionSystem extends JsonObject {
 
 	private static final long serialVersionUID = 1L;
 	protected static final Logger log = LogManager.getLogger(IteratedFunctionSystem.class);
-	static MathContext context = MathContext.DECIMAL32;	// precision is 7 decimal places
+	public static final MathContext mathContext = new MathContext(5, RoundingMode.HALF_DOWN);	// precision is 7 decimal places
 	public static final String objectType = "IFS";
 	
 	@JsonProperty	private List<LinearFunction> functions = new ArrayList<LinearFunction>();
@@ -175,10 +176,10 @@ public class IteratedFunctionSystem extends JsonObject {
 						int index = irow + 2*icol;
 						BigDecimal bd = new BigDecimal(Double.parseDouble(coefArray[index]) );
 						if(index == 1 || index == 2 || index ==5) {
-							dm[icol] = -bd.round(context).floatValue();
+							dm[icol] = -bd.round(mathContext).floatValue();
 						}
 						else {
-							dm[icol] = bd.round(context).floatValue();
+							dm[icol] = bd.round(mathContext).floatValue();
 						}
 					}
 					function.addRow(dm);

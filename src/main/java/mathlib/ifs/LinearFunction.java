@@ -1,6 +1,7 @@
 package mathlib.ifs;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +34,7 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 	
 	private static final long serialVersionUID = -4451686768008927428L;
 	public static final String ObjectType = "LinearFunction";
+	public static final MathContext mathContext = IteratedFunctionSystem.mathContext;
 	
 	@JsonProperty("type")	private String type = ObjectType;
 	//  the function Matrix must be 2 x 3
@@ -124,17 +126,18 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 		return type;
 	}
 
-	public Point2D<BigDecimal> evaluateAt(Point2D<BigDecimal> point) {
+	protected Point2D<BigDecimal> evaluateAt(Point2D<BigDecimal> point) {
 		double x =	a()*point.getX().doubleValue() +
 					b()*point.getY().doubleValue() +
 					c();
 		double y =	d()*point.getX().doubleValue() +
 					e()*point.getY().doubleValue() +
 					f();
-		Point2D<BigDecimal> result = new Point2D<BigDecimal>(x,y);
+		Point2D<BigDecimal> temp = new Point2D<BigDecimal>(x,y);
 		for(Variation v : variations) {
-			result = v.apply(result);
+			temp = v.apply(temp);
 		}
+		Point2D<BigDecimal> result = new Point2D<BigDecimal>(temp.toBigDecimalX().round(mathContext), temp.toBigDecimalY().round(mathContext) );
 		return result;
 	}
 	

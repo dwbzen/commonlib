@@ -25,11 +25,13 @@ public class ChaosGame implements IPointProducer {
 	
 	private IteratedFunctionSystem ifs;
 	private int maxIterations = 100000;
-	private int functionIterations = 20;
+	private int functionIterations = 21;
 	private int count;
 	private int repeats = 1;
 	private boolean debug = false;
 	private Map<Function<Point2D<BigDecimal>, Point2D<BigDecimal>>, Integer> linearFunctionCounts = new HashMap<>();
+	// a count of #times a point is the result of a linear function.
+	private Map<Point2D<Double>, Integer> pointHistogram = new HashMap<>();
 	
 	protected ChaosGame() {
 	}
@@ -76,8 +78,8 @@ public class ChaosGame implements IPointProducer {
 			}
 		}
 		count++;
-		int count = getFunctionCount(f) + 1;
-		linearFunctionCounts.put(f, count);
+		int functionCount = getFunctionCount(f) + 1;
+		linearFunctionCounts.put(f, functionCount);
 		return new Point2D<Double>(point);
 	}
 	
@@ -87,7 +89,17 @@ public class ChaosGame implements IPointProducer {
 			start();
 			while(!isComplete()) {
 				 Point2D<Double> point = next();
-				 points.add(point);
+				 if(pointHistogram.containsKey(point)) {
+					 int count = pointHistogram.get(point).intValue() + 1;
+					 point.setCount(count);
+					 pointHistogram.put(point, count);
+					 points.getPoints().remove(point);
+					 points.getPoints().add(point);
+				 }
+				 else {
+					 points.add(point);
+					 pointHistogram.put(point, 1);
+				 }
 			}
 		}
 		return points;
@@ -127,6 +139,10 @@ public class ChaosGame implements IPointProducer {
 		return linearFunctionCounts;
 	}
 
+	public Map<Point2D<Double>, Integer> getPointHistogram() {
+		return pointHistogram;
+	}
+
 	/**
 	 * Usage: ChaosGame [-n num] [-name datasetname] [-ifs ifsname] [-start text] [-trailing text] > filename.json
 	 * where num is #iterations (defaults to 10000)
@@ -160,7 +176,7 @@ public class ChaosGame implements IPointProducer {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int niterations = 10000;
+		int niterations = 100000;
 		int nrepeats = 1;
 		String dataSetName = "ifs1";
 		String trailingMessage = "SHUTDOWN";
