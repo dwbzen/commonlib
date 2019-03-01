@@ -22,6 +22,8 @@ import com.fasterxml.jackson.databind.ObjectReader;
  * JSON Point2D
  * {"name":"unknown","type":"Point2D","coordinates":[0.99201,-4.333]}
  * 
+ * TODO This needs to be refactored to be polymorphic.
+ * TODO The Double attributes should be T. Same applies to Point3D.
  * 
  * @param <T>
  */
@@ -37,7 +39,6 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 	
 	public static final Point2D<Double> ORIGIN = new Point2D<>(0.0, 0.0);
 	public static final Pattern DECIMAL_REGEX = Pattern.compile("\\[\\s*(.+),\\s*(.+)\\s*\\]");
-	public static final Pattern JSON_REGEX = Pattern.compile("(name:.+),(type:.+),(Point2D:.+)");
 	
 	protected Point2D() {
 		setType(ObjectType);
@@ -184,6 +185,11 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 	}
 	
 	@Override
+	/**
+	 * Points are equal if the respective X and Y values are equal.
+	 * Point count is not a factor in determining equality.
+	 * Use the identical method to also consider count.
+	 */
 	public boolean equals(Object other) {
 		boolean equals = false;
 		if(other instanceof Point2D) {
@@ -192,7 +198,18 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 		return equals;
 	}
 	
-	  @Override
+	public boolean identical(Object other) {
+		boolean equals = false;
+		if(other instanceof Point2D) {
+			equals = ((Point2D<?>)other).getX().equals(getX()) && ((Point2D<?>)other).getY().equals(getY());
+			if(equals) {
+				equals &= ((Point2D<?>)other).getCount() == ((Point2D<?>)other).getCount();
+			}
+		}
+		return equals;
+	}
+	
+	@Override
 	  public int hashCode() {
 		  return (x.toString() + y.toString()).hashCode();
 	  }

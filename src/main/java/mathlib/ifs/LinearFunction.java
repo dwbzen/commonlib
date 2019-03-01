@@ -36,6 +36,8 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 	public static final String ObjectType = "LinearFunction";
 	public static final MathContext mathContext = IteratedFunctionSystem.mathContext;
 	
+	public static final BigDecimal lowerLimit = IteratedFunctionSystem.lowerLimit;	// any number having an absolute value <= lowerLimit is set to 0.0
+	
 	@JsonProperty("type")	private String type = ObjectType;
 	//  the function Matrix must be 2 x 3
 	@JsonProperty			private  Matrix<BigDecimal> function = null;
@@ -137,7 +139,15 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 		for(Variation v : variations) {
 			temp = v.apply(temp);
 		}
-		Point2D<BigDecimal> result = new Point2D<BigDecimal>(temp.toBigDecimalX().round(mathContext), temp.toBigDecimalY().round(mathContext) );
+		BigDecimal xbd = temp.toBigDecimalX().round(mathContext);
+		if(xbd.abs().compareTo(lowerLimit) <= 0) {
+			xbd = BigDecimal.ZERO;
+		}
+		BigDecimal ybd = temp.toBigDecimalY().round(mathContext);
+		if(ybd.abs().compareTo(lowerLimit) <= 0) {
+			ybd = BigDecimal.ZERO;
+		}
+		Point2D<BigDecimal> result = new Point2D<BigDecimal>(xbd, ybd );
 		return result;
 	}
 	

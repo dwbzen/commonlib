@@ -91,9 +91,9 @@ public class ChaosGame implements IPointProducer {
 				 Point2D<Double> point = next();
 				 if(pointHistogram.containsKey(point)) {
 					 int count = pointHistogram.get(point).intValue() + 1;
+					 points.getPoints().remove(point);
 					 point.setCount(count);
 					 pointHistogram.put(point, count);
-					 points.getPoints().remove(point);
 					 points.getPoints().add(point);
 				 }
 				 else {
