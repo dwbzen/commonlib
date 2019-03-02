@@ -50,8 +50,8 @@ public class IteratedFunctionSystem extends JsonObject {
 	private static final long serialVersionUID = 1L;
 	protected static final Logger log = LogManager.getLogger(IteratedFunctionSystem.class);
 	
-	public static final MathContext mathContext = new MathContext(8, RoundingMode.HALF_DOWN);	// precision is 8 decimal places
-	public static final BigDecimal lowerLimit = new BigDecimal(1E-8);	// any number having an absolute value <= lowerLimit is set to 0.0
+	public static final MathContext mathContext = new MathContext(5, RoundingMode.HALF_DOWN);	// precision is 8 decimal places
+	public static final BigDecimal lowerLimit = new BigDecimal(1E-5);	// any number having an absolute value <= lowerLimit is set to 0.0
 	
 	public static final String objectType = "IFS";
 	
@@ -268,10 +268,10 @@ public class IteratedFunctionSystem extends JsonObject {
 	 * @return
 	 */
 	@JsonIgnore
-	public Point2D<BigDecimal> getRandomPoint() {
+	public Point2D<Double> getRandomPoint() {
 		double x = (random.nextDouble()*range) + low;
 		double y = (random.nextDouble()*range) + low;
-		return new Point2D<BigDecimal>(x,y);
+		return new Point2D<Double>(x,y);
 	}
 	
 	/**
@@ -282,6 +282,7 @@ public class IteratedFunctionSystem extends JsonObject {
    	 *  <xform weight="0.5" color="0" linear="1" coefs="0.5  0  0     0.5   0.5   0"    opacity="1" />
      *  <xform weight="0.5" color="0" linear="1" coefs="0.5  0  0     0.5   0     0"    opacity="1" />
      * In the Apophysis editor UI:
+     * <code>
      * Transform 1
      * 	X	0.5		  0
      *  Y	  0		0.5
@@ -296,7 +297,7 @@ public class IteratedFunctionSystem extends JsonObject {
      *  X	0.5		  0
      *  Y	  0		0.5
      *  O     0		  0
-     *  
+     *  </code>
 	 * @return IteratedFunctionSystem
 	 */
 	public static IteratedFunctionSystem Sierpinski() {

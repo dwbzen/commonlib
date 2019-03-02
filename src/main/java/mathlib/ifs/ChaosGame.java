@@ -1,6 +1,5 @@
 package mathlib.ifs;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +27,7 @@ public class ChaosGame implements IPointProducer {
 	private int functionIterations = 21;
 	private int count;
 	private int repeats = 1;
-	private boolean debug = false;
-	private Map<Function<Point2D<BigDecimal>, Point2D<BigDecimal>>, Integer> linearFunctionCounts = new HashMap<>();
+	private Map<Function<Point2D<Double>, Point2D<Double>>, Integer> linearFunctionCounts = new HashMap<>();
 	// a count of #times a point is the result of a linear function.
 	private Map<Point2D<Double>, Integer> pointHistogram = new HashMap<>();
 	
@@ -67,38 +65,44 @@ public class ChaosGame implements IPointProducer {
 	 * 
 	 * @return
 	 */
-	public Point2D<Double> next() {
-		Point2D<BigDecimal> point = ifs.getRandomPoint();
+	public Point2D<Double> next(Point2D<Double> point) {
 		LinearFunction f = ifs.pickFunction();
-		if(debug) {	System.out.println("start: " + point); }
-		for(int i=0; i<functionIterations; i++) {
-			point = f.apply(point);
-			if(debug) {	
-				System.out.println("picked " + f.getName() + " " + point.toString()); 
-			}
-		}
+		log.debug("picked " + f.getName() + " " + point.toString()); 
+		point = f.apply(point);
+		log.debug("next point: " + point.toString());
 		count++;
 		int functionCount = getFunctionCount(f) + 1;
 		linearFunctionCounts.put(f, functionCount);
-		return new Point2D<Double>(point);
+		return new Point2D<Double>(point.getX(), point.getY());
 	}
-	
+	/**
+	 * (x, y)= a random point in the bi-unit square
+	 * iterate { i = a random integer from 0 to n to 1 inclusive
+	 *		(x, y) = Fi(x, y)
+	 *		plot(x, y) except during the first 20 iterations
+	 * }
+	 * @return
+	 */
 	public PointSet<Double>  run() {
 		PointSet<Double> points = new PointSet<Double>();
 		for(int i=0; i<repeats; i++) {
+			Point2D<Double> point = ifs.getRandomPoint();
+			log.debug("start: " + point);
 			start();
 			while(!isComplete()) {
-				 Point2D<Double> point = next();
-				 if(pointHistogram.containsKey(point)) {
-					 int count = pointHistogram.get(point).intValue() + 1;
-					 points.getPoints().remove(point);
-					 point.setCount(count);
-					 pointHistogram.put(point, count);
-					 points.getPoints().add(point);
-				 }
-				 else {
-					 points.add(point);
-					 pointHistogram.put(point, 1);
+				 point = next(point);
+				 if(count >= functionIterations) {		// don't plot the first 20 points
+					 if(pointHistogram.containsKey(point)) {
+						 int count = pointHistogram.get(point).intValue() + 1;
+						 points.getPoints().remove(point);
+						 point.setCount(count);
+						 pointHistogram.put(point, count);
+						 points.getPoints().add(point);
+					 }
+					 else {
+						 points.add(point);
+						 pointHistogram.put(point, 1);
+					 }
 				 }
 			}
 		}
@@ -135,7 +139,7 @@ public class ChaosGame implements IPointProducer {
 		return linearFunctionCounts.get(f).intValue();
 	}
 	
-	public Map<Function<Point2D<BigDecimal>, Point2D<BigDecimal>>, Integer> getLinearFunctionCounts() {
+	public Map<Function<Point2D<Double>, Point2D<Double>>, Integer> getLinearFunctionCounts() {
 		return linearFunctionCounts;
 	}
 

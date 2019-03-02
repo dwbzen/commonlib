@@ -30,7 +30,7 @@ import mathlib.util.IJson;
  *
  *
  */
-public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Point2D<BigDecimal>>  {
+public class LinearFunction implements IJson, Function<Point2D<Double>, Point2D<Double>>  {
 	
 	private static final long serialVersionUID = -4451686768008927428L;
 	public static final String ObjectType = "LinearFunction";
@@ -128,7 +128,7 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 		return type;
 	}
 
-	protected Point2D<BigDecimal> evaluateAt(Point2D<BigDecimal> point) {
+	protected Point2D<Double> evaluateAt(Point2D<Double> point) {
 		double x =	a()*point.getX().doubleValue() +
 					b()*point.getY().doubleValue() +
 					c();
@@ -147,7 +147,7 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 		if(ybd.abs().compareTo(lowerLimit) <= 0) {
 			ybd = BigDecimal.ZERO;
 		}
-		Point2D<BigDecimal> result = new Point2D<BigDecimal>(xbd, ybd );
+		Point2D<Double> result = new Point2D<Double>(xbd, ybd );
 		return result;
 	}
 	
@@ -167,7 +167,7 @@ public class LinearFunction implements IJson, Function<Point2D<BigDecimal>, Poin
 	}
 
 	@Override
-	public Point2D<BigDecimal> apply(Point2D<BigDecimal> point) {
+	public Point2D<Double> apply(Point2D<Double> point) {
 		return evaluateAt(point);
 	}
 }

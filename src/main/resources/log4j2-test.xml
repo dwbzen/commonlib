@@ -16,7 +16,7 @@
 <Loggers>
 
     <Logger name="mathlib" additivity="false">
-		<level value="INFO"/>
+		<level value="TRACE"/>
 		<appender-ref ref="STDOUT"/>
 	</Logger>
 	
@@ -25,6 +25,11 @@
 		<appender-ref ref="STDOUT"/>
 	</Logger>
 
+	<Logger name="mathlib.ifs" additivity="false">
+		<level value="DEBUG"/>
+		<appender-ref ref="STDOUT"/>
+	</Logger>
+	
 	<Logger name="util" additivity="false">
 		<level value="INFO"/>
 		<appender-ref ref="STDOUT"/>
