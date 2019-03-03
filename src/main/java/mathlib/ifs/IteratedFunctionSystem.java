@@ -51,7 +51,7 @@ public class IteratedFunctionSystem extends JsonObject {
 	protected static final Logger log = LogManager.getLogger(IteratedFunctionSystem.class);
 	
 	public static final MathContext mathContext = new MathContext(5, RoundingMode.HALF_DOWN);	// precision is 8 decimal places
-	public static final BigDecimal lowerLimit = new BigDecimal(1E-5);	// any number having an absolute value <= lowerLimit is set to 0.0
+	public static final BigDecimal lowerLimit = new BigDecimal(1E-6);	// any number having an absolute value <= lowerLimit is set to 0.0
 	
 	public static final String objectType = "IFS";
 	

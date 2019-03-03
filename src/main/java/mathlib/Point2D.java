@@ -35,7 +35,7 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 			
 	@JsonProperty	private Double x = BigDecimal.ZERO.doubleValue();
 	@JsonProperty	private Double y = BigDecimal.ZERO.doubleValue();
-	@JsonProperty	private int	count = 1;		// #times this point is accessed in a given context
+	@JsonProperty	private int	count = 1;
 	
 	public static final Point2D<Double> ORIGIN = new Point2D<>(0.0, 0.0);
 	public static final Pattern DECIMAL_REGEX = Pattern.compile("\\[\\s*(.+),\\s*(.+)\\s*\\]");
@@ -105,6 +105,11 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 		return new BigDecimal(y);
 	}
 
+	/**
+	 * count is the #times this point is accessed in a given context.
+	 * This can be mult-purposed to represent a color (for example) as a gradient index.
+	 * @return count
+	 */
 	public int getCount() {
 		return count;
 	}
