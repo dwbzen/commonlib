@@ -25,8 +25,8 @@ import mathlib.util.IJson;
  * @author don_bacon
  *
  * @param <K> the base class of elements in the relationship (Character for example)
- * @param <T> the containing class that is a List<K>  (Word is a List<Character>)
- * @param <S> a Supplier<T>	(Sentence supplies Word)
+ * @param <T> the containing class that is a List<K>  (Word is a List<Character>, Sentence is a List<Word>)
+ * @param <S> a Supplier<T>	(Sentence supplies Word, Book supplies Sentence)
  */
 public abstract class OccurrenceRelation<K extends Comparable<K>, T extends List<K>, S extends Supplier<T>> 
 		implements IRelation<K,T,S>, IJson {
