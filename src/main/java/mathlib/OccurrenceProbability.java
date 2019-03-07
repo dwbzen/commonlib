@@ -1,5 +1,8 @@
 package mathlib;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Comparator;
 
@@ -11,8 +14,12 @@ import mathlib.util.IJson;
 public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbability> {
 	
 	private static final long serialVersionUID = 8656552141453330699L;
+	
+	public static final MathContext mathContext = new MathContext(5, RoundingMode.HALF_DOWN);	// precision is 5 decimal places
+	public static final BigDecimal lowerLimit = new BigDecimal(1E-6);	// any number having an absolute value <= lowerLimit is set to 0.0
+	
 	@JsonProperty("occurrence")	 private int occurrence = 0;
-	@JsonProperty	private double probability = 0.0;
+	@JsonProperty	private Double probability = 0.0;
 	@JsonProperty	private int[] range = {0, 0};
 	/**
 	 * The ordinal of this OccurrenceProbability relative to the sorting of the container
@@ -34,7 +41,7 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 	public OccurrenceProbability(int occ, double prob) {
 		this();
 		occurrence = occ;
-		probability = prob;
+		setProbability(prob);
 	}
 
 	public int getOccurrence() {
@@ -62,8 +69,8 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 		return format.format(probability);
 	}
 
-	public void setProbability(double probability) {
-		this.probability = probability;
+	public void setProbability(double prob) {
+		this.probability =  BigDecimal.valueOf(prob).round(mathContext).doubleValue();
 	}
 
 	public int[] getRange() {

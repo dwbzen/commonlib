@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,7 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	private static final long serialVersionUID = 2823871802307514005L;
 
 	protected static final Logger log = LogManager.getLogger(OccurrenceRelationBag.class);
+	public static final String indent = "      ";
 	
 	@JsonProperty	private int totalOccurrences = 0;
 	/**
@@ -42,6 +44,11 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	@JsonIgnore		private boolean open = true;
 	@JsonIgnore		private boolean supressSourceOutput = false;
 	
+	/*
+	 * optional Function injected to extract the Id from a T instance.
+	 */
+	@JsonIgnore		private Function<T, String> idExtractorFunction = null;
+	
 	/**
 	 * Function to compute distances , injected into each SourceOccurrenceProbability instance.
 	 */
@@ -50,6 +57,10 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	protected OccurrenceRelationBag(int degree) {
 		this.degree = degree;
 		sourceOccurrenceProbabilityMap = new TreeMap<>();
+	}
+	
+	public void setIdExtractorFunction(Function<T, String> function) {
+		idExtractorFunction = function;
 	}
 	
 	public boolean addOccurrenceRelation(OccurrenceRelation<K,T,S> occurrenceRelation) {
@@ -72,6 +83,10 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 			sop.setMetricFunction(metricFunction);
 		}
 		sop.addSource(source);
+		if(idExtractorFunction != null) {
+			String id = idExtractorFunction.apply(source);
+			sop.addId(id);
+		}
 		sop.getOccurrenceProbability().increment();
 		totalOccurrences++;
 	}

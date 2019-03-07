@@ -19,6 +19,7 @@ public class SourceOccurrenceProbability<K extends Comparable<K>, T extends List
 	@JsonIgnore		private Tupple<K> key = null;
 	@JsonProperty	private OccurrenceProbability occurrenceProbability = null;
 	@JsonProperty	private Set<T> sources = new TreeSet<>();
+	@JsonProperty	private Set<String> ids = new TreeSet<>();
 	@JsonProperty	private Double averageDistance = 0D;	// average distance between K elements across all sources
 	/**
 	 * The containing OccurrenceRelationBag
@@ -40,6 +41,9 @@ public class SourceOccurrenceProbability<K extends Comparable<K>, T extends List
 		return this.sources;
 	}
 	
+	public Set<String> getIds() {
+		return this.ids;
+	}
 	/**
 	 * Adds a T source, increments sourceCount and updates averageDistance
 	 * @param source
@@ -52,6 +56,15 @@ public class SourceOccurrenceProbability<K extends Comparable<K>, T extends List
 			averageDistance = totalDistance / sourceCount;
 		}
 		return sources.add(source);
+	}
+	
+	public boolean addSource(T source, String id) {
+		addSource(source);
+		return addId(id);
+	}
+	
+	public boolean addId(String id) {
+		return ids.add(id);
 	}
 
 	public OccurrenceProbability getOccurrenceProbability() {
