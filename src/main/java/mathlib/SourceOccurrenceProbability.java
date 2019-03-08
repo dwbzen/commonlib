@@ -79,6 +79,7 @@ public class SourceOccurrenceProbability<K extends Comparable<K>, T extends List
 		return averageDistance;
 	}
 	
+	@JsonIgnore
 	public String getAverageDistanceText() {
 		return OccurrenceProbability.format.format(averageDistance);
 	}
@@ -107,10 +108,14 @@ public class SourceOccurrenceProbability<K extends Comparable<K>, T extends List
 		this.occurrenceRelationBag = occurrenceRelationBag;
 	}
 
+	public boolean equals(SourceOccurrenceProbability<K, T> other) {
+		return occurrenceProbability.equals(other.getOccurrenceProbability());
+	}
+	
 	@Override
 	public int compareTo(SourceOccurrenceProbability<K, T> other) {
 		OccurrenceProbability op = other.getOccurrenceProbability();
-		int compare = this.occurrenceProbability.compareTo(op);
+		int compare = occurrenceProbability.compareTo(op);
 		if(compare == 0) {
 			compare = key.compareTo(other.key);
 		}

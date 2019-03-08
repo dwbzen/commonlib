@@ -29,6 +29,7 @@ import mathlib.util.IJson;
 public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple<T>> {
 
 	private static final long serialVersionUID = 6084450929057511808L;
+	static String[] displayBraces = {"[ ", " ]" };
 	@JsonProperty	private int degree = 1; 	// a scalar
 	@JsonProperty	protected List<T> elements = null;
 	@JsonIgnore		protected SortedSet<T> uniqueElements = new TreeSet<>();
@@ -123,9 +124,9 @@ public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple
 	public String toString(boolean formatted) {
 		StringBuilder sb = new StringBuilder();
 		if(formatted) {
-			sb.append("[ ");
+			sb.append(displayBraces[0]);
 			elements.forEach(t -> sb.append(t.toString() + ","));
-			sb.delete(sb.length()-1, sb.length()).append(" ]");
+			sb.delete(sb.length()-1, sb.length()).append(displayBraces[1]);
 		}
 		else {
 			elements.forEach(t -> sb.append(t.toString()));

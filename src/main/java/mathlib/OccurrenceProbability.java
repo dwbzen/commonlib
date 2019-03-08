@@ -18,13 +18,14 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 	public static final MathContext mathContext = new MathContext(5, RoundingMode.HALF_DOWN);	// precision is 5 decimal places
 	public static final BigDecimal lowerLimit = new BigDecimal(1E-6);	// any number having an absolute value <= lowerLimit is set to 0.0
 	
-	@JsonProperty("occurrence")	 private int occurrence = 0;
+	@JsonProperty	private int occurrence = 0;
+	@JsonProperty	private int rank = 0;
 	@JsonProperty	private Double probability = 0.0;
-	@JsonProperty	private int[] range = {0, 0};
+	
+	@JsonIgnore		private int[] range = {0, 0};
 	/**
 	 * The ordinal of this OccurrenceProbability relative to the sorting of the container
 	 */
-	@JsonProperty	private int rank = 0;
 	@JsonIgnore		private Comparator<OccurrenceProbability> comparator = null;
 	public static String formatPattern = null;
 	public static DecimalFormat format = null;
@@ -119,10 +120,10 @@ public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbab
 	
 	public String toJson(String indent) {
 		StringBuilder sb = new StringBuilder(indent + "\"occurrenceProbability\" : {\n");
+		sb.append(indent + "  " + "\"occurrence\" : " + occurrence + "\n");
 		sb.append(indent + "  " + "\"rank\" : " + rank + "\n");
 		sb.append(indent + "  " + "\"probability\" : " +  getProbabilityText() + ",\n");
-		sb.append(indent + "  " + "\"range\" : [" + range[0] + ", " + range[1] + "],\n");
-		sb.append(indent + "  " + "\"occurrence\" : " + occurrence + "\n");
+		//sb.append(indent + "  " + "\"range\" : [" + range[0] + ", " + range[1] + "],\n");
 		sb.append(indent + "}");
 		return sb.toString();
 	}
@@ -145,7 +146,7 @@ class OccurrenceProbabilityComparator implements Comparator<OccurrenceProbabilit
 	@Override
 	public int compare(OccurrenceProbability o1, OccurrenceProbability o2) {
 		int result = 0;
-		if(!o1.equals(o2)) {
+		if(o1.getOccurrence() != o2.getOccurrence()) {
 			if(reverse) {
 				result =  o1.getOccurrence() < o2.getOccurrence() ? 1 : -1;
 			}

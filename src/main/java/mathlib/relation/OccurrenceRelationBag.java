@@ -36,11 +36,11 @@ public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends L
 	public static final String indent = "      ";
 	
 	@JsonProperty	private int totalOccurrences = 0;
+	@JsonProperty	private int degree = 1;
 	/**
 	 * The OccurrenceProbability and List of sources of each K-Tupple
 	 */
 	@JsonProperty	protected Map<Tupple<K>, SourceOccurrenceProbability<K, T>> sourceOccurrenceProbabilityMap = null;
-	@JsonProperty	private int degree = 1;
 	@JsonIgnore		private boolean open = true;
 	@JsonIgnore		private boolean supressSourceOutput = false;
 	
