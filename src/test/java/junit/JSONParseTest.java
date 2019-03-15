@@ -1,7 +1,7 @@
 package junit;
 
 import junit.framework.TestCase;
-import mathlib.Point2D;
+import common.math.Point2D;
 
 public class JSONParseTest  extends TestCase {
 

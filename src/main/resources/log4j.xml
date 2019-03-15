@@ -17,13 +17,13 @@
 	</File>
 </Appenders>
 <Loggers>
-    <Logger name="util" additivity="false">
+    <Logger name="common.util" additivity="false">
 		<level value="DEBUG"/>
 		<appender-ref ref="STDOUT"/>
 		<appender-ref ref="FILE"/>
 	</Logger>
 
-	<Logger name="mathlib.*" additivity="false">
+	<Logger name="common.*" additivity="false">
 		<level value="DEBUG"/>
 		<appender-ref ref="STDOUT"/>
 	</Logger>

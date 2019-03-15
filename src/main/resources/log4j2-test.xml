@@ -15,22 +15,22 @@
 </Appenders>
 <Loggers>
 
-    <Logger name="mathlib" additivity="false">
+    <Logger name="common" additivity="false">
 		<level value="TRACE"/>
 		<appender-ref ref="STDOUT"/>
 	</Logger>
 	
-	<Logger name="mathlib.cp" additivity="false">
+	<Logger name="common.cp" additivity="false">
 		<level value="DEBUG"/>
 		<appender-ref ref="STDOUT"/>
 	</Logger>
 
-	<Logger name="mathlib.ifs" additivity="false">
+	<Logger name="common.math.ifs" additivity="false">
 		<level value="DEBUG"/>
 		<appender-ref ref="STDOUT"/>
 	</Logger>
 	
-	<Logger name="util" additivity="false">
+	<Logger name="common.util" additivity="false">
 		<level value="INFO"/>
 		<appender-ref ref="STDOUT"/>
 	</Logger>

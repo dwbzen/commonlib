@@ -17,12 +17,12 @@ apply plugin: 'eclipse'
 apply plugin: 'maven'
 
 sourceCompatibility = 10
-version = '2.0'
-project.group  = 'math-lib'
+version = '1.0'
+project.group  = 'commonlib'
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Math-Lib',
+        attributes 'Implementation-Title': 'CommonLib',
                    'Implementation-Version': version
     }
 }

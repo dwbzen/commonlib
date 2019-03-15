@@ -1,7 +1,7 @@
 package junit;
 
 import junit.framework.TestCase;
-import mathlib.CommandMessage;
+import common.math.CommandMessage;
 
 public class CommandMessageTest   extends TestCase {
 

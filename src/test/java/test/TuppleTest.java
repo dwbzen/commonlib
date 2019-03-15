@@ -3,7 +3,7 @@ package test;
 import java.util.ArrayList;
 import java.util.List;
 
-import mathlib.Tupple;
+import common.math.Tupple;
 
 public class TuppleTest {
 
