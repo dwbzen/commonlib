@@ -32,7 +32,7 @@ jar {
 
 sonarqube {
     properties {
-        property 'sonar.projectName', 'Math-Lib'
+        property 'sonar.projectName', 'commonlib'
     }
 }
 
