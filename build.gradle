@@ -19,6 +19,7 @@ apply plugin: 'maven'
 sourceCompatibility = 10
 version = '1.0'
 project.group  = 'commonlib'
+project.description = "Common Lib"
 
 jar {
     manifest {
