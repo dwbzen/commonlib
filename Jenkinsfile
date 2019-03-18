@@ -7,24 +7,24 @@ pipeline {
             }
         }
         stage('Build') {
-			echo 'Building'
             steps {
+				echo 'Building'
                 bat 'gradlew.bat -b build.gradle.sonarqube clean'
                 bat 'gradlew.bat -b build.gradle.sonarqube build'
                 bat 'gradlew.bat -b build.gradle.sonarqube test'
             }
         }
         stage('SonarQube analysis') {
-			echo 'Running code analysis'
             // requires SonarQube Scanner for Gradle 2.1+
             // It's important to add --info because of SONARJNKNS-281
             steps {
+				echo 'Running code analysis'
                 bat 'gradlew.bat -b build.gradle.sonarqube sonarqube'
             }
         }
         stage('Deploy') {
-			echo 'Deploying'
             steps {
+				echo 'Deploying'
                 bat 'gradlew.bat uploadArchives'
             }
         }
