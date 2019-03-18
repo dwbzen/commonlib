@@ -210,6 +210,12 @@ public class PointSet<T extends Number>  extends JsonObject {
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
+	
+	@Override
+	public void setName(String name) {
+		this.name = name;
+		stats.setName(name);
+	}
 
 	@Override
 	public String toString() {
