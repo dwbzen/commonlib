@@ -61,7 +61,7 @@ public class CollectorStats<K extends Comparable<K>, T extends List<K> & Compara
 	}
 	
 	public CollectorStats(int sublen) {
-		this.subsetLength = sublen;
+		subsetLength = sublen;
 	}
 	
 	public CollectorStats(T sub) {
