@@ -17,6 +17,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven'
 
 sourceCompatibility = 10
+targetCompatibility = 10
 version = '1.0'
 project.group  = 'commonlib'
 project.description = "Common Lib"
