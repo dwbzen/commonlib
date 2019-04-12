@@ -17,8 +17,8 @@ apply plugin: 'java-library-distribution'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
 
-sourceCompatibility = 10
-targetCompatibility = 10
+sourceCompatibility = 11
+targetCompatibility = 11
 version = '1.0'
 project.group  = 'commonlib'
 project.description = "Common Lib"

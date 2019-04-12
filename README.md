@@ -1,3 +1,19 @@
-"#commonlib" 
-Generic data structures to support linear algebra, metric spaces, fractals and linear transformations such as Iterated Function Systems. 
-This library supports my java music framework project
+#commonlib
+Data models and utilities to support:
+* linear algebra, metric spaces, complex numbers, linear transformations
+* fractals such as Iterated Function Systems
+* Collector-Producer pattern
+* General Relations
+* Json support
+
+commonlib supports [music-framework](https://github.com/dwbzen/music-framework) and [text-processing](https://github.com/dwbzen/text-processing) projects.
+## eclipse project setup
+* Clone the latest [commonlib](https://github.com/dwbzen/commonlib) repo from Github
+    * Recommend cloning in C:\projects\ or C:\Compile
+* Download and install the version of the JDK referenced in build.gradle (sourceCompatability)
+* Download and install latest eclipse Java IDE (2019-3)
+* Spin up eclipse and add the JDK (currently using JDK 11) under Installed JREs, and make it the default
+* Import the commonlib gradle project
+
+The project should build cleanly with 21 warnings.
+
