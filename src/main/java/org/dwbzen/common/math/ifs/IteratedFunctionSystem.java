@@ -50,8 +50,8 @@ public class IteratedFunctionSystem extends JsonObject {
 	private static final long serialVersionUID = 1L;
 	protected static final Logger log = LogManager.getLogger(IteratedFunctionSystem.class);
 	
-	public static final MathContext mathContext = new MathContext(5, RoundingMode.HALF_DOWN);	// precision is 5 decimal places
-	public static final BigDecimal lowerLimit = new BigDecimal(1E-6);	// any number having an absolute value <= lowerLimit is set to 0.0
+	public static MathContext mathContext = new MathContext(3, RoundingMode.HALF_DOWN);	// precision is 3 decimal places
+	public static final BigDecimal lowerLimit = new BigDecimal(1E-4);	// any number having an absolute value <= lowerLimit is set to 0.0
 	
 	public static final String objectType = "IFS";
 	
@@ -98,7 +98,7 @@ public class IteratedFunctionSystem extends JsonObject {
 	public IteratedFunctionSystem(String flameFile, String flameName) throws Exception {
 		this(flameName);
 		File xmlFile = new File(flameFile);
-		parseXMLFile(xmlFile);
+		parseXMLFlameFile(xmlFile);
 	}
 	
 	public static IteratedFunctionSystem fromJson(String jsonstr) {
@@ -126,7 +126,7 @@ public class IteratedFunctionSystem extends JsonObject {
 	 * @throws IOException
 	 * @throws java.lang.IllegalArgumentException if the named flame is not found
 	 */
-	private void parseXMLFile(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
+	public List<LinearFunction> parseXMLFlameFile(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(xmlFile);
@@ -196,6 +196,7 @@ public class IteratedFunctionSystem extends JsonObject {
 				}
 			}
 		}
+		return functions;
 	}
 	
 	/**
@@ -203,7 +204,7 @@ public class IteratedFunctionSystem extends JsonObject {
 	 * @param element
 	 */
 	private void getVariations(Element element) {
-		
+		// TODO 
 	}
 
 	public static void main(String... args) throws Exception {
