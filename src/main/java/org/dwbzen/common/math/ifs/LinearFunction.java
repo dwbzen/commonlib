@@ -3,6 +3,7 @@ package org.dwbzen.common.math.ifs;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,11 +31,13 @@ import org.dwbzen.common.util.IJson;
  * 
  *
  * JSON representation of this LinearFunction example:<br>
- * 
- * { "className" : "math.ifs.LinearFunction" , "weight" : 0.0 , "name" : "f1", 
- *   "function": { "className" : "math.Matrix" , "rows" : 2 , "cols" : 3 , 
- *   "array" : [ [ 0.5 , 0 , 0] , [ 0 , 0.5 , 0.5]] , "rank" : 2 , "name" : "f1"} }
- *
+ * <code>
+	{"name":"f1",
+	"function":{"array":[[0,0.6500000,0.8500000],[0.6466040,0.009000000,0.5400000]]},
+	"precision":4,
+	"type":"LinearFunction",
+	"weight":0.2}
+ * </code>
  *
  */
 public class LinearFunction implements IJson, Function<Point2D<Double>, Point2D<Double>>  {
@@ -43,7 +46,6 @@ public class LinearFunction implements IJson, Function<Point2D<Double>, Point2D<
 	protected static final Logger log = LogManager.getLogger(LinearFunction.class);
 
 	public static final String ObjectType = "LinearFunction";
-	public static final MathContext mathContext = IteratedFunctionSystem.mathContext;
 	static ObjectMapper mapper = new ObjectMapper();
 	
 	public static final BigDecimal lowerLimit = IteratedFunctionSystem.lowerLimit;	// any number having an absolute value <= lowerLimit is set to 0.0
@@ -53,6 +55,9 @@ public class LinearFunction implements IJson, Function<Point2D<Double>, Point2D<
 	//  the function Matrix must be 2 x 3
 	@JsonProperty			private  Matrix<BigDecimal> function = null;
 	@JsonProperty("weight")	private double weight = 0;
+	@JsonProperty			private int	precision = 4;
+
+	@JsonIgnore	private MathContext mathContext = new MathContext(precision, RoundingMode.HALF_DOWN);
 	@JsonIgnore	private List<Variation>	variations = new ArrayList<Variation>();
 
 	public static void main(String[] args) {
@@ -203,5 +208,18 @@ public class LinearFunction implements IJson, Function<Point2D<Double>, Point2D<
 	@Override
 	public Point2D<Double> apply(Point2D<Double> point) {
 		return evaluateAt(point);
+	}
+
+	public int getPrecision() {
+		return precision;
+	}
+
+	public void setPrecision(int precision) {
+		this.precision = precision;
+		 mathContext = new MathContext(precision, RoundingMode.HALF_DOWN);
+	}
+
+	public MathContext getMathContext() {
+		return mathContext;
 	}
 }

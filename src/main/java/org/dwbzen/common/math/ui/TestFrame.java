@@ -27,6 +27,7 @@ import org.dwbzen.common.math.fractal.IterationPoint;
 import org.dwbzen.common.math.fractal.JuliaFractal;
 import org.dwbzen.common.math.fractal.MandlebrotFractal;
 import org.dwbzen.common.math.ifs.ChaosGame;
+import org.dwbzen.common.math.ifs.IfsSystems;
 import org.dwbzen.common.math.ifs.IteratedFunctionSystem;
 import org.dwbzen.common.util.BroadcastEvent;
 import org.dwbzen.common.util.IBroadcastClient;
@@ -1297,7 +1298,7 @@ public class TestFrame extends javax.swing.JFrame implements IBroadcastClient {
 		int repeats = (param2 == null || param2.length()==0 ) ? 1 : Integer.parseInt(param2);
 
 		// TODO: SET the desired IFS here
-		IteratedFunctionSystem ifs = IteratedFunctionSystem.IFS2();
+		IteratedFunctionSystem ifs = IfsSystems.IFS3();
 		
 		ChaosGame game = new ChaosGame(ifs, npoints, repeats);
 		game.setMaxIterations(npoints);

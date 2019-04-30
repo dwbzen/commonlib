@@ -55,7 +55,7 @@ public class CollectorStats<K extends Comparable<K>, T extends List<K> & Compara
 	
 	@JsonProperty	private boolean terminal = false;	// true if this is a terminal state
 	@JsonProperty	private boolean initial = false;	// true if this is an initial state
-	public static boolean trace = true;
+	public static boolean trace = false;
 	
 	public CollectorStats() {
 	}

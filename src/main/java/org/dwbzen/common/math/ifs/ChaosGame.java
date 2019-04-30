@@ -245,25 +245,25 @@ public class ChaosGame implements IPointProducer {
 		}
 		else {
 			if(ifsname.equalsIgnoreCase("Sierpinski2")) {
-				ifs = IteratedFunctionSystem.Sierpinski2();
+				ifs = IfsSystems.Sierpinski2();
 			}
 			else if(ifsname.equalsIgnoreCase("Sierpinski")) {
-				ifs = IteratedFunctionSystem.Sierpinski();
+				ifs = IfsSystems.Sierpinski();
 			}
 			else if(ifsname.equalsIgnoreCase("flame1")) {
-				ifs = IteratedFunctionSystem.Flame1();
+				ifs = IfsSystems.Flame1();
 			}
 			else if(ifsname.equalsIgnoreCase("Sierpinski3")) {
-				ifs = IteratedFunctionSystem.Sierpinski3();
+				ifs = IfsSystems.Sierpinski3();
 			}
 			else if(ifsname.equalsIgnoreCase("ifs2")) {
-				ifs = IteratedFunctionSystem.IFS2();
+				ifs = IfsSystems.IFS2();
 			}
 			else if(ifsname.equalsIgnoreCase("ifs3")) {
-				ifs = IteratedFunctionSystem.IFS3();
+				ifs = IfsSystems.IFS3();
 			}
 			else if(ifsname.equalsIgnoreCase("Sierpinski3Variations")) {
-				ifs = IteratedFunctionSystem.Sierpinski3Variations();
+				ifs = IfsSystems.Sierpinski3Variations();
 			}
 
 		}
