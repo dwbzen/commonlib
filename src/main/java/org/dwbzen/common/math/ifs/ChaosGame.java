@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import org.dwbzen.common.math.CommandMessage;
 import org.dwbzen.common.math.IPointProducer;
+import org.dwbzen.common.math.OrderedPair;
 import org.dwbzen.common.math.Point2D;
 import org.dwbzen.common.math.PointSet;
 
@@ -27,6 +28,8 @@ public class ChaosGame implements IPointProducer {
 	private int functionIterations = 21;
 	private int count;
 	private int repeats = 1;
+	PointSet<Double> points = new PointSet<Double>();
+	private OrderedPair<Integer, Integer> scaleDimensions = null;
 	private Map<Function<Point2D<Double>, Point2D<Double>>, Integer> linearFunctionCounts = new HashMap<>();
 	// a count of #times a point is the result of a linear function.
 	private Map<Point2D<Double>, Integer> pointHistogram = new HashMap<>();
@@ -84,7 +87,6 @@ public class ChaosGame implements IPointProducer {
 	 * @return
 	 */
 	public PointSet<Double>  run() {
-		PointSet<Double> points = new PointSet<Double>();
 		for(int i=0; i<repeats; i++) {
 			Point2D<Double> point = ifs.getRandomPoint();
 			log.debug("start: " + point);
@@ -139,6 +141,18 @@ public class ChaosGame implements IPointProducer {
 		return linearFunctionCounts.get(f).intValue();
 	}
 	
+	public OrderedPair<Integer, Integer> getScaleDimensions() {
+		return scaleDimensions;
+	}
+
+	public void setScaleDimensions(OrderedPair<Integer, Integer> scaleDimensions) {
+		this.scaleDimensions = scaleDimensions;
+	}
+
+	public PointSet<Double> getPoints() {
+		return points;
+	}
+
 	public Map<Function<Point2D<Double>, Point2D<Double>>, Integer> getLinearFunctionCounts() {
 		return linearFunctionCounts;
 	}
@@ -189,6 +203,8 @@ public class ChaosGame implements IPointProducer {
 		String flameName = null;
 		String ifsname = null;
 		IteratedFunctionSystem ifs = null;
+		String[] scale = null;
+		OrderedPair<Integer, Integer> scaleDimensions = null;
 		
 		for(int i=0; i<args.length;i++) {
 			if(args[i].equalsIgnoreCase("-n")) {
@@ -231,6 +247,9 @@ public class ChaosGame implements IPointProducer {
 				flameName = args[++i];
 				ifsname = flameName;
 			}
+			else if(args[i].equalsIgnoreCase("-scale")) {
+				scale = args[++i].split(",");
+			}
 		}
 		
 		if(filename != null) {
@@ -268,6 +287,12 @@ public class ChaosGame implements IPointProducer {
 
 		}
 		ChaosGame game = new ChaosGame(ifs, niterations, nrepeats);
+		if(scale != null) {
+			int x = Integer.parseInt(scale[0]);
+			int y = Integer.parseInt(scale[1]);
+			scaleDimensions = new OrderedPair<>(x,y);
+			game.setScaleDimensions(scaleDimensions);
+		}
 		/*
 		 * Run the chaos game to generate points
 		 */

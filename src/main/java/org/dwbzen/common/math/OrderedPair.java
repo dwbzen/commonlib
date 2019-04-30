@@ -10,11 +10,19 @@ public class OrderedPair<S, T> implements IJson, Comparable<OrderedPair<S,T>> {
 	@JsonProperty	private S x = null;
 	@JsonProperty	private T y = null;
 	
+	public OrderedPair() {}
+	
 	public OrderedPair(S xval, T yval) {
 		x = xval;
 		y = yval;
 	}
 
+	public S getFirst() {
+		return getX();
+	}
+	public T getSecond() {
+		return getY();
+	}
 	public S getX() {
 		return x;
 	}

@@ -33,6 +33,16 @@ public class PointSetStats<T extends Number> extends JsonObject {
 		this.maxPoint = maxPoint;
 	}
 	
+	public PointSetStats(PointSetStats<? extends Number> other) {
+		setType(objectType);
+		minXValue = other.minXValue;
+		maxXValue = other.maxXValue;
+		minYValue = other.minYValue;
+		maxYValue = other.maxYValue;
+		this.minPoint = other.minPoint;
+		this.maxPoint = other.maxPoint;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static PointSetStats<Double> fromJson(String jsonstr) {
 		 PointSetStats<Double> stats = null;
