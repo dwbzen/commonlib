@@ -65,11 +65,9 @@ public class LinearFunction implements IJson, Function<Point2D<Double>, Point2D<
 		LinearFunction f1 = new LinearFunction(dm3);
 		f1.setName("f1");
 		f1.setWeight(0.5);
-		System.out.println(f1);
-		System.out.println(f1.toJson());
 		
-		String jsonstr = args[0];
-		System.out.println(jsonstr);
+		String jsonstr = f1.toJson();
+		log.info(jsonstr);
 		LinearFunction lf = null;
 		IteratedFunctionSystem ifs = new IteratedFunctionSystem();
 		try {
