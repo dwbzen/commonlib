@@ -2,6 +2,7 @@ package org.dwbzen.common.math;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,17 +13,17 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import org.dwbzen.common.math.ifs.IteratedFunctionSystem;
 
 /**
- * @author dbacon
+ * @author don_bacon
  *
  * @param <T>
  */
-public class PointSet<T extends Number>  extends JsonObject {
+public class PointSet<T extends Number> extends JsonObject implements Iterable<Point2D<T>>  {
 
 	private static final long serialVersionUID = 7219606678524448973L;
 	public static final String objectType = "PointSet";
 	public static enum DataSource {IFS, RANDOM, UNKNOWN};
 	
-	@JsonProperty private List<Point2D<Double>> points = new ArrayList<Point2D<Double>>();
+	@JsonProperty private List<Point2D<T>> points = new ArrayList<Point2D<T>>();
 	@JsonProperty private PointSetStats<Double> stats = new PointSetStats<>();
 
 	@JsonProperty			private int n=0;
@@ -32,7 +33,7 @@ public class PointSet<T extends Number>  extends JsonObject {
 	public PointSet() {
 	}
 	
-	public List<Point2D<Double>> getPoints() {
+	public List<Point2D<T>> getPoints() {
 		return points;
 	}
 	
@@ -105,9 +106,12 @@ public class PointSet<T extends Number>  extends JsonObject {
 	 * @param val
 	 * @return 
 	 */
-	public boolean add(Point2D<Double> point) {
+	public boolean add(Point2D<T> point) {
 		double x = point.getX().doubleValue();
 		double y = point.getY().doubleValue();
+		double modPoint = point.mod();
+		double modMin = stats.minPoint.mod();
+		double modMax = stats.maxPoint.mod();
 		if(x < stats.minXValue) {
 			stats.minXValue = x;
 		}
@@ -120,11 +124,11 @@ public class PointSet<T extends Number>  extends JsonObject {
 		if(y > stats.maxYValue) {
 			stats.maxYValue = y;
 		}
-		if(point.compareTo(stats.minPoint) < 0 ) {
-			stats.minPoint = point;
+		if(modPoint < modMin ) {
+			stats.minPoint = point.toDouble();
 		}
-		if(point.compareTo(stats.maxPoint) >0 ) {
-			stats.maxPoint = point;
+		if(modPoint > modMax ) {
+			stats.maxPoint = point.toDouble();
 		}
 		n++;
 		return points.add(point);
@@ -220,6 +224,11 @@ public class PointSet<T extends Number>  extends JsonObject {
 	@Override
 	public String toString() {
 		return toJson(true);
+	}
+
+	@Override
+	public Iterator<Point2D<T>> iterator() {
+		return points.iterator();
 	}
 	
 }

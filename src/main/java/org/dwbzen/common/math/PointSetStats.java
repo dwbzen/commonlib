@@ -7,6 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+/**
+ * Both the maxPoint and minPoint are determined by the Manhattan distance metric.
+ * 
+ * @author don_bacon
+ * @param <T>
+ * @see  org.dwbzen.common.math.Point2D#distance(Point2D)
+ */
 public class PointSetStats<T extends Number> extends JsonObject {
 	
 	private static final long serialVersionUID = 1L;

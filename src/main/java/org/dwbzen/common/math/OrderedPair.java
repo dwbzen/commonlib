@@ -1,5 +1,6 @@
 package org.dwbzen.common.math;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.dwbzen.common.util.IJson;
@@ -17,9 +18,12 @@ public class OrderedPair<S, T> implements IJson, Comparable<OrderedPair<S,T>> {
 		y = yval;
 	}
 
+	@JsonIgnore
 	public S getFirst() {
 		return getX();
 	}
+	
+	@JsonIgnore
 	public T getSecond() {
 		return getY();
 	}

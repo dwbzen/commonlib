@@ -214,7 +214,7 @@ public class LinearFunction implements IJson, Function<Point2D<Double>, Point2D<
 
 	public void setPrecision(int precision) {
 		this.precision = precision;
-		 mathContext = new MathContext(precision, RoundingMode.HALF_DOWN);
+		mathContext = new MathContext(precision, RoundingMode.HALF_DOWN);
 	}
 
 	public MathContext getMathContext() {

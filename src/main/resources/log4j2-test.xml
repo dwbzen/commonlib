@@ -15,22 +15,22 @@
 </Appenders>
 <Loggers>
 
-    <Logger name="common" additivity="false">
+    <Logger name="org.dwbzen.common" additivity="false">
 		<level value="TRACE"/>
 		<appender-ref ref="STDOUT"/>
 	</Logger>
 	
-	<Logger name="common.cp" additivity="false">
+	<Logger name="org.dwbzen.common.cp" additivity="false">
 		<level value="DEBUG"/>
 		<appender-ref ref="STDOUT"/>
 	</Logger>
 
-	<Logger name="common.math.ifs" additivity="false">
+	<Logger name="org.dwbzen.common.math.ifs" additivity="false">
 		<level value="DEBUG"/>
 		<appender-ref ref="STDOUT"/>
 	</Logger>
 	
-	<Logger name="common.util" additivity="false">
+	<Logger name="org.dwbzen.common.util" additivity="false">
 		<level value="INFO"/>
 		<appender-ref ref="STDOUT"/>
 	</Logger>

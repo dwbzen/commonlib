@@ -20,14 +20,14 @@ import com.fasterxml.jackson.databind.ObjectReader;
  * 
  * @author dbacon
  * JSON Point2D
- * {"name":"unknown","type":"Point2D","coordinates":[0.99201,-4.333]}
+ * {"name":"__none__","type":"Point2D","x":52.0,"y":26.0,"count":1}
  * 
  * TODO This needs to be refactored to be polymorphic.
  * TODO The Double attributes should be T. Same applies to Point3D.
  * 
  * @param <T>
  */
-public class Point2D<T extends Number> extends JsonObject  implements IPoint, Comparable<Point2D<T>>  {
+public class Point2D<T extends Number> extends JsonObject  implements IPoint, Comparable<Point2D<Number>>  {
 
 	private static final long serialVersionUID = 7492212210472351442L;
 	protected static final Logger log = LogManager.getLogger(Point2D.class);
@@ -180,13 +180,17 @@ public class Point2D<T extends Number> extends JsonObject  implements IPoint, Co
 	}
 	
 	@Override
-	public int compareTo(Point2D<T> other) {
+	public int compareTo(Point2D<Number> other) {
 		if(equals(other)) {
 			return 0;
 		}
 		double modMe = mod();
 		double modOther = other.mod();
 		return (modMe < modOther) ? -1 : 1;
+	}
+
+	public Point2D<Double> toDouble() {
+		return new Point2D<Double>(this.x, this.y);
 	}
 	
 	@Override
