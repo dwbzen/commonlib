@@ -19,6 +19,7 @@ public class PointSetStats<T extends Number> extends JsonObject {
 	private static final long serialVersionUID = 1L;
 	public static final String objectType = "stats";
 	
+	@JsonProperty("size")	public int size = 0;	// count of points
 	@JsonProperty("minX")	public Double minXValue = Double.MAX_VALUE;
 	@JsonProperty("minY")	public Double minYValue = Double.MAX_VALUE;
 	@JsonProperty("maxX")	public Double maxXValue = Double.MIN_VALUE;
@@ -68,6 +69,13 @@ public class PointSetStats<T extends Number> extends JsonObject {
 			return stats;
 	}
 	
+	public int getSize() {
+		return size;
+	}
+	public void setSize(int size) {
+		this.size = size;
+	}
+
 	public Double getMinXValue() {
 		return minXValue;
 	}
@@ -104,7 +112,7 @@ public class PointSetStats<T extends Number> extends JsonObject {
 	public void setMaxPoint(Point2D<Double> maxPoint) {
 		this.maxPoint = maxPoint;
 	}
-	
+
 	@Override
 	@JsonIgnore
 	public String getName() {

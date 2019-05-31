@@ -3,11 +3,7 @@ package org.dwbzen.common.math.ifs;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,6 +11,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dwbzen.common.math.Matrix;
+import org.dwbzen.common.math.Point2D;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -25,10 +23,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-
-import org.dwbzen.common.math.JsonObject;
-import org.dwbzen.common.math.Matrix;
-import org.dwbzen.common.math.Point2D;
 
 /**
  * Represents a general 2-dimensional IFS
@@ -45,31 +39,21 @@ import org.dwbzen.common.math.Point2D;
  * @author don_bacon
  *
  */
-public class IteratedFunctionSystem extends JsonObject {
+public class IteratedFunctionSystem extends AbstractIteratedFunctionSystem {
 
 	private static final long serialVersionUID = 1L;
+
 	protected static final Logger log = LogManager.getLogger(IteratedFunctionSystem.class);
 	
-	public static final BigDecimal lowerLimit = new BigDecimal(1E-4);	// any number having an absolute value <= lowerLimit is set to 0.0
-	
-	public static final String objectType = "IFS";
-	
-	@JsonProperty	private List<LinearFunction> functions = new ArrayList<LinearFunction>();
 	@JsonProperty	private double range = 2.0;
 	@JsonProperty	private double low = -1.0;	// [ LOW, LOW + RANGE ]
-	@JsonProperty	private int	precision = 4;
-	
-	@JsonIgnore		private double totalWeight = 0.0;
-	@JsonIgnore		private Document doc;
-	@JsonIgnore		private ThreadLocalRandom random = ThreadLocalRandom.current();
-	@JsonIgnore		private MathContext mathContext = new MathContext(precision, RoundingMode.HALF_DOWN);
 
 	protected IteratedFunctionSystem() {
-		this.type = objectType;
+		super();
 	}
 	
 	public IteratedFunctionSystem(String ifsName) {
-		this.type = objectType;
+		super();
 		this.name = ifsName;
 	}
 	
@@ -197,7 +181,7 @@ public class IteratedFunctionSystem extends JsonObject {
 				}
 			}
 		}
-		return functions;
+		return getFunctions();
 	}
 	
 	/**
@@ -235,35 +219,6 @@ public class IteratedFunctionSystem extends JsonObject {
 		}
 	}
 
-	public LinearFunction pickFunction() {
-		double d = random.nextDouble(totalWeight);
-		double sum = 0;
-		LinearFunction linearFunction = null;
-		for(LinearFunction f : functions) {
-			sum += f.getWeight();
-			linearFunction = f;
-			if(d <= sum) {
-				break;
-			}
-		}
-		return linearFunction;
-	}
-	
-	public List<LinearFunction> getFunctions() {
-		return this.functions;
-	}
-	
-	public int addFunction(LinearFunction f) {
-		return addFunction(f, f.getWeight());
-	}
-	
-	public int addFunction(LinearFunction f, double weight) {
-		LinearFunction lf = new LinearFunction(f);
-		lf.setWeight(weight);
-		totalWeight += weight;
-		functions.add(lf);
-		return functions.size();
-	}
 	
 	/**
 	 * Gets a random point in the range x,y :: [-1, +1]
@@ -292,29 +247,4 @@ public class IteratedFunctionSystem extends JsonObject {
 		this.low = low;
 	}
 
-	public Document getDoc() {
-		return doc;
-	}
-
-	public double getTotalWeight() {
-		return totalWeight;
-	}
-
-	public int getPrecision() {
-		return precision;
-	}
-
-	public void setPrecision(int precision) {
-		this.precision = precision;
-		 mathContext = new MathContext(precision, RoundingMode.HALF_DOWN);
-	}
-
-	public MathContext getMathContext() {
-		return mathContext;
-	}
-
-	public void setMathContext(MathContext mathContext) {
-		this.mathContext = mathContext;
-	}
-	
 }

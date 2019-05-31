@@ -200,7 +200,12 @@ public class PointSet<T extends Number> extends JsonObject implements Iterable<P
 	}
 	
 	public PointSetStats<Double> getStats() {
+		updateSize();
 		return stats;
+	}
+	
+	private void updateSize() {
+		stats.setSize(points.size());
 	}
 
 	public void setStats(PointSetStats<Double> stats) {
@@ -223,6 +228,7 @@ public class PointSet<T extends Number> extends JsonObject implements Iterable<P
 
 	@Override
 	public String toString() {
+		updateSize();	// just in case
 		return toJson(true);
 	}
 
