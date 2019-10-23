@@ -22,7 +22,7 @@ public interface IJson extends Serializable {
 		}
 		mapper.configure(SerializationFeature.INDENT_OUTPUT, pretty);
 		mapper.configure(SerializationFeature.WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS, false);
-		mapper.configure(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, true);
+		mapper.configure(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED, false);
 		mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
 		mapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
 		try {
