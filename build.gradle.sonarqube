@@ -31,6 +31,8 @@ jar {
     }
 }
 
+// stand-alone: gradlew -b build.gradle.sonarqube sonarqube -Dsonar.projectKey=commonlib -Dsonar.host.url=http://localhost:9000 -Dsonar.login=admin -Dsonar.password=admin
+// sonarqube-7.9.1
 sonarqube {
     properties {
         property 'sonar.projectName', 'commonlib'
