@@ -5,15 +5,13 @@ import java.util.TreeSet;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.dwbzen.common.math.Tupple;
 import org.dwbzen.common.util.IJson;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Partitions<K extends Comparable<K>> implements IJson {
 
-	private static final long serialVersionUID = 1L;
 	protected static final Logger log = LogManager.getLogger(Partitions.class);
 	
 	@JsonProperty	private Set<Tupple<K>> partitions = new TreeSet<>();

@@ -5,16 +5,14 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.BiFunction;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.dwbzen.common.relation.OccurrenceRelationBag;
 import org.dwbzen.common.util.IJson;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SourceOccurrenceProbability<K extends Comparable<K>, T extends List<K>> 
 		implements IJson, Comparable<SourceOccurrenceProbability<K,T>>  {
-	
-	private static final long serialVersionUID = 7790448292733732535L;
 	
 	@JsonIgnore		private Tupple<K> key = null;
 	@JsonProperty	private OccurrenceProbability occurrenceProbability = null;

@@ -11,12 +11,11 @@ import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dwbzen.common.math.Tupple;
+import org.dwbzen.common.util.IJson;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.dwbzen.common.math.Tupple;
-import org.dwbzen.common.util.IJson;
 
 /**
  * An OccurranceRelation encapsulates the "occurs together" relationship of objects
@@ -30,8 +29,6 @@ import org.dwbzen.common.util.IJson;
  */
 public abstract class OccurrenceRelation<K extends Comparable<K>, T extends List<K>, S extends Supplier<T>> 
 		implements IRelation<K,T,S>, IJson {
-
-	private static final long serialVersionUID = -7700538447846642790L;
 
 	protected static final Logger log = LogManager.getLogger(OccurrenceRelation.class);
 	

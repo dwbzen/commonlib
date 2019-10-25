@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Metadata implements IJson {
 
-	private static final long serialVersionUID = -2899190433409143596L;
 	/*
 	 * Some standard Keys
 	 */

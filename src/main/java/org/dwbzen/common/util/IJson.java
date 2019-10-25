@@ -1,7 +1,5 @@
 package org.dwbzen.common.util;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -11,7 +9,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  * @author don_bacon
  *
  */
-public interface IJson extends Serializable {
+public interface IJson {
 	static ObjectMapper mapper = new ObjectMapper();
 	static final String QUOTE = "\"";
 	

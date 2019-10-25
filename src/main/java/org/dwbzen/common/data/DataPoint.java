@@ -3,9 +3,9 @@ package org.dwbzen.common.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.dwbzen.common.util.IJson;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * A DataPoint is an abstraction of a point that is an element of a larger data structure.
@@ -20,7 +20,6 @@ import org.dwbzen.common.util.IJson;
  */
 public abstract class DataPoint<T extends Number> implements IJson {
 
-	private static final long serialVersionUID = -8850267519541590336L;
 	@JsonProperty	private List<Integer> dimensions = new ArrayList<Integer>();
 	@JsonProperty	private int depth = 1;
 	

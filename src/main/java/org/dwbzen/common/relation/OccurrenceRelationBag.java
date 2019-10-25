@@ -11,14 +11,13 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.dwbzen.common.math.OccurrenceProbability;
 import org.dwbzen.common.math.SourceOccurrenceProbability;
 import org.dwbzen.common.math.Tupple;
 import org.dwbzen.common.util.IJson;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * 
@@ -29,8 +28,6 @@ import org.dwbzen.common.util.IJson;
  * @param <S> a Supplier<T>  (for example, Sentence)
  */
 public abstract class OccurrenceRelationBag<K extends Comparable<K>, T extends List<K>, S extends Supplier<T>> implements IJson {
-
-	private static final long serialVersionUID = 2823871802307514005L;
 
 	protected static final Logger log = LogManager.getLogger(OccurrenceRelationBag.class);
 	public static final String indent = "      ";

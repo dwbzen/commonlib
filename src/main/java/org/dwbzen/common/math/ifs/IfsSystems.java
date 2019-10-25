@@ -277,11 +277,11 @@ public class IfsSystems {
 		LinearFunction f3 = new LinearFunction(dm3);
 		f3.setName("f3");
 		
+		/*
 		Variation v1 = Variation.createNew("swirl", .5);
 		Variation v2 = Variation.createNew("sinusoidal", .5);
 		Variation v3 = Variation.createNew("cylinder", .5);
 		Variation v4 = Variation.createNew("horseshoe", .5);
-		/*
 		f1.addVariation(v1);
 		f2.addVariation(v1);
 		f3.addVariation(v1);

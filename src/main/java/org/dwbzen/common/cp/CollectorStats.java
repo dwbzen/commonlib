@@ -10,15 +10,15 @@ import java.util.TreeMap;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.dwbzen.common.math.OccurrenceProbability;
 import org.dwbzen.common.math.OrderedPair;
 import org.dwbzen.common.util.IJson;
 import org.dwbzen.common.util.INameable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * CollectorStats encapsulates probabilities for a particular T subset and Collection of Supplier.<br>
@@ -30,8 +30,6 @@ import org.dwbzen.common.util.INameable;
  */
 public class CollectorStats<K extends Comparable<K>, T extends List<K> & Comparable<T>, R extends Supplier<T> & INameable> 
 		implements IJson, Comparable<CollectorStats<K, T, R>> {
-
-	private static final long serialVersionUID = 9036890665958155561L;
 
 	ObjectMapper mapper = new ObjectMapper();
 	

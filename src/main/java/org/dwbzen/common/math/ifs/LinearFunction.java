@@ -11,16 +11,15 @@ import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dwbzen.common.math.Matrix;
+import org.dwbzen.common.math.Point2D;
+import org.dwbzen.common.util.IJson;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.dwbzen.common.math.Matrix;
-import org.dwbzen.common.math.Point2D;
-import org.dwbzen.common.util.IJson;
 
 /**
  * A LinearFunction F is defined as a map R<sup>2</sup> -> R<sup>2</sup>:</p>
@@ -42,7 +41,6 @@ import org.dwbzen.common.util.IJson;
  */
 public class LinearFunction implements IJson, Function<Point2D<Double>, Point2D<Double>>  {
 	
-	private static final long serialVersionUID = -4451686768008927428L;
 	protected static final Logger log = LogManager.getLogger(LinearFunction.class);
 
 	public static final String ObjectType = "LinearFunction";

@@ -6,14 +6,12 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Comparator;
 
+import org.dwbzen.common.util.IJson;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.dwbzen.common.util.IJson;
-
 public class OccurrenceProbability implements IJson, Comparable<OccurrenceProbability> {
-	
-	private static final long serialVersionUID = 8656552141453330699L;
 	
 	public static final MathContext mathContext = new MathContext(5, RoundingMode.HALF_DOWN);	// precision is 5 decimal places
 	public static final BigDecimal lowerLimit = new BigDecimal(1E-6);	// any number having an absolute value <= lowerLimit is set to 0.0

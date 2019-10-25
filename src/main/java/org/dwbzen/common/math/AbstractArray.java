@@ -1,12 +1,10 @@
 package org.dwbzen.common.math;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.dwbzen.common.util.IJson;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public abstract class AbstractArray<T extends Number> implements IJson {
-	
-	private static final long serialVersionUID = -5630583197997148925L;
 
 	public AbstractArray() {
 	}

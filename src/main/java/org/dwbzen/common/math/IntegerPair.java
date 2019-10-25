@@ -1,9 +1,9 @@
 package org.dwbzen.common.math;
 
+import org.dwbzen.common.util.IJson;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.dwbzen.common.util.IJson;
 
 /**
  * 
@@ -12,7 +12,6 @@ import org.dwbzen.common.util.IJson;
  */
 public class IntegerPair implements IJson {
 
-	private static final long serialVersionUID = 8841512197660420640L;
 	@JsonIgnore	private String xLabel = "x";
 	@JsonIgnore private String yLabel = "y";
 	

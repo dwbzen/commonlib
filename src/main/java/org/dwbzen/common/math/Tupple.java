@@ -9,10 +9,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.dwbzen.common.util.IJson;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.dwbzen.common.util.IJson;
 
 /**
  * A sorted Collection of n number of T instances where n=degree (or order) of the Tupple.<br>
@@ -28,7 +28,6 @@ import org.dwbzen.common.util.IJson;
  */
 public class Tupple<T extends Comparable<T>> implements IJson, Comparable<Tupple<T>> {
 
-	private static final long serialVersionUID = 6084450929057511808L;
 	static String[] displayBraces = {"[ ", " ]" };
 	@JsonProperty	private int degree = 1; 	// a scalar
 	@JsonProperty	protected List<T> elements = null;
