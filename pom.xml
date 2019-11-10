@@ -3,7 +3,7 @@
   <groupId>org.dwbzen.commonlib</groupId>
   <artifactId>commonlib</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Math Library</name>
+  <name>Common Library</name>
   <description>Data Models, Linear Algebra, Utilities</description>
   <dependencies>
 	<dependency>
