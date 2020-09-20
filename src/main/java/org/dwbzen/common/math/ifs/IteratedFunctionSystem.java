@@ -44,6 +44,7 @@ public class IteratedFunctionSystem extends AbstractIteratedFunctionSystem {
 	private static final long serialVersionUID = 1L;
 
 	protected static final Logger log = LogManager.getLogger(IteratedFunctionSystem.class);
+	public static IteratedFunctionSystem NONE = new IteratedFunctionSystem("none");
 	
 	@JsonProperty	private double range = 2.0;
 	@JsonProperty	private double low = -1.0;	// [ LOW, LOW + RANGE ]
