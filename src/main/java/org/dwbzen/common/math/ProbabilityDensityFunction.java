@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Probability density function for Normal Distribution:
- * E^(-((x - \[Mu])^2/(2 \[Sigma]^2)))/(Sqrt[2 \[Pi]] \[Sigma])
+ * e^(-((x - \[Mu])^2/(2 \[Sigma]^2)))/(Sqrt[2 \[Pi]] \[Sigma])<br>
  * where Mu is the mean (also median and mode)
  * and Sigma is the standard deviation
  * 

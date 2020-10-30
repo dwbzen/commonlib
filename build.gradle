@@ -16,8 +16,8 @@ apply plugin: 'java-library-distribution'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-sourceCompatibility = 14
-targetCompatibility = 14
+sourceCompatibility = 15
+targetCompatibility = 15
 version = '2.0'
 project.group  = 'org.dwbzen.commonlib'
 project.description = "Common Lib"
