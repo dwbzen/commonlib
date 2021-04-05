@@ -6,6 +6,8 @@ import java.util.List;
 
 public class MathUtil {
 	
+	public static double logb102 = Math.log10(2.0);
+	
 	/**
 	 * Factors units to powers of 2 for a given time signature & measure divisions
 	 * 
@@ -126,7 +128,7 @@ public class MathUtil {
 	 * @return
 	 */
 	public static double log2( double num ) {
-	     return logb(num, 2);
+	     return Math.log10(num) / logb102;
 	}
 
 
