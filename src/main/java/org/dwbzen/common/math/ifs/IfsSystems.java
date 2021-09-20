@@ -17,19 +17,19 @@ public class IfsSystems {
      *  <xform weight="0.5" color="0" linear="1" coefs="0.5  0  0     0.5   0     0"    opacity="1" />
      * In the Apophysis editor UI:
      * <code>
-     * Transform 1
-     * 	X	0.5		  0
-     *  Y	  0		0.5
+     * Transform 1<br>
+     * 	X	0.5		  0<br>
+     *  Y	  0		0.5<br>
      *  O   0.5		0.5
-     *  
-     *  Transform 2
-     *  X	0.5		  0
-     *  Y	  0		0.5
+     *  </p>
+     *  Transform 2<br>
+     *  X	0.5		  0<br>
+     *  Y	  0		0.5<br>
      *  O   0.5		  0
-     *  
-     *  Transform 3
-     *  X	0.5		  0
-     *  Y	  0		0.5
+     *  </p>
+     *  Transform 3<br>
+     *  X	0.5		  0<br>
+     *  Y	  0		0.5<br>
      *  O     0		  0
      *  </code>
 	 * @return IteratedFunctionSystem

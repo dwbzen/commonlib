@@ -25,16 +25,15 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
- * Represents a general 2-dimensional IFS
- * This is a collection of n functions Fi(x,y)
- * Fi(x,y) = (ax + by + c, dx + ey + f)
- * Each function F can be represented as a 2-row by 3-column matrix T(2,3):
+ * Represents a general 2-dimensional IFS<br>
+ * This is a collection of n functions Fi(x,y)<br>
+ * <b>F<sub>i</sub>(x, y) = (ax + by + c, dx + ey + f)<br></b>
+ * Each function F can be represented as a 2-row by 3-column matrix T(2,3):<br>
  * [ [ a, b, c ], [ d, e, f ] ]
- * 
- * so F <==> T * [x,y,1]  (matrix multiplication)
- * Each F has a weight: 0 < weight < 1
- * that is interpreted as a relative probability of that transform being
- * selected when the ChaosGame is run.
+ * </p>
+ * so F <==> T * [x, y, 1]  (matrix multiplication)<br>
+ * Each F has a weight: 0 < weight < 1 <br>
+ * that is interpreted as a relative probability of that transform being selected when the ChaosGame is run.<br>
  * 
  * @author don_bacon
  *
@@ -59,17 +58,16 @@ public class IteratedFunctionSystem extends AbstractIteratedFunctionSystem {
 	}
 	
 	/**
-	 * Create an IteratedFunctionSystem from transform coeficients in
-	 * an Apophysis flame (XML) file.
-	 * Overall structure is:
-	 * <flames name="name">
-	 *   <flame name="fname">
-	 *   	<xform .... />    repeat as needed
-	 *      <palette count="256" format="RGB">
-	 *      	data
-	 *      </palette>
-	 *    </flame>
-	 * </flames>
+	 * Create an IteratedFunctionSystem from transform coeficients in an Apophysis flame (XML) file.<br>
+	 * Overall structure is:<br>
+	<flames name="name">
+		< flame name="fname">
+		<xform .... />    repeat as needed
+		<palette count="256" format="RGB"/>
+			data
+		</palette>
+		</flame>
+	</flames>
 	 * Transforms look like this: <xform weight="0.333" color="0" linear="1" coefs="0.5 0 0 0.5 0.5 -0.5" opacity="1" />
 	 * Variations specified per xform as an attribute. The values for a given transform sum to 1. Here are some examples:</p>
 	 * linear="0.119537904160097" 	hyperbolic="0.880462095839903" </p>

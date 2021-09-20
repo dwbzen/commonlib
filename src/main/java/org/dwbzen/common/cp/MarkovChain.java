@@ -20,7 +20,7 @@ import org.dwbzen.common.util.IJson;
 import org.dwbzen.common.util.INameable;
 
 /**
- * MarkovChain is an implementation of a discreet-time Markov Chain (DTMC).<br>
+ * MarkovChain is an implementation of a discreet-time Markov Chain (DTMC) with memory.<br>
  * It undergoes transitions from one state to another on a state space, 
  * with the probability distribution of the next state depending only on the current state<br>
  * and not on the sequence of events that preceded it.<br>
@@ -32,7 +32,7 @@ import org.dwbzen.common.util.INameable;
  *
  *
  * @author don_bacon
- * <p>See <a href="https://en.wikipedia.org/wiki/Markov_chain">Markov Chain</a> on Wikipedia
+ * <p>See <a href="https://en.wikipedia.org/wiki/Discrete-time_Markov_chain">Discrete-time Markov chain</a> on Wikipedia
  * 
  * @param <K> a base class
  * @param <T> class that implements List<K>

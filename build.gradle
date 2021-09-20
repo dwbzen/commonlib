@@ -7,7 +7,7 @@
  */
  plugins {
   id "java"
-  id "ivy-publish"
+  id "maven-publish"
 }
 
 // Apply the java-library plugin to add support for Java Library
@@ -18,7 +18,7 @@ apply plugin: 'maven-publish'
 
 sourceCompatibility = 15
 targetCompatibility = 15
-version = '2.0'
+version = '3.0'
 project.group  = 'org.dwbzen.commonlib'
 project.description = "Common Lib"
 
@@ -32,9 +32,7 @@ jar {
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
-    jcenter()
     mavenLocal()
 	mavenCentral()
 	flatDir {
@@ -43,11 +41,17 @@ repositories {
     }
 }
 
-uploadArchives {
-		repositories {
-			add project.repositories.jarRepository
-			mavenLocal()
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId="commonlib"
+			from components.java
 		}
+	}
+	repositories {
+		add project.repositories.jarRepository
+		mavenLocal()
+	}
 }
 
 dependencies {

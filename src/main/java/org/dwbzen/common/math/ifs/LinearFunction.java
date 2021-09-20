@@ -27,15 +27,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * and is represented internally as a 2 x 3 Matrix:</p>
  * &#9474; a&emsp;b&emsp;c &#9474;<br>
  * &#9474; d&emsp;e&emsp;f&ensp;&#9474;</p>
- * 
+ * Where  V<sub>i</sub> is the variation applied to the function.<br>
  *
  * JSON representation of this LinearFunction example:<br>
  * <code>
-	{"name":"f1",
-	"function":{"array":[[0,0.6500000,0.8500000],[0.6466040,0.009000000,0.5400000]]},
-	"precision":4,
-	"type":"LinearFunction",
-	"weight":0.2}
+	{"name":"f1",<br>
+	"function":{"array":[[0,0.6500000,0.8500000],[0.6466040,0.009000000,0.5400000]]},<br>
+	"precision":4,<br>
+	"type":"LinearFunction",<br>
+	"weight":0.2}<br>
  * </code>
  *
  */
