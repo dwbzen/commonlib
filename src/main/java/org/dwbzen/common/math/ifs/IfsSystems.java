@@ -145,6 +145,32 @@ public class IfsSystems {
 		return ifs;
 	}
 	
+	public static IteratedFunctionSystem Barnsley() {
+		IteratedFunctionSystem ifs = new IteratedFunctionSystem("Barnsley");
+		
+		double[][] dm1 = { {0, 0, 0}, {0.16, 0, 0} };
+		double[][] dm2 = { {0.85, 0.04, 0.0}, {-0.04, 0.85, 1.6} };
+		double[][] dm3 = { {0.20, -0.26, 0.0}, {0.23, 0.22, 1.60} };
+		double[][] dm4 = { {-0.15, 0.28, 0.0}, {0.26, 0.24, 0.44} };
+		
+		LinearFunction f1 = new LinearFunction(dm1);
+		f1.setName("f1");
+		LinearFunction f2 = new LinearFunction(dm2);
+		f2.setName("f2");
+		LinearFunction f3 = new LinearFunction(dm3);
+		f3.setName("f3");
+		LinearFunction f4 = new LinearFunction(dm4);
+		f3.setName("f4");
+		
+		ifs.addFunction(f1, 0.01);
+		ifs.addFunction(f2, 0.85);
+		ifs.addFunction(f3, 0.07);
+		ifs.addFunction(f4, 0.07);
+		
+		return ifs;
+		
+	}
+	
 	/**
 	 * Sierpinksi gasket centered with point up with Variations
 	 * Data set sierpinski3

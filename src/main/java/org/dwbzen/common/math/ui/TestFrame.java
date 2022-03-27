@@ -1297,8 +1297,10 @@ public class TestFrame extends javax.swing.JFrame implements IBroadcastClient {
 		String param2 = bailoutTextField.getText();
 		int repeats = (param2 == null || param2.length()==0 ) ? 1 : Integer.parseInt(param2);
 
-		// TODO: SET the desired IFS here
-		IteratedFunctionSystem ifs = IfsSystems.Sierpinski3();	// IFS3()
+		/*
+		 * TODO: SET the desired IFS here
+		 */
+		IteratedFunctionSystem ifs = IfsSystems.Barnsley();
 		
 		ChaosGame game = new ChaosGame(ifs, npoints, repeats);
 		game.setMaxIterations(npoints);

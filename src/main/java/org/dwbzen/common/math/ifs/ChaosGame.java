@@ -89,7 +89,7 @@ public class ChaosGame implements IPointProducer {
 	}
 	/**
 	 * (x, y)= a random point in the bi-unit square
-	 * iterate { i = a random integer from 0 to n to 1 inclusive
+	 * iterate { i = a random integer from 0 to n-1 inclusive (n = number of LinearFunctions)
 	 *		(x, y) = Fi(x, y)
 	 *		plot(x, y) except during the first 20 iterations
 	 * }
@@ -348,6 +348,9 @@ public class ChaosGame implements IPointProducer {
 			}
 			else if(ifsname.equalsIgnoreCase("Sierpinski3")) {
 				ifs = IfsSystems.Sierpinski3();
+			}
+			else if(ifsname.equalsIgnoreCase("Barnsley")) {
+				ifs = IfsSystems.Barnsley();
 			}
 			else if(ifsname.equalsIgnoreCase("flame1")) {
 				ifs = IfsSystems.Flame1();
