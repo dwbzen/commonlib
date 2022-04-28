@@ -16,9 +16,9 @@ commonlib supports [music-framework](https://github.com/dwbzen/music-framework) 
 ## eclipse project setup
 * Clone the latest [commonlib](https://github.com/dwbzen/commonlib) repo from Github
     * Recommend cloning in C:\Compile along with text-processing and music-framework projects
-* Download and install the version of the JDK referenced in build.gradle (Java 16)
-* Download and install latest eclipse Java IDE (2021-06)
-* Spin up eclipse and add the JDK for Java 16 under Installed JREs, and make it the default
+* Download and install the version of the JDK referenced in build.gradle (Java 18)
+* Download and install latest eclipse Java IDE (2022-03)
+* Spin up eclipse and add the JDK for Java 18 under Installed JREs, and make it the default
 * Import the commonlib gradle project
 
 The project should build cleanly with 23 warnings. Use build.gradle.sonarqube to integrate with SonarQube static analysis.
