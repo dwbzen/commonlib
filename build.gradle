@@ -76,6 +76,7 @@ dependencies {
     implementation  'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.12.0'
     implementation  'org.apache.commons:commons-lang3:3.4'
     implementation  'javax.json:javax.json-api:1.1'
- 
+	// https://mvnrepository.com/artifact/org.jdesktop/swing-layout
+	implementation group: 'org.jdesktop', name: 'swing-layout', version: '1.0.2'
 }
 
